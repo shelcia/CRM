@@ -1,5 +1,71 @@
+$bg: #212732;
+$primary: #265fc9;
+$emtxt: rgba(255, 255, 255, 0.87);
 * {
   box-sizing: border-box;
   margin: 0px;
   padding: 0px;
+  font-family: "Poppins", sans-serif;
+}
+body {
+  background-color: $bg;
+  background-repeat: no-repeat;
+  background-size: cover;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+//LOGIN
+.login-container {
+  margin: auto;
+  margin-top: 10vh;
+  width: 400px;
+  background-color: $primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 0.25rem;
+  padding: 4rem;
+  h5 {
+    font-size: 1.3rem;
+    font-weight: 400;
+    text-align: center;
+    color: $emtxt;
+    margin: 0.4rem;
+  }
+  input {
+    padding: 0.375rem 0.75rem;
+    margin: 0.4rem;
+    border: none;
+    width: 100%;
+    border-radius: 0.5rem;
+    background-color: $emtxt;
+    &:focus {
+      outline: none;
+    }
+  }
+  button {
+    cursor: pointer;
+    border: none;
+    padding: 0.375rem 0.75rem;
+    margin: 0.6rem;
+    border-radius: 0.5rem;
+    background-color: $bg;
+    color: $emtxt;
+    transition: 0.2s color ease-in;
+    &:hover {
+      //   box-shadow: 3px 3px 6px #00000029;
+      color: $primary;
+    }
+    &:focus,
+    &:active {
+      outline: none !important;
+      border: none;
+    }
+  }
 }
