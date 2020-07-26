@@ -37,7 +37,7 @@ const AdminLogin = () => {
     <React.Fragment>
       <div className={classname}>{message.toString()}</div>
       <div className="login-container">
-        <h5>Login</h5>
+        <h5>Admin Login</h5>
         <input
           type="text"
           placeholder="enter email-id"

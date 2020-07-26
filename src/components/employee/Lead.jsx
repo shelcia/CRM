@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidenav from "./Sidenav";
 
-const ServiceRequest = () => {
+const Lead = () => {
   const [results, setResults] = useState([]);
-
+  const token = localStorage.getItem("token");
   useEffect(() => {
-    getServiceRequest();
+    getLeads();
   }, []);
 
-  const getServiceRequest = async () => {
-    const token = localStorage.getItem("token");
+  const getLeads = async () => {
+    console.log(token);
     axios({
-      url: "http://localhost:3000/api/employeedashboard/servicerequest",
+      url: "http://localhost:3000/api/employeedashboard/lead",
       method: "get",
       headers: {
         "auth-token": token,
@@ -24,7 +24,7 @@ const ServiceRequest = () => {
         setResults(response.data);
       })
       .catch((err) => {
-        alert(err);
+        console.log(err);
       });
   };
 
@@ -40,12 +40,8 @@ const ServiceRequest = () => {
               <ul>
                 <li>{result.title}</li>
                 <li>{result.client}</li>
-                <li>{result.manager}</li>
-                <li>{result.expected_closing}</li>
-                <li>{result.priority}</li>
+                <li>{result.number}</li>
                 <li>{result.status}</li>
-                <li>{result.expected_revenue}</li>
-                <li>{result.probability}</li>
               </ul>
             </div>
           ))}
@@ -55,4 +51,4 @@ const ServiceRequest = () => {
   );
 };
 
-export default ServiceRequest;
+export default Lead;

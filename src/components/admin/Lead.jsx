@@ -31,6 +31,7 @@ const Lead = () => {
       })
       .catch((err) => {
         console.log(err);
+        alert(err);
       });
   };
   const addLead = (e) => {

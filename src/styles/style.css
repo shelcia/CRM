@@ -55,6 +55,17 @@ a:active {
   margin: 0.4rem;
 }
 
+.login-container a {
+  color: rgba(255, 255, 255, 0.87);
+  cursor: pointer;
+  -webkit-transition: 0.2s all ease-in;
+  transition: 0.2s all ease-in;
+}
+
+.login-container a:hover {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.87);
+}
+
 .login-container input {
   padding: 0.375rem 0.75rem;
   margin: 0.4rem;
@@ -191,6 +202,10 @@ a:active {
 
 .grid .card-container .add-form input:focus {
   outline: none;
+}
+
+.grid .card-container .add-form h3 {
+  color: rgba(255, 255, 255, 0.87);
 }
 
 .grid .card-container .add-form button {

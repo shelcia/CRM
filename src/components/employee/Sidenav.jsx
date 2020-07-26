@@ -9,22 +9,16 @@ const Sidenav = () => {
     <React.Fragment>
       <nav>
         <ul>
-          <Link to="/admindashboard/servicerequest">
+          <Link to="/employeedashboard/servicerequest">
             <li>Service Request</li>
           </Link>
-          <Link to="/admindashboard/lead">
+          <Link to="/employeedashboard/lead">
             <li>Leads</li>
           </Link>
-          <Link to="/admindashboard/contact">
+          <Link to="/employeedashboard/contact">
             <li>Contacts</li>
           </Link>
-          <Link to="/admindashboard/addUser">
-            <li>Add User</li>
-          </Link>
-          <Link to="/admindashboard/deleteuser">
-            <li>Delete User</li>
-          </Link>
-          <Link onClick={() => delToken()} to="/">
+          <Link onClick={() => delToken()} to="/employeelogin">
             <li>Logout</li>
           </Link>
         </ul>
