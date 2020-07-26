@@ -17,7 +17,8 @@ const Contact = () => {
   }, []);
   const getContacts = () => {
     axios({
-      url: "http://localhost:3000/api/admindashboard/contact",
+      url:
+        "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/contact",
       method: "get",
       headers: {
         "auth-token": token,
@@ -45,15 +46,18 @@ const Contact = () => {
     };
     console.log(JSON.stringify(response));
 
-    fetch("http://localhost:3000/api/admindashboard/contact", {
-      method: "POST",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(response),
-    })
+    fetch(
+      "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/contact",
+      {
+        method: "POST",
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(response),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -68,15 +72,18 @@ const Contact = () => {
       _id: id,
     };
     console.log(response);
-    fetch("http://localhost:3000/api/admindashboard/contact", {
-      method: "DELETE",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(response),
-    })
+    fetch(
+      "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/contact",
+      {
+        method: "DELETE",
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(response),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -121,7 +128,7 @@ const Contact = () => {
               placeholder="address"
               onChange={(e) => setAddress(e.target.value)}
             />
-            <button onClick={(e) => addContact(e)}>Add Lead</button>
+            <button onClick={(e) => addContact(e)}>Add Contact</button>
           </div>
           {results.map((result) => (
             <div key={result._id} className="cards">

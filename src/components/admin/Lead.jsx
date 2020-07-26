@@ -70,7 +70,7 @@ const Lead = () => {
       _id: id,
     };
     console.log(response);
-    fetch("http://localhost:3000/api/admindashboard/lead", {
+    fetch("https://crm-backend-nodejs.herokuapp.com/api/admindashboard/lead", {
       method: "DELETE",
       headers: {
         "auth-token": token,

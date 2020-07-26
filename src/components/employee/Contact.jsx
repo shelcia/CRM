@@ -12,7 +12,8 @@ const Contact = () => {
 
   const getContacts = () => {
     axios({
-      url: "http://localhost:3000/api/employeedashboard/contact",
+      url:
+        "https://crm-backend-nodejs.herokuapp.com/api/employeedashboard/contact",
       method: "get",
       headers: {
         "auth-token": token,

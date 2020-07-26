@@ -20,7 +20,7 @@ const AdminLogin = () => {
     console.log(JSON.stringify(response));
     try {
       const result = await axios.post(
-        "http://localhost:3000/api/admin/login",
+        "https://crm-backend-nodejs.herokuapp.com/api/admin/login",
         response
       );
       localStorage.setItem("token", result.data);

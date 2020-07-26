@@ -21,7 +21,8 @@ const ServiceRequest = () => {
   const getServiceRequest = async () => {
     const token = localStorage.getItem("token");
     axios({
-      url: "http://localhost:3000/api/managerdashboard/servicerequest",
+      url:
+        "https://crm-backend-nodejs.herokuapp.com/api/managerdashboard/servicerequest",
       method: "get",
       headers: {
         "auth-token": token,
@@ -52,15 +53,18 @@ const ServiceRequest = () => {
       priority: priority,
     };
 
-    fetch("http://localhost:3000/api/managerdashboard/servicerequest", {
-      method: "POST",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(response),
-    })
+    fetch(
+      "https://crm-backend-nodejs.herokuapp.com/api/managerdashboard/servicerequest",
+      {
+        method: "POST",
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(response),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

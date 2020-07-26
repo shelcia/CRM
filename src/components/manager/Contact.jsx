@@ -17,7 +17,8 @@ const Contact = () => {
   }, []);
   const getContacts = () => {
     axios({
-      url: "http://localhost:3000/api/managerdashboard/contact",
+      url:
+        "https://crm-backend-nodejs.herokuapp.com/api/managerdashboard/contact",
       method: "get",
       headers: {
         "auth-token": token,
@@ -45,15 +46,18 @@ const Contact = () => {
     };
     console.log(JSON.stringify(response));
 
-    fetch("http://localhost:3000/api/managerdashboard/contact", {
-      method: "POST",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(response),
-    })
+    fetch(
+      "https://crm-backend-nodejs.herokuapp.com/api/managerdashboard/contact",
+      {
+        method: "POST",
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(response),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

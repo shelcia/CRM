@@ -21,7 +21,8 @@ const ServiceRequest = () => {
   const getServiceRequest = async () => {
     const token = localStorage.getItem("token");
     axios({
-      url: "http://localhost:3000/api/admindashboard/servicerequest",
+      url:
+        "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest",
       method: "get",
       headers: {
         "auth-token": token,
@@ -55,15 +56,18 @@ const ServiceRequest = () => {
     };
     console.log(JSON.stringify(response));
 
-    fetch("http://localhost:3000/api/admindashboard/servicerequest", {
-      method: "POST",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(response),
-    })
+    fetch(
+      "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest",
+      {
+        method: "POST",
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(response),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -79,15 +83,18 @@ const ServiceRequest = () => {
       _id: id,
     };
     console.log(response);
-    fetch("http://localhost:3000/api/admindashboard/servicerequest", {
-      method: "DELETE",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(response),
-    })
+    fetch(
+      "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest",
+      {
+        method: "DELETE",
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(response),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

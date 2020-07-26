@@ -19,7 +19,7 @@ const EmployeeLogin = () => {
     const response = { email: email, password: password };
     try {
       const result = await axios.post(
-        "http://localhost:3000/api/employee/login",
+        "https://crm-backend-nodejs.herokuapp.com/api/employee/login",
         response
       );
       localStorage.setItem("token", result.data);

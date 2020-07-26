@@ -12,7 +12,8 @@ const ServiceRequest = () => {
   const getServiceRequest = async () => {
     const token = localStorage.getItem("token");
     axios({
-      url: "http://localhost:3000/api/employeedashboard/servicerequest",
+      url:
+        "https://crm-backend-nodejs.herokuapp.com/api/employeedashboard/servicerequest",
       method: "get",
       headers: {
         "auth-token": token,

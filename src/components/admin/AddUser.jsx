@@ -32,7 +32,7 @@ const AddUser = ({ match }) => {
       password: emppassword,
     };
 
-    fetch("http://localhost:3000/api/employee/register", {
+    fetch("https://crm-backend-nodejs.herokuapp.com/api/employee/register", {
       method: "POST",
       headers: {
         "auth-token": token,
@@ -62,7 +62,7 @@ const AddUser = ({ match }) => {
       password: manpassword,
     };
 
-    fetch("http://localhost:3000/api/manager/register", {
+    fetch("https://crm-backend-nodejs.herokuapp.com/api/manager/register", {
       method: "POST",
       headers: {
         "auth-token": token,
@@ -92,7 +92,7 @@ const AddUser = ({ match }) => {
       password: adpassword,
     };
 
-    fetch("http://localhost:3000/api/admin/register", {
+    fetch("https://crm-backend-nodejs.herokuapp.com/api/admin/register", {
       method: "POST",
       headers: {
         "auth-token": token,

@@ -18,7 +18,7 @@ const Lead = () => {
   const getLeads = async () => {
     console.log(token);
     axios({
-      url: "http://localhost:3000/api/managerdashboard/lead",
+      url: "https://crm-backend-nodejs.herokuapp.com/api/managerdashboard/lead",
       method: "get",
       headers: {
         "auth-token": token,

@@ -13,7 +13,7 @@ const DelUser = () => {
       email: email,
     };
     console.log(response);
-    fetch("http://localhost:3000/api/admin/deleteuser", {
+    fetch("https://crm-backend-nodejs.herokuapp.com/api/admin/deleteuser", {
       method: "DELETE",
       headers: {
         "auth-token": token,
