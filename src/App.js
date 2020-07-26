@@ -1,47 +1,63 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+//ADMIN ROUTES
+import AdminLogin from "./components/admin/AdminLogin";
+import AdminServiceRequest from "./components/admin/ServiceRequest";
+import AdminLead from "./components/admin/Lead";
+import AdminContact from "./components/admin/Contact";
+import AdminEditServiceRequest from "./components/admin/EditService";
+import AdminEditLead from "./components/admin/EditLead";
+import AdminEditContact from "./components/admin/EditContact";
+//MANAGER ROUTES
+import ManagerLogin from "./components/manager/ManagerLogin";
+import ManagerServiceRequest from "./components/manager/ServiceRequest";
+// import ManagerLogin from "./components/manager/ManagerLogin";
+
 import "./styles/style.css";
 
 const App = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [token, setToken] = useState();
-
-  const loginUser = async (e) => {
-    e.preventDefault();
-    console.log("clicked");
-    const response = { email: email, password: password };
-    console.log(JSON.stringify(response));
-    try {
-      const result = await axios.post(
-        "http://localhost:3000/api/users/login",
-        response
-      );
-      console.log(result);
-      console.log(result.data);
-      setToken(result.data);
-    } catch (e) {
-      console.log(`Axios request failed: ${e}`);
-    }
-  };
   return (
     <React.Fragment>
-      <div className="login-container">
-        <h5>Login</h5>
-        <input
-          type="text"
-          placeholder="enter email-id"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="enter password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="button" onClick={(e) => loginUser(e)}>
-          Login
-        </button>
-      </div>
+      <Router>
+        <Switch>
+          <Route path="/" exact component={() => <AdminLogin />} />
+          <Route path="/adminlogin" exact component={() => <AdminLogin />} />
+          <Route
+            path="/admindashboard/servicerequest"
+            exact
+            component={() => <AdminServiceRequest />}
+          />
+          <Route
+            path="/admindashboard/servicerequest/:id"
+            component={AdminEditServiceRequest}
+          />
+          <Route
+            path="/admindashboard/lead"
+            exact
+            component={() => <AdminLead />}
+          />
+          <Route path="/admindashboard/lead/:id" component={AdminEditLead} />
+          <Route
+            path="/admindashboard/contact"
+            exact
+            component={() => <AdminContact />}
+          />
+          <Route
+            path="/admindashboard/contact/:id"
+            component={AdminEditContact}
+          />
+          <Route
+            path="/managerlogin"
+            exact
+            component={() => <ManagerLogin />}
+          />
+          <Route
+            path="/manangerdashboard/servicerequest"
+            exact
+            component={() => <ManagerServiceRequest />}
+          />
+        </Switch>
+      </Router>
     </React.Fragment>
   );
 };
