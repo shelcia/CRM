@@ -46,8 +46,6 @@ const AddUser = ({ match }) => {
         console.log(data);
         alert(data);
       });
-
-    window.location.reload();
   };
 
   //ADD MANAGER
@@ -76,8 +74,6 @@ const AddUser = ({ match }) => {
         console.log(data);
         alert(data);
       });
-
-    window.location.reload();
   };
 
   //ADD ADMIN
@@ -106,8 +102,6 @@ const AddUser = ({ match }) => {
         console.log(data);
         alert(data);
       });
-
-    window.location.reload();
   };
   return (
     <React.Fragment>

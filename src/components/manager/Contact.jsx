@@ -63,7 +63,7 @@ const Contact = () => {
         console.log(data);
         alert("added succuessfully");
       });
-    window.location.reload();
+    getContacts();
   };
 
   return (

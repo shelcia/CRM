@@ -70,7 +70,7 @@ const ServiceRequest = () => {
         console.log(data);
         alert("added succuessfully");
       });
-    window.location.reload();
+    getServiceRequest();
   };
 
   return (

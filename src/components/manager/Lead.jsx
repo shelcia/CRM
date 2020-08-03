@@ -63,7 +63,7 @@ const Lead = () => {
         alert(data);
       });
 
-    window.location.reload();
+    getLeads();
   };
 
   return (
