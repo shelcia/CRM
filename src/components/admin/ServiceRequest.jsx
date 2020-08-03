@@ -71,9 +71,16 @@ const ServiceRequest = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+        if (status === 400) {
+          alert("error in the input field");
+        } else {
+          alert("successfully added");
+        }
+      })
+      .catch((err) => {
+        alert(err);
       });
-    alert("added succuessfully");
-    window.location.reload();
+    getServiceRequest();
   };
 
   const delServiceRequest = (id) => {
@@ -99,7 +106,7 @@ const ServiceRequest = () => {
       .then((data) => {
         console.log(data);
       });
-    window.location.reload();
+    getServiceRequest();
   };
   return (
     <React.Fragment>

@@ -61,9 +61,8 @@ const Contact = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        alert("added succuessfully");
       });
-    window.location.reload();
+    getContacts();
   };
   const delContact = (id) => {
     const token = localStorage.getItem("token");
@@ -88,7 +87,7 @@ const Contact = () => {
       .then((data) => {
         console.log(data);
       });
-    window.location.reload();
+    getContacts();
   };
   return (
     <React.Fragment>

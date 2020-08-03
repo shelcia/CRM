@@ -18,7 +18,7 @@ const Lead = () => {
   const getLeads = async () => {
     console.log(token);
     axios({
-      url: "http://localhost:3000/api/admindashboard/lead",
+      url: "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/lead",
       method: "get",
       headers: {
         "auth-token": token,
@@ -46,7 +46,7 @@ const Lead = () => {
     };
     console.log(JSON.stringify(response));
 
-    fetch("http://localhost:3000/api/admindashboard/lead", {
+    fetch("https://crm-backend-nodejs.herokuapp.com/api/admindashboard/lead", {
       method: "POST",
       headers: {
         "auth-token": token,
@@ -61,7 +61,7 @@ const Lead = () => {
         alert(data);
       });
 
-    window.location.reload();
+    getLeads();
   };
   const delLead = (id) => {
     const token = localStorage.getItem("token");
@@ -83,7 +83,7 @@ const Lead = () => {
       .then((data) => {
         alert(data);
       });
-    window.location.reload();
+    getLeads();
   };
   return (
     <React.Fragment>
