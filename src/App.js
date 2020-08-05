@@ -1,5 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+//ROUTES
+import LandingPage from "./components/LandingPage";
+
 //ADMIN ROUTES
 import AdminLogin from "./components/admin/AdminLogin";
 import AdminServiceRequest from "./components/admin/ServiceRequest";
@@ -31,7 +34,7 @@ const App = () => {
     <React.Fragment>
       <Router>
         <Switch>
-          <Route path="/" exact component={() => <AdminLogin />} />
+          <Route path="/" exact component={() => <LandingPage />} />
           <Route path="/adminlogin" exact component={() => <AdminLogin />} />
           <Route
             path="/admindashboard/servicerequest"

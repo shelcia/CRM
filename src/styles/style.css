@@ -3,11 +3,11 @@
           box-sizing: border-box;
   margin: 0px;
   padding: 0px;
-  font-family: "Poppins", sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 body {
-  background-color: #212732;
+  background-color: #212121;
   background-repeat: no-repeat;
   background-size: cover;
   -webkit-font-smoothing: antialiased;
@@ -23,6 +23,10 @@ a:link,
 a:visited,
 a:active {
   text-decoration: none;
+}
+
+.landing-page .navbar-container a {
+  color: #ffdf34;
 }
 
 .login-container {

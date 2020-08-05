@@ -1,14 +1,19 @@
 $bg: #212732;
 $primary: #265fc9;
 $emtxt: rgba(255, 255, 255, 0.87);
+
+$primarycolor: #965fff;
+$secondarycolor: #ffdf34;
+$background: #212121;
+
 * {
   box-sizing: border-box;
   margin: 0px;
   padding: 0px;
-  font-family: "Poppins", sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 body {
-  background-color: $bg;
+  background-color: $background;
   background-repeat: no-repeat;
   background-size: cover;
   -webkit-font-smoothing: antialiased;
@@ -24,6 +29,17 @@ a:visited,
 a:active {
   text-decoration: none;
 }
+
+//LANDING PAGE
+
+.landing-page {
+  .navbar-container {
+    a {
+      color: $secondarycolor;
+    }
+  }
+}
+
 //LOGIN
 .login-container {
   margin: auto;
