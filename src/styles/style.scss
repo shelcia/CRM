@@ -2,7 +2,7 @@ $bg: #212732;
 $primary: #265fc9;
 $emtxt: rgba(255, 255, 255, 0.87);
 
-$primarycolor: #965fff;
+$primarycolor: #9f6cfe;
 $secondarycolor: #ffdf34;
 $background: #212121;
 
@@ -11,6 +11,7 @@ $background: #212121;
   margin: 0px;
   padding: 0px;
   font-family: "Roboto", sans-serif;
+  scroll-behavior: smooth;
 }
 body {
   background-color: $background;
@@ -18,7 +19,7 @@ body {
   background-size: cover;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
@@ -30,72 +31,176 @@ a:active {
   text-decoration: none;
 }
 
+@mixin displayFlex($justify) {
+  display: flex;
+  align-items: center;
+  justify-content: $justify;
+}
+@mixin marginauto($width) {
+  width: $width;
+  margin: auto;
+}
+@mixin robotoStyleBold($color, $size) {
+  font-family: "Roboto";
+  letter-spacing: 0.2;
+  font-weight: bold;
+  color: $color;
+  font-size: $size;
+}
+@mixin padding($top, $bottom, $left, $right) {
+  padding-top: $top;
+  padding-bottom: $bottom;
+  padding-left: $left;
+  padding-right: $right;
+}
+@mixin buttonStyle($color) {
+  @include padding(0.8rem, 0.8rem, 2.5rem, 2.5rem);
+  border: none;
+  cursor: pointer;
+  border-radius: 50em;
+  background-color: $color;
+  text-transform: uppercase;
+  box-shadow: 0px 3px 10px #000000;
+  transition: all 0.2s ease-in;
+  &:hover {
+    background-color: darken($color: $color, $amount: 20);
+  }
+  &:focus,
+  &:active {
+    outline: none !important;
+    border: none;
+  }
+}
 //LANDING PAGE
 
 .landing-page {
   .navbar-container {
-    a {
-      color: $secondarycolor;
+    @include marginauto(100%);
+    nav {
+      @include marginauto(85%);
+      @include displayFlex(space-between);
+      .logo-container {
+        img {
+          @include padding(1rem, 1rem, 0.75rem, 0.75rem);
+          height: 80px;
+          width: auto;
+        }
+      }
+      .navlist-container {
+        @include displayFlex(space-evenly);
+        a {
+          @include robotoStyleBold($secondarycolor, 1rem);
+          @include padding(1rem, 1rem, 1.5rem, 1.5rem);
+        }
+      }
+    }
+  }
+  .img-container {
+    @include marginauto(100%);
+    @include displayFlex(center);
+    img {
+      height: 40vh;
+    }
+  }
+  .headliner-container {
+    @include marginauto(100%);
+    @include displayFlex(center);
+    flex-direction: column;
+    text-align: center;
+    div.headliner {
+      @include robotoStyleBold($secondarycolor, 2rem);
+      text-transform: uppercase;
+      margin: 2rem auto;
+    }
+    button {
+      @include robotoStyleBold($emtxt, 1rem);
+      @include buttonStyle($primarycolor);
+    }
+  }
+  .login-cards {
+    @include displayFlex(center);
+    flex-direction: column;
+    div.headliner {
+      @include robotoStyleBold($primarycolor, 2rem);
+      text-transform: uppercase;
+      margin: 5rem auto;
+    }
+    .card-container {
+      @include displayFlex(space-evenly);
+      flex-wrap: wrap;
+      .card {
+        @include displayFlex(center);
+        margin: 1rem;
+        background-color: $secondarycolor;
+        border-radius: 50%;
+        width: 200px;
+        height: 200px;
+        text-align: center;
+        box-shadow: 0px 3px 10px #000000;
+        transition: all 0.2 ease-in;
+        &:hover {
+          box-shadow: 0px 3px 30px #000000;
+        }
+        img {
+          width: auto;
+          height: 100px;
+        }
+      }
     }
   }
 }
 
-//LOGIN
+//LOGIN PAGE
 .login-container {
-  margin: auto;
-  margin-top: 10vh;
-  width: 400px;
-  background-color: $primary;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  border-radius: 0.25rem;
-  padding: 4rem;
-  h5 {
-    font-size: 1.3rem;
-    font-weight: 400;
-    text-align: center;
-    color: $emtxt;
-    margin: 0.4rem;
-  }
-  a {
-    color: $emtxt;
-    cursor: pointer;
-    transition: 0.2s all ease-in;
-    &:hover {
-      border-bottom: 1px solid $emtxt;
+  @include marginauto(85%);
+  .flexbox {
+    @include displayFlex(space-between);
+    div.illustrator {
+      @include marginauto(60%);
+      @include displayFlex(center);
+    }
+    div.login {
+      @include marginauto(40%);
+      div.headliner {
+        @include robotoStyleBold($secondarycolor, 2rem);
+        text-transform: uppercase;
+        margin: 2rem auto;
+      }
+      input {
+        background-color: rgba(0, 0, 0, 0) !important;
+        border: none;
+        border-bottom: 1.5px solid $primarycolor;
+        padding: 0.375rem 0.75rem;
+        margin: 0.4rem;
+        width: 100%;
+        color: $primarycolor;
+        &:focus {
+          outline: none;
+          background-color: rgba(0, 0, 0, 0) !important;
+        }
+      }
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus,
+      textarea:-webkit-autofill,
+      textarea:-webkit-autofill:hover,
+      textarea:-webkit-autofill:focus,
+      select:-webkit-autofill,
+      select:-webkit-autofill:hover,
+      select:-webkit-autofill:focus {
+        border-bottom: 1px solid $primarycolor;
+        -webkit-text-fill-color: $primarycolor;
+        box-shadow: 0 0 0px 1000px #00000000 inset;
+        transition: background-color 5000s ease-in-out 0s;
+      }
     }
   }
-  input {
-    padding: 0.375rem 0.75rem;
-    margin: 0.4rem;
-    border: none;
-    width: 100%;
-    border-radius: 0.5rem;
-    background-color: $emtxt;
-    &:focus {
-      outline: none;
-    }
-  }
+
   button {
-    cursor: pointer;
-    border: none;
-    padding: 0.375rem 0.75rem;
-    margin: 0.6rem;
-    border-radius: 0.5rem;
-    background-color: $bg;
-    color: $emtxt;
-    transition: 0.2s color ease-in;
-    &:hover {
-      //   box-shadow: 3px 3px 6px #00000029;
-      color: $primary;
-    }
-    &:focus,
-    &:active {
-      outline: none !important;
-      border: none;
-    }
+    left: 50%;
+    @include robotoStyleBold($background, 1rem);
+    @include buttonStyle($secondarycolor);
+    margin: 2rem auto;
   }
 }
 
@@ -124,7 +229,6 @@ a:active {
   .navbar-container {
     nav {
       width: 200px;
-      //   background-color: $primary;
       height: 100vh;
       display: flex;
       align-items: center;
