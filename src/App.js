@@ -6,6 +6,7 @@ import LandingPage from "./components/LandingPage";
 //ADMIN ROUTES
 import AdminLogin from "./components/admin/AdminLogin";
 import AdminServiceRequest from "./components/admin/ServiceRequest/ServiceRequest";
+import AdminService from "./components/admin/ServiceRequest/Service";
 import AdminLead from "./components/admin/Leads/Lead";
 import AdminContact from "./components/admin/Contact/Contact";
 import AdminEditServiceRequest from "./components/admin/ServiceRequest/EditService";
@@ -43,7 +44,8 @@ const App = () => {
           />
           <Route
             path="/admindashboard/servicerequest/:id"
-            component={AdminEditServiceRequest}
+            // component={AdminEditServiceRequest}
+            component={AdminService}
           />
           <Route
             path="/admindashboard/lead"

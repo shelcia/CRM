@@ -138,7 +138,7 @@ a:active {
   border: none;
   cursor: pointer;
   border-radius: 50em;
-  background-color: #9f6cfe;
+  background-color: #897eff;
   text-transform: uppercase;
   -webkit-box-shadow: 0px 3px 10px #000000;
           box-shadow: 0px 3px 10px #000000;
@@ -147,7 +147,7 @@ a:active {
 }
 
 .landing-page .headliner-container button:hover {
-  background-color: #5d07fd;
+  background-color: #2c18ff;
 }
 
 .landing-page .headliner-container button:focus, .landing-page .headliner-container button:active {
@@ -175,7 +175,7 @@ a:active {
   font-family: "Mulish";
   letter-spacing: 0.2;
   font-weight: bold;
-  color: #9f6cfe;
+  color: #897eff;
   font-size: 2rem;
   text-transform: uppercase;
   margin: 5rem auto;
@@ -256,6 +256,7 @@ a:active {
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  height: 80vh;
 }
 
 .login-container .flexbox div.login {
@@ -276,11 +277,11 @@ a:active {
 .login-container .flexbox div.login input {
   background-color: rgba(0, 0, 0, 0) !important;
   border: none;
-  border-bottom: 1.5px solid #9f6cfe;
+  border-bottom: 1.5px solid #897eff;
   padding: 0.375rem 0.75rem;
   margin: 0.4rem;
   width: 100%;
-  color: #9f6cfe;
+  color: #897eff;
 }
 
 .login-container .flexbox div.login input:focus {
@@ -297,8 +298,8 @@ a:active {
 .login-container .flexbox div.login select:-webkit-autofill,
 .login-container .flexbox div.login select:-webkit-autofill:hover,
 .login-container .flexbox div.login select:-webkit-autofill:focus {
-  border-bottom: 1px solid #9f6cfe;
-  -webkit-text-fill-color: #9f6cfe;
+  border-bottom: 1px solid #897eff;
+  -webkit-text-fill-color: #897eff;
   -webkit-box-shadow: 0 0 0px 1000px #00000000 inset;
           box-shadow: 0 0 0px 1000px #00000000 inset;
   -webkit-transition: background-color 5000s ease-in-out 0s;
@@ -341,7 +342,7 @@ a:active {
   z-index: 10;
   position: relative;
   padding: 0.75rem 1rem;
-  background-color: #265fc9;
+  background-color: #897eff;
   color: rgba(255, 255, 255, 0.87);
   display: none;
   display: -webkit-box;
@@ -393,7 +394,7 @@ a:active {
 
 .grid .navbar-container nav ul a li {
   cursor: pointer;
-  color: #265fc9;
+  color: #897eff;
   -webkit-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
 }
@@ -447,7 +448,7 @@ a:active {
 
 .grid .card-container .add-form button {
   margin-top: 5px;
-  background-color: #265fc9;
+  background-color: #897eff;
   color: rgba(255, 255, 255, 0.87);
   padding: 0.375rem 0.75rem;
   border: none;
@@ -472,13 +473,192 @@ a:active {
 }
 
 .grid .card-container .cards a i {
-  background-color: #265fc9;
+  background-color: #897eff;
   color: rgba(255, 255, 255, 0.87);
   border-radius: 50%;
   padding: 0.3rem;
 }
 
-.dashboard .sidebar .nav .nav-items {
-  color: #9f6cfe;
+.dashboard {
+  overflow-y: hidden;
+  height: 100vh;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 200px auto;
+      grid-template-columns: 200px auto;
+}
+
+.dashboard .sidebar {
+  background-color: #212121;
+  height: 100vh;
+  -webkit-box-shadow: 6px 0px 20px #00000029;
+          box-shadow: 6px 0px 20px #00000029;
+  border-bottom-right-radius: 25px;
+  border-top-right-radius: 25px;
+}
+
+.dashboard .sidebar .nav {
+  margin-top: 20%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: right;
+      -ms-flex-pack: right;
+          justify-content: right;
+}
+
+.dashboard .sidebar .nav ul {
+  list-style: none;
+  width: 100%;
+}
+
+.dashboard .sidebar .nav ul a .nav-items {
+  font-family: "Mulish";
+  letter-spacing: 0.2;
+  font-weight: 600;
+  color: #897eff;
+  font-size: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  padding-left: 2rem;
+  padding-right: 1rem;
+  -webkit-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+  cursor: pointer;
+}
+
+.dashboard .sidebar .nav ul a .nav-items:hover {
+  background-color: #272727;
+}
+
+.dashboard .sidebar .nav ul a .nav-items::after {
+  display: fixed;
+  height: 1px;
+  widows: 40%;
+  color: #897eff;
+}
+
+.dashboard .main-content {
+  margin-top: 15px;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.dashboard .main-content .header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.dashboard .main-content .header .title {
+  font-family: "Mulish";
+  letter-spacing: 0.2;
+  font-weight: bold;
+  color: #ffdf34;
+  font-size: 2.5rem;
+}
+
+.dashboard .main-content .header button {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 50em;
+  background-color: #ffdf34;
+  text-transform: uppercase;
+  -webkit-box-shadow: 0px 3px 10px #000000;
+          box-shadow: 0px 3px 10px #000000;
+  -webkit-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+  font-family: "Mulish";
+  letter-spacing: 0.2;
+  font-weight: 900;
+  color: #212121;
+  font-size: 1rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  text-transform: uppercase;
+}
+
+.dashboard .main-content .header button:hover {
+  background-color: #cdad00;
+}
+
+.dashboard .main-content .header button:focus, .dashboard .main-content .header button:active {
+  outline: none !important;
+  border: none;
+}
+
+.dashboard .main-content .header button i {
+  font-size: 25px;
+  padding-left: 10px;
+}
+
+.dashboard .main-content hr {
+  margin-top: 10px;
+  color: #ffdf34;
+  border: 1px solid #ffdf34;
+}
+
+.dashboard .main-content .content {
+  margin-top: 10px;
+  color: #897eff;
+}
+
+.dashboard .main-content .content ul {
+  list-style: none;
+}
+
+.dashboard .main-content .content ul li {
+  margin-bottom: 10px;
+  background-color: #272727;
+  padding: 1rem 1rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.dashboard .main-content .content ul li p {
+  font-family: "Mulish";
+  letter-spacing: 0.2;
+  font-weight: 400;
+  color: #897eff;
+  font-size: 1rem;
+}
+
+.dashboard .main-content .content ul li i {
+  color: #ffdf34;
+  cursor: pointer;
+  -webkit-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+
+.dashboard .main-content .content ul li i:hover {
+  -webkit-transform: translateX(10px);
+          transform: translateX(10px);
 }
 /*# sourceMappingURL=style.css.map */

@@ -13,6 +13,8 @@ const ServiceRequest = () => {
   const [prob, setProb] = useState("");
   const [priority, setPriority] = useState("");
   const [status, setStatus] = useState("");
+  const url =
+    "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest";
 
   useEffect(() => {
     getServiceRequest();
@@ -21,8 +23,7 @@ const ServiceRequest = () => {
   const getServiceRequest = async () => {
     const token = localStorage.getItem("token");
     axios({
-      url:
-        "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest",
+      url: url,
       method: "get",
       headers: {
         "auth-token": token,
@@ -56,18 +57,15 @@ const ServiceRequest = () => {
     };
     console.log(JSON.stringify(response));
 
-    fetch(
-      "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest",
-      {
-        method: "POST",
-        headers: {
-          "auth-token": token,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(response),
-      }
-    )
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "auth-token": token,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(response),
+    })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -90,18 +88,15 @@ const ServiceRequest = () => {
       _id: id,
     };
     console.log(response);
-    fetch(
-      "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest",
-      {
-        method: "DELETE",
-        headers: {
-          "auth-token": token,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(response),
-      }
-    )
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        "auth-token": token,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(response),
+    })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -110,34 +105,54 @@ const ServiceRequest = () => {
   };
   return (
     <React.Fragment>
-      <div className="grid">
-        <div className="navbar-container">
+      <div className="dashboard">
+        <div className="sidebar">
           <Sidenav />
         </div>
-        <div className="card-container">
-          {results.map((result) => (
-            <div key={result._id} className="cards">
-              <ul>
-                <li>{result.title}</li>
-                <li>{result.client}</li>
-                <li>{result.manager}</li>
-                <li>{result.expected_closing}</li>
-                <li>{result.priority}</li>
-                <li>{result.status}</li>
-                <li>{result.expected_revenue}</li>
-                <li>{result.probability}</li>
-                <Link to={`/admindashboard/servicerequest/${result._id}`}>
-                  <i className="material-icons">&#xe3c9;</i>
-                </Link>
-                <Link
-                  onClick={() => delServiceRequest(result._id)}
-                  to="/admindashboard/servicerequest"
-                >
-                  <i className="material-icons">&#xe872;</i>
-                </Link>
-              </ul>
-            </div>
-          ))}
+        <div className="main-content">
+          <div className="header">
+            <div className="title">Service Request</div>
+            <button type="button">
+              Add <i class="material-icons">&#xe147;</i>
+            </button>
+          </div>
+          <hr />
+          <div className="content">
+            <ul>
+              {results.map((result) => (
+                <li key={result._id}>
+                  <p>{result.title}</p>
+                  <Link to={`/admindashboard/servicerequest/${result._id}`}>
+                    <i class="material-icons">&#xe5c8;</i>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            {/* {results.map((result) => (
+              <div key={result._id} className="cards">
+                <ul>
+                  <li>{result.title}</li>
+                  <li>{result.client}</li>
+                  <li>{result.manager}</li>
+                  <li>{result.expected_closing}</li>
+                  <li>{result.priority}</li>
+                  <li>{result.status}</li>
+                  <li>{result.expected_revenue}</li>
+                  <li>{result.probability}</li>
+                  <Link to={`/admindashboard/servicerequest/${result._id}`}>
+                    <i className="material-icons">&#xe3c9;</i>
+                  </Link>
+                  <Link
+                    onClick={() => delServiceRequest(result._id)}
+                    to="/admindashboard/servicerequest"
+                  >
+                    <i className="material-icons">&#xe872;</i>
+                  </Link>
+                </ul>
+              </div>
+            ))} */}
+          </div>
         </div>
       </div>
     </React.Fragment>

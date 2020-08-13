@@ -1,10 +1,10 @@
 $bg: #212732;
-$primary: #265fc9;
 $emtxt: rgba(255, 255, 255, 0.87);
 
-$primarycolor: #9f6cfe;
+$primarycolor: #897eff;
 $secondarycolor: #ffdf34;
 $background: #212121;
+$hoverbg: #272727;
 
 * {
   box-sizing: border-box;
@@ -40,10 +40,10 @@ a:active {
   width: $width;
   margin: auto;
 }
-@mixin robotoStyleBold($color, $size) {
+@mixin mulishStyle($color, $size, $weight) {
   font-family: "Mulish";
   letter-spacing: 0.2;
-  font-weight: bold;
+  font-weight: $weight;
   color: $color;
   font-size: $size;
 }
@@ -55,6 +55,24 @@ a:active {
 }
 @mixin buttonStyle($color) {
   @include padding(0.8rem, 0.8rem, 2.5rem, 2.5rem);
+  border: none;
+  cursor: pointer;
+  border-radius: 50em;
+  background-color: $color;
+  text-transform: uppercase;
+  box-shadow: 0px 3px 10px #000000;
+  transition: all 0.2s ease-in;
+  &:hover {
+    background-color: darken($color: $color, $amount: 20);
+  }
+  &:focus,
+  &:active {
+    outline: none !important;
+    border: none;
+  }
+}
+@mixin smallButtonStyle($color) {
+  @include padding(0.5rem, 0.5rem, 1.5rem, 1.5rem);
   border: none;
   cursor: pointer;
   border-radius: 50em;
@@ -89,7 +107,7 @@ a:active {
       .navlist-container {
         @include displayFlex(space-evenly);
         a {
-          @include robotoStyleBold($secondarycolor, 1rem);
+          @include mulishStyle($secondarycolor, 1rem, bold);
           @include padding(1rem, 1rem, 1.5rem, 1.5rem);
         }
       }
@@ -108,12 +126,12 @@ a:active {
     flex-direction: column;
     text-align: center;
     div.headliner {
-      @include robotoStyleBold($secondarycolor, 2rem);
+      @include mulishStyle($secondarycolor, 2rem, bold);
       text-transform: uppercase;
       margin: 2rem auto;
     }
     button {
-      @include robotoStyleBold($emtxt, 1rem);
+      @include mulishStyle($emtxt, 1rem, bold);
       @include buttonStyle($primarycolor);
     }
   }
@@ -121,7 +139,7 @@ a:active {
     @include displayFlex(center);
     flex-direction: column;
     div.headliner {
-      @include robotoStyleBold($primarycolor, 2rem);
+      @include mulishStyle($primarycolor, 2rem, bold);
       text-transform: uppercase;
       margin: 5rem auto;
     }
@@ -158,11 +176,12 @@ a:active {
     div.illustrator {
       @include marginauto(60%);
       @include displayFlex(center);
+      height: 80vh;
     }
     div.login {
       @include marginauto(40%);
       div.headliner {
-        @include robotoStyleBold($secondarycolor, 2rem);
+        @include mulishStyle($secondarycolor, 2rem, bold);
         text-transform: uppercase;
         margin: 2rem auto;
       }
@@ -198,7 +217,7 @@ a:active {
 
   button {
     left: 50%;
-    @include robotoStyleBold($background, 1rem);
+    @include mulishStyle($background, 1rem, bold);
     @include buttonStyle($secondarycolor);
     margin: 2rem auto;
   }
@@ -208,7 +227,7 @@ a:active {
   z-index: 10;
   position: relative;
   padding: 0.75rem 1rem;
-  background-color: $primary;
+  background-color: $primarycolor;
   color: $emtxt;
   display: none;
   display: flex;
@@ -239,7 +258,7 @@ a:active {
         a {
           li {
             cursor: pointer;
-            color: $primary;
+            color: $primarycolor;
             transition: all 0.2s ease-in;
             &:hover {
               color: $emtxt;
@@ -277,7 +296,7 @@ a:active {
       }
       button {
         margin-top: 5px;
-        background-color: $primary;
+        background-color: $primarycolor;
         color: $emtxt;
         padding: 0.375rem 0.75rem;
         border: none;
@@ -300,7 +319,7 @@ a:active {
       }
       a {
         i {
-          background-color: $primary;
+          background-color: $primarycolor;
           color: $emtxt;
           border-radius: 50%;
           padding: 0.3rem;
@@ -311,10 +330,95 @@ a:active {
 }
 
 .dashboard {
+  overflow-y: hidden;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 200px auto;
   .sidebar {
+    background-color: $background;
+    height: 100vh;
+    box-shadow: 6px 0px 20px #00000029;
+    border-bottom-right-radius: 25px;
+    border-top-right-radius: 25px;
+
     .nav {
-      .nav-items {
-        color: $primarycolor;
+      // padding-left: 20px;
+      margin-top: 20%;
+      @include displayFlex(right);
+      ul {
+        list-style: none;
+        width: 100%;
+        a {
+          .nav-items {
+            @include mulishStyle($primarycolor, 1rem, 600);
+            @include padding(1rem, 1rem, 2rem, 1rem);
+            transition: all 0.2s ease-in;
+            cursor: pointer;
+            // border-bottom: 1px solid $primarycolor;
+            &:hover {
+              background-color: $hoverbg;
+            }
+            &::after {
+              display: fixed;
+              height: 1px;
+              widows: 40%;
+              color: $primarycolor;
+            }
+          }
+        }
+      }
+    }
+  }
+  .main-content {
+    margin-top: 15px;
+    padding-left: 50px;
+    padding-right: 50px;
+    .header {
+      @include displayFlex(space-between);
+      .title {
+        @include mulishStyle($secondarycolor, 2.5rem, bold);
+      }
+      button {
+        @include smallButtonStyle($secondarycolor);
+        @include mulishStyle($background, 1rem, 900);
+        @include displayFlex(space-between);
+        text-transform: uppercase;
+        i {
+          font-size: 25px;
+          padding-left: 10px;
+        }
+      }
+    }
+    hr {
+      // height: 1px;
+      margin-top: 10px;
+      color: $secondarycolor;
+      border: 1px solid $secondarycolor;
+    }
+    .content {
+      margin-top: 10px;
+
+      color: $primarycolor;
+      ul {
+        list-style: none;
+        li {
+          margin-bottom: 10px;
+          background-color: $hoverbg;
+          padding: 1rem 1rem;
+          @include displayFlex(space-between);
+
+          p {
+            @include mulishStyle($primarycolor, 1rem, 400);
+          }
+          i {
+            color: $secondarycolor;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            &:hover {
+              transform: translateX(10px);
+            }
+          }
+        }
       }
     }
   }
