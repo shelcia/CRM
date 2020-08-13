@@ -11,12 +11,16 @@ import AdminService from "./components/admin/ServiceRequest/Service";
 import AdminAddServiceRequest from "./components/admin/ServiceRequest/AddForm";
 // import AdminEditServiceRequest from "./components/admin/ServiceRequest/EditService";
 
+import AdminLeads from "./components/admin/Leads/Leads";
 import AdminLead from "./components/admin/Leads/Lead";
+import AdminAddLead from "./components/admin/Leads/AddFormLead";
 // import AdminEditLead from "./components/admin/Leads/EditLead";
-import AdminAddLead from "./components/admin/Leads/AddForm";
 
 import AdminContact from "./components/admin/Contact/Contact";
-import AdminEditContact from "./components/admin/Contact/EditContact";
+import AdminContacts from "./components/admin/Contact/Contacts";
+import AdminAddContact from "./components/admin/Contact/AddForm";
+// import AdminEditContact from "./components/admin/Contact/EditContact";
+
 import AdminAddUser from "./components/admin/User/AddUser";
 import AdminDelUser from "./components/admin/User/DeleteUser";
 //MANAGER ROUTES
@@ -62,11 +66,14 @@ const App = () => {
             exact
             component={() => <AdminLead />}
           />
+          <Route path="/admindashboard/lead/:id" exact component={AdminLeads} />
           <Route
-            path="/admindashboard/lead/:id"
+            path="/admindashboard/lead/add"
+            exact
             // component={AdminEditLead}
-            component={AdminAddLead}
+            component={() => <AdminAddLead />}
           />
+
           <Route
             path="/admindashboard/contact"
             exact
@@ -74,7 +81,14 @@ const App = () => {
           />
           <Route
             path="/admindashboard/contact/:id"
-            component={AdminEditContact}
+            // component={AdminEditContact}
+            component={AdminContacts}
+          />
+          <Route
+            path="/admindashboard/contact/add"
+            exact
+            // component={AdminEditLead}
+            component={AdminAddContact}
           />
           <Route path="/admindashboard/adduser" component={AdminAddUser} />
           <Route path="/admindashboard/deleteuser" component={AdminDelUser} />

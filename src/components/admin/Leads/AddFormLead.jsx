@@ -46,7 +46,7 @@ const AddForm = () => {
         </div>
         <div className="main-content">
           <div className="header">
-            <div className="title">Lead</div>
+            <div className="title">Lead Form</div>
           </div>
           <hr />
           <div className="content">
