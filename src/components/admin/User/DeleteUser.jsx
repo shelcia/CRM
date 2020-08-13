@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Sidenav from "./Sidenav";
+import Sidenav from "../Sidenav";
 import { useHistory } from "react-router-dom";
 
 const DelUser = () => {

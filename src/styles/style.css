@@ -3,7 +3,7 @@
           box-sizing: border-box;
   margin: 0px;
   padding: 0px;
-  font-family: "Roboto", sans-serif;
+  font-family: "Mulish", sans-serif;
   scroll-behavior: smooth;
 }
 
@@ -67,7 +67,7 @@ a:active {
 }
 
 .landing-page .navbar-container nav .navlist-container a {
-  font-family: "Roboto";
+  font-family: "Mulish";
   letter-spacing: 0.2;
   font-weight: bold;
   color: #ffdf34;
@@ -116,7 +116,7 @@ a:active {
 }
 
 .landing-page .headliner-container div.headliner {
-  font-family: "Roboto";
+  font-family: "Mulish";
   letter-spacing: 0.2;
   font-weight: bold;
   color: #ffdf34;
@@ -126,7 +126,7 @@ a:active {
 }
 
 .landing-page .headliner-container button {
-  font-family: "Roboto";
+  font-family: "Mulish";
   letter-spacing: 0.2;
   font-weight: bold;
   color: rgba(255, 255, 255, 0.87);
@@ -172,7 +172,7 @@ a:active {
 }
 
 .landing-page .login-cards div.headliner {
-  font-family: "Roboto";
+  font-family: "Mulish";
   letter-spacing: 0.2;
   font-weight: bold;
   color: #9f6cfe;
@@ -264,7 +264,7 @@ a:active {
 }
 
 .login-container .flexbox div.login div.headliner {
-  font-family: "Roboto";
+  font-family: "Mulish";
   letter-spacing: 0.2;
   font-weight: bold;
   color: #ffdf34;
@@ -307,7 +307,7 @@ a:active {
 
 .login-container button {
   left: 50%;
-  font-family: "Roboto";
+  font-family: "Mulish";
   letter-spacing: 0.2;
   font-weight: bold;
   color: #212121;
@@ -476,5 +476,9 @@ a:active {
   color: rgba(255, 255, 255, 0.87);
   border-radius: 50%;
   padding: 0.3rem;
+}
+
+.dashboard .sidebar .nav .nav-items {
+  color: #9f6cfe;
 }
 /*# sourceMappingURL=style.css.map */

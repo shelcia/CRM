@@ -10,7 +10,7 @@ $background: #212121;
   box-sizing: border-box;
   margin: 0px;
   padding: 0px;
-  font-family: "Roboto", sans-serif;
+  font-family: "Mulish", sans-serif;
   scroll-behavior: smooth;
 }
 body {
@@ -41,7 +41,7 @@ a:active {
   margin: auto;
 }
 @mixin robotoStyleBold($color, $size) {
-  font-family: "Roboto";
+  font-family: "Mulish";
   letter-spacing: 0.2;
   font-weight: bold;
   color: $color;
@@ -305,6 +305,16 @@ a:active {
           border-radius: 50%;
           padding: 0.3rem;
         }
+      }
+    }
+  }
+}
+
+.dashboard {
+  .sidebar {
+    .nav {
+      .nav-items {
+        color: $primarycolor;
       }
     }
   }

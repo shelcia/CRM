@@ -5,14 +5,14 @@ import LandingPage from "./components/LandingPage";
 
 //ADMIN ROUTES
 import AdminLogin from "./components/admin/AdminLogin";
-import AdminServiceRequest from "./components/admin/ServiceRequest";
-import AdminLead from "./components/admin/Lead";
-import AdminContact from "./components/admin/Contact";
-import AdminEditServiceRequest from "./components/admin/EditService";
-import AdminEditLead from "./components/admin/EditLead";
-import AdminEditContact from "./components/admin/EditContact";
-import AdminAddUser from "./components/admin/AddUser";
-import AdminDelUser from "./components/admin/DeleteUser";
+import AdminServiceRequest from "./components/admin/ServiceRequest/ServiceRequest";
+import AdminLead from "./components/admin/Leads/Lead";
+import AdminContact from "./components/admin/Contact/Contact";
+import AdminEditServiceRequest from "./components/admin/ServiceRequest/EditService";
+import AdminEditLead from "./components/admin/Leads/EditLead";
+import AdminEditContact from "./components/admin/Contact/EditContact";
+import AdminAddUser from "./components/admin/User/AddUser";
+import AdminDelUser from "./components/admin/User/DeleteUser";
 //MANAGER ROUTES
 import ManagerLogin from "./components/manager/ManagerLogin";
 import ManagerServiceRequest from "./components/manager/ServiceRequest";
