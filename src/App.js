@@ -38,7 +38,10 @@ import ManagerLeads from "./components/manager/Leads/Leads";
 // import ManagerEditLead from "./components/manager/Leads/EditLead";
 
 import ManagerContact from "./components/manager/Contact/Contact";
-import ManagerEditContact from "./components/manager/Contact/EditContact";
+import ManagerAddContact from "./components/manager/Contact/AddForm";
+import ManagerContacts from "./components/manager/Contact/Contacts";
+// import ManagerEditContact from "./components/manager/Contact/EditContact";
+
 //EMPLOYEE ROUTES
 import EmployeeLogin from "./components/employee/EmployeeLogin";
 import EmployeeServiceRequest from "./components/employee/ServiceRequest";
@@ -129,7 +132,7 @@ const App = () => {
             component={() => <ManagerLead />}
           />
           <Route
-            path="/managerdashboard/add"
+            path="/managerdashboard/lead/add"
             exact
             component={ManagerAddLead}
           />
@@ -140,8 +143,13 @@ const App = () => {
             component={() => <ManagerContact />}
           />
           <Route
+            path="/managerdashboard/contact/add"
+            exact
+            component={ManagerAddContact}
+          />
+          <Route
             path="/managerdashboard/contact/:id"
-            component={ManagerEditContact}
+            component={ManagerContacts}
           />
           <Route
             path="/employeelogin"

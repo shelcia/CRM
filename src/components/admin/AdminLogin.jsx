@@ -63,7 +63,7 @@ const AdminLogin = () => {
               style={{ marginLeft: "2rem" }}
               onClick={(event) => {
                 event.preventDefault();
-                history.goBack();
+                history.push("/#Login");
               }}
             >
               Back
