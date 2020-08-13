@@ -373,8 +373,11 @@ a:active {
     margin-top: 15px;
     padding-left: 50px;
     padding-right: 50px;
+    position: relative;
+
     .header {
       @include displayFlex(space-between);
+      z-index: 2;
       .title {
         @include mulishStyle($secondarycolor, 2.5rem, bold);
       }
@@ -397,8 +400,43 @@ a:active {
     }
     .content {
       margin-top: 10px;
-
       color: $primarycolor;
+      height: 400px;
+      overflow-y: scroll;
+      .cards {
+        width: 100%;
+        background-color: $hoverbg;
+        ul {
+          list-style: none;
+          li {
+            padding: 0.4rem 1rem;
+            @include displayFlex(space-between);
+            b {
+              @include mulishStyle($primarycolor, 1rem, 800);
+              width: 50%;
+            }
+            p {
+              @include mulishStyle($secondarycolor, 1rem, 500);
+              width: 50%;
+            }
+          }
+        }
+        .button-container {
+          @include displayFlex(space-evenly);
+          padding-bottom: 30px;
+
+          button {
+            @include smallButtonStyle($secondarycolor);
+            @include mulishStyle($background, 1rem, 900);
+            @include displayFlex(space-between);
+            text-transform: uppercase;
+            i {
+              font-size: 25px;
+              padding-left: 10px;
+            }
+          }
+        }
+      }
       ul {
         list-style: none;
         li {
@@ -406,7 +444,6 @@ a:active {
           background-color: $hoverbg;
           padding: 1rem 1rem;
           @include displayFlex(space-between);
-
           p {
             @include mulishStyle($primarycolor, 1rem, 400);
           }

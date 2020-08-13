@@ -9,7 +9,8 @@ import AdminServiceRequest from "./components/admin/ServiceRequest/ServiceReques
 import AdminService from "./components/admin/ServiceRequest/Service";
 import AdminLead from "./components/admin/Leads/Lead";
 import AdminContact from "./components/admin/Contact/Contact";
-import AdminEditServiceRequest from "./components/admin/ServiceRequest/EditService";
+// import AdminEditServiceRequest from "./components/admin/ServiceRequest/EditService";
+import AdminAddServiceRequest from "./components/admin/ServiceRequest/AddForm";
 import AdminEditLead from "./components/admin/Leads/EditLead";
 import AdminEditContact from "./components/admin/Contact/EditContact";
 import AdminAddUser from "./components/admin/User/AddUser";
@@ -41,6 +42,11 @@ const App = () => {
             path="/admindashboard/servicerequest"
             exact
             component={() => <AdminServiceRequest />}
+          />
+          <Route
+            path="/admindashboard/servicerequest/add"
+            exact
+            component={() => <AdminAddServiceRequest />}
           />
           <Route
             path="/admindashboard/servicerequest/:id"

@@ -545,6 +545,7 @@ a:active {
   margin-top: 15px;
   padding-left: 50px;
   padding-right: 50px;
+  position: relative;
 }
 
 .dashboard .main-content .header {
@@ -557,6 +558,7 @@ a:active {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  z-index: 2;
 }
 
 .dashboard .main-content .header .title {
@@ -621,6 +623,106 @@ a:active {
 .dashboard .main-content .content {
   margin-top: 10px;
   color: #897eff;
+  height: 400px;
+  overflow-y: scroll;
+}
+
+.dashboard .main-content .content .cards {
+  width: 100%;
+  background-color: #272727;
+}
+
+.dashboard .main-content .content .cards ul {
+  list-style: none;
+}
+
+.dashboard .main-content .content .cards ul li {
+  padding: 0.4rem 1rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.dashboard .main-content .content .cards ul li b {
+  font-family: "Mulish";
+  letter-spacing: 0.2;
+  font-weight: 800;
+  color: #897eff;
+  font-size: 1rem;
+  width: 50%;
+}
+
+.dashboard .main-content .content .cards ul li p {
+  font-family: "Mulish";
+  letter-spacing: 0.2;
+  font-weight: 500;
+  color: #ffdf34;
+  font-size: 1rem;
+  width: 50%;
+}
+
+.dashboard .main-content .content .cards .button-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  padding-bottom: 30px;
+}
+
+.dashboard .main-content .content .cards .button-container button {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 50em;
+  background-color: #ffdf34;
+  text-transform: uppercase;
+  -webkit-box-shadow: 0px 3px 10px #000000;
+          box-shadow: 0px 3px 10px #000000;
+  -webkit-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+  font-family: "Mulish";
+  letter-spacing: 0.2;
+  font-weight: 900;
+  color: #212121;
+  font-size: 1rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  text-transform: uppercase;
+}
+
+.dashboard .main-content .content .cards .button-container button:hover {
+  background-color: #cdad00;
+}
+
+.dashboard .main-content .content .cards .button-container button:focus, .dashboard .main-content .content .cards .button-container button:active {
+  outline: none !important;
+  border: none;
+}
+
+.dashboard .main-content .content .cards .button-container button i {
+  font-size: 25px;
+  padding-left: 10px;
 }
 
 .dashboard .main-content .content ul {
