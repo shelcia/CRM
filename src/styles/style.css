@@ -627,6 +627,108 @@ a:active {
   overflow-y: scroll;
 }
 
+.dashboard .main-content .content .add-form {
+  width: 80%;
+  margin: auto;
+  background-color: #272727;
+  -webkit-box-shadow: 6px 3px 20px #00000029;
+          box-shadow: 6px 3px 20px #00000029;
+  padding: 1.5rem;
+}
+
+.dashboard .main-content .content .add-form input,
+.dashboard .main-content .content .add-form select {
+  background-color: rgba(0, 0, 0, 0) !important;
+  border: none;
+  border-bottom: 1.5px solid #897eff;
+  padding: 0.375rem 0.75rem;
+  margin: 0.4rem;
+  width: 100%;
+  color: #897eff;
+}
+
+.dashboard .main-content .content .add-form input:focus,
+.dashboard .main-content .content .add-form select:focus {
+  outline: none;
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.dashboard .main-content .content .add-form input:-webkit-autofill,
+.dashboard .main-content .content .add-form input:-webkit-autofill:hover,
+.dashboard .main-content .content .add-form input:-webkit-autofill:focus,
+.dashboard .main-content .content .add-form textarea:-webkit-autofill,
+.dashboard .main-content .content .add-form textarea:-webkit-autofill:hover,
+.dashboard .main-content .content .add-form textarea:-webkit-autofill:focus,
+.dashboard .main-content .content .add-form select:-webkit-autofill,
+.dashboard .main-content .content .add-form select:-webkit-autofill:hover,
+.dashboard .main-content .content .add-form select:-webkit-autofill:focus {
+  border-bottom: 1px solid #897eff;
+  -webkit-text-fill-color: #897eff;
+  -webkit-box-shadow: 0 0 0px 1000px #00000000 inset;
+          box-shadow: 0 0 0px 1000px #00000000 inset;
+  -webkit-transition: background-color 5000s ease-in-out 0s;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.dashboard .main-content .content .add-form .button-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: space-evenly;
+      -ms-flex-pack: space-evenly;
+          justify-content: space-evenly;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.dashboard .main-content .content .add-form .button-container button {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 50em;
+  background-color: #ffdf34;
+  text-transform: uppercase;
+  -webkit-box-shadow: 0px 3px 10px #000000;
+          box-shadow: 0px 3px 10px #000000;
+  -webkit-transition: all 0.2s ease-in;
+  transition: all 0.2s ease-in;
+  font-family: "Mulish";
+  letter-spacing: 0.2;
+  font-weight: 900;
+  color: #212121;
+  font-size: 1rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  text-transform: uppercase;
+}
+
+.dashboard .main-content .content .add-form .button-container button:hover {
+  background-color: #cdad00;
+}
+
+.dashboard .main-content .content .add-form .button-container button:focus, .dashboard .main-content .content .add-form .button-container button:active {
+  outline: none !important;
+  border: none;
+}
+
+.dashboard .main-content .content .add-form .button-container button i {
+  font-size: 25px;
+  padding-left: 10px;
+}
+
 .dashboard .main-content .content .cards {
   width: 100%;
   background-color: #272727;

@@ -8,8 +8,8 @@ const AddForm = () => {
   const [closing, setClosing] = useState("");
   const [revenue, setRevenue] = useState("");
   const [prob, setProb] = useState("");
-  const [priority, setPriority] = useState("");
-  const [status, setStatus] = useState("");
+  const [priority, setPriority] = useState("High");
+  const [status, setStatus] = useState("Created");
   const url =
     "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest";
   const addServiceRequest = (e) => {
@@ -50,7 +50,6 @@ const AddForm = () => {
       .catch((err) => {
         alert(err);
       });
-    // getServiceRequest();
   };
   return (
     <React.Fragment>
@@ -89,18 +88,25 @@ const AddForm = () => {
                 placeholder="closing"
                 onChange={(e) => setClosing(e.target.value)}
               />
-              <input
-                type="text"
-                name="priority"
-                placeholder="priority"
-                onChange={(e) => setPriority(e.target.value)}
-              />
-              <input
-                type="text"
-                name="status"
-                placeholder="status"
-                onChange={(e) => setStatus(e.target.value)}
-              />
+              <select name="status" id="status">
+                <option onSelect={() => setStatus("Created")}>Created</option>
+                <option onSelect={() => setStatus("Released")}>Released</option>
+                <option onSelect={() => setStatus("Open")}>Open</option>
+                <option onSelect={() => setStatus("In process")}>
+                  In process
+                </option>
+                <option onSelect={() => setStatus("Cancelled")}>
+                  Cancelled
+                </option>
+                <option onSelect={() => setStatus("Completed")}>
+                  Completed
+                </option>
+              </select>
+              <select name="priority" id="priority">
+                <option onSelect={() => setPriority("High")}>High</option>
+                <option onSelect={() => setPriority("Medium")}>Medium</option>
+                <option onSelect={() => setPriority("Low")}>Low</option>
+              </select>
               <input
                 type="text"
                 name="probability"
@@ -113,9 +119,11 @@ const AddForm = () => {
                 placeholder="revenue"
                 onChange={(e) => setRevenue(e.target.value)}
               />
-              <button onClick={(e) => addServiceRequest(e)}>
-                Add Service Request
-              </button>
+              <div className="button-container">
+                <button onClick={(e) => addServiceRequest(e)}>
+                  Add Service Request
+                </button>
+              </div>
             </div>
           </div>
         </div>
