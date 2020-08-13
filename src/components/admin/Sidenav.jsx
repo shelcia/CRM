@@ -18,12 +18,15 @@ const Sidenav = () => {
           <Link to="/admindashboard/contact">
             <li className="nav-items">Contacts</li>
           </Link>
-          <Link to="/admindashboard/addUser">
+          <Link to="/admindashboard/allusers">
+            <li className="nav-items">All Users</li>
+          </Link>
+          {/* <Link to="/admindashboard/addUser">
             <li className="nav-items">Add User</li>
           </Link>
           <Link to="/admindashboard/deleteuser">
             <li className="nav-items">Delete User</li>
-          </Link>
+          </Link> */}
           <Link onClick={() => delToken()} to="/">
             <li className="nav-items">Logout</li>
           </Link>

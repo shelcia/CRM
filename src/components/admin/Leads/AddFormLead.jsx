@@ -4,14 +4,12 @@ import Sidenav from "../Sidenav";
 const AddForm = () => {
   const [title, setTitle] = useState("");
   const [client, setClient] = useState("");
-  const [status, setStatus] = useState("Created");
   const [number, setNumber] = useState();
-  const token = localStorage.getItem("token");
-
+  const [status, setStatus] = useState("New");
   const url =
     "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/lead";
-
-  const addLead = (e) => {
+  const addServiceRequest = (e) => {
+    const token = localStorage.getItem("token");
     console.log(token);
     e.preventDefault();
     console.log("clicked");
@@ -35,7 +33,14 @@ const AddForm = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        alert(data);
+        if (data.status === 400) {
+          alert("error in the input field");
+        } else {
+          alert("successfully added");
+        }
+      })
+      .catch((err) => {
+        alert(err);
       });
   };
   return (
@@ -46,7 +51,7 @@ const AddForm = () => {
         </div>
         <div className="main-content">
           <div className="header">
-            <div className="title">Lead Form</div>
+            <div className="title">Lead</div>
           </div>
           <hr />
           <div className="content">
@@ -54,30 +59,31 @@ const AddForm = () => {
               <input
                 type="text"
                 name="title"
-                placeholder="title"
+                placeholder="Title"
                 onChange={(e) => setTitle(e.target.value)}
               />
               <input
                 type="text"
                 name="client"
-                placeholder="client"
+                placeholder="Client"
                 onChange={(e) => setClient(e.target.value)}
               />
               <input
                 type="number"
-                name="number"
-                placeholder="number"
+                name="numberr"
+                placeholder="Number"
                 onChange={(e) => setNumber(e.target.value)}
               />
+
               <select name="status" id="status">
                 <option onSelect={() => setStatus("New")}>New</option>
+                <option onSelect={() => setStatus("Lost")}>Lost</option>
                 <option onSelect={() => setStatus("Contacted")}>
                   Contacted
                 </option>
                 <option onSelect={() => setStatus("Qualified")}>
                   Qualified
                 </option>
-                <option onSelect={() => setStatus("Lost")}>Lost</option>
                 <option onSelect={() => setStatus("Cancelled")}>
                   Cancelled
                 </option>
@@ -85,8 +91,9 @@ const AddForm = () => {
                   Confirmed
                 </option>
               </select>
+
               <div className="button-container">
-                <button onClick={(e) => addLead(e)}>Add Lead</button>
+                <button onClick={(e) => addServiceRequest(e)}>Add Lead</button>
               </div>
             </div>
           </div>
