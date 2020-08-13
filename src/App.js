@@ -28,7 +28,9 @@ import AdminAllUsers from "./components/admin/User/AllUser";
 import ManagerLogin from "./components/manager/ManagerLogin";
 
 import ManagerServiceRequest from "./components/manager/ServiceRequest/ServiceRequest";
-import ManagerEditServiceRequest from "./components/manager/ServiceRequest/EditService";
+// import ManagerEditServiceRequest from "./components/manager/ServiceRequest/EditService";
+import ManagerAddService from "./components/manager/ServiceRequest/AddForm";
+import ManagerService from "./components/manager/ServiceRequest/Service";
 
 import ManagerLead from "./components/manager/Leads/Lead";
 import ManagerEditLead from "./components/manager/Leads/EditLead";
@@ -57,10 +59,12 @@ const App = () => {
           />
           <Route
             path="/admindashboard/servicerequest/add"
+            exact
             component={() => <AdminAddServiceRequest />}
           />
           <Route
             path="/admindashboard/servicerequest/:id"
+            exact
             component={AdminService}
           />
           <Route
@@ -81,11 +85,27 @@ const App = () => {
             path="/admindashboard/contact/add"
             component={AdminAddContact}
           />
-          <Route path="/admindashboard/contact/:id" component={AdminContacts} />
-          <Route path="/admindashboard/allusers" component={AdminAllUsers} />
+          <Route
+            path="/admindashboard/contact/:id"
+            exact
+            component={AdminContacts}
+          />
+          <Route
+            path="/admindashboard/allusers"
+            exact
+            component={AdminAllUsers}
+          />
 
-          <Route path="/admindashboard/adduser" component={AdminAddUser} />
-          <Route path="/admindashboard/deleteuser" component={AdminDelUser} />
+          <Route
+            path="/admindashboard/adduser"
+            exact
+            component={AdminAddUser}
+          />
+          <Route
+            path="/admindashboard/deleteuser"
+            exact
+            component={AdminDelUser}
+          />
 
           <Route
             path="/managerlogin"
@@ -98,8 +118,13 @@ const App = () => {
             component={() => <ManagerServiceRequest />}
           />
           <Route
+            path="/managerdashboard/servicerequest/add"
+            exact
+            component={ManagerAddService}
+          />
+          <Route
             path="/managerdashboard/servicerequest/:id"
-            component={ManagerEditServiceRequest}
+            component={ManagerService}
           />
           <Route
             path="/managerdashboard/lead"

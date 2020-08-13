@@ -7,19 +7,19 @@ const delToken = () => {
 const Sidenav = () => {
   return (
     <React.Fragment>
-      <nav>
+      <nav className="nav">
         <ul>
           <Link to="/managerdashboard/servicerequest">
-            <li>Service Request</li>
+            <li className="nav-items">Service Request</li>
           </Link>
           <Link to="/managerdashboard/lead">
-            <li>Leads</li>
+            <li className="nav-items">Leads</li>
           </Link>
           <Link to="/managerdashboard/contact">
-            <li>Contacts</li>
+            <li className="nav-items">Contacts</li>
           </Link>
           <Link onClick={() => delToken()} to="/managerlogin">
-            <li>Logout</li>
+            <li className="nav-items">Logout</li>
           </Link>
         </ul>
       </nav>

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-// import { Link, useHistory } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 import Illustration from "../../assets/illustration.png";
@@ -59,8 +58,16 @@ const AdminLogin = () => {
             <button type="button" onClick={(e) => loginUser(e)}>
               Login
             </button>
-            {/* <Link to="/employeelogin">Go to Employee Login Page</Link>
-            <Link to="/managerlogin">Go to Manager Login Page</Link> */}
+            <button
+              type="button"
+              style={{ marginLeft: "2rem" }}
+              onClick={(event) => {
+                event.preventDefault();
+                history.goBack();
+              }}
+            >
+              Back
+            </button>
           </div>
         </div>
       </div>
