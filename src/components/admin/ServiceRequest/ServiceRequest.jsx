@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Sidenav from "../Sidenav";
+import { useSelector, useDispatch } from "react-redux";
+import { LoadService } from "../../actions/index";
 
 const ServiceRequest = () => {
-  const [results, setResults] = useState([]);
+  // const [results, setResults] = useState([]);
+  const results = useSelector((state) => state.service);
   const [title, setTitle] = useState("");
   const [client, setClient] = useState("");
   const [manager, setManager] = useState("");
@@ -13,6 +16,7 @@ const ServiceRequest = () => {
   const [prob, setProb] = useState("");
   const [priority, setPriority] = useState("");
   const [status, setStatus] = useState("");
+  const dispatch = useDispatch();
   const url =
     "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest";
 
@@ -32,7 +36,8 @@ const ServiceRequest = () => {
     })
       .then((response) => {
         console.log(response);
-        setResults(response.data);
+        dispatch(LoadService(response.data));
+        // setResults(response.data);
       })
       .catch((err) => {
         console.log(err);
