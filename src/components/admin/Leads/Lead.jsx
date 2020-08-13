@@ -8,35 +8,34 @@ import { LoadLead } from "../../actions/index";
 const Lead = () => {
   const results = useSelector((state) => state.lead);
   const dispatch = useDispatch();
-  const token = localStorage.getItem("token");
-  const url =
-    "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/lead";
 
   useEffect(() => {
-    getLeads();
-  }, []);
-
-  const getLeads = async () => {
-    console.log(token);
-    axios({
-      url: url,
-      method: "get",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        dispatch(LoadLead(response.data));
-
-        // setResults(response.data);
+    const token = localStorage.getItem("token");
+    const url =
+      "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/lead";
+    const getLeads = async () => {
+      console.log(token);
+      axios({
+        url: url,
+        method: "get",
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+        },
       })
-      .catch((err) => {
-        console.log(err);
-        alert(err);
-      });
-  };
+        .then((response) => {
+          console.log(response);
+          dispatch(LoadLead(response.data));
+
+          // setResults(response.data);
+        })
+        .catch((err) => {
+          console.log(err);
+          alert(err);
+        });
+    };
+    getLeads();
+  }, [dispatch]);
 
   return (
     <React.Fragment>

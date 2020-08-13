@@ -8,31 +8,31 @@ import { LoadService } from "../../actions/index";
 const ServiceRequest = () => {
   const results = useSelector((state) => state.service);
   const dispatch = useDispatch();
-  const url =
-    "https://crm-backend-nodejs.herokuapp.com/api/managerdashboard/servicerequest";
 
   useEffect(() => {
-    getServiceRequest();
-  }, []);
+    const url =
+      "https://crm-backend-nodejs.herokuapp.com/api/managerdashboard/servicerequest";
 
-  const getServiceRequest = async () => {
-    const token = localStorage.getItem("token");
-    axios({
-      url: url,
-      method: "get",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        dispatch(LoadService(response.data));
+    const getServiceRequest = async () => {
+      const token = localStorage.getItem("token");
+      axios({
+        url: url,
+        method: "get",
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+        },
       })
-      .catch((err) => {
-        console(err);
-      });
-  };
+        .then((response) => {
+          // console.log(response);
+          dispatch(LoadService(response.data));
+        })
+        .catch((err) => {
+          console(err);
+        });
+    };
+    getServiceRequest();
+  }, [dispatch]);
 
   return (
     <React.Fragment>

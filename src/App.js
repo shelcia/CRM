@@ -22,18 +22,20 @@ import AdminAddContact from "./components/admin/Contact/AddForm";
 // import AdminEditContact from "./components/admin/Contact/EditContact";
 
 import AdminAddUser from "./components/admin/User/AddUser";
-import AdminDelUser from "./components/admin/User/DeleteUser";
 import AdminAllUsers from "./components/admin/User/AllUser";
+
 //MANAGER ROUTES
 import ManagerLogin from "./components/manager/ManagerLogin";
 
 import ManagerServiceRequest from "./components/manager/ServiceRequest/ServiceRequest";
-// import ManagerEditServiceRequest from "./components/manager/ServiceRequest/EditService";
 import ManagerAddService from "./components/manager/ServiceRequest/AddForm";
 import ManagerService from "./components/manager/ServiceRequest/Service";
+// import ManagerEditServiceRequest from "./components/manager/ServiceRequest/EditService";
 
 import ManagerLead from "./components/manager/Leads/Lead";
-import ManagerEditLead from "./components/manager/Leads/EditLead";
+import ManagerAddLead from "./components/manager/Leads/AddForm";
+import ManagerLeads from "./components/manager/Leads/Leads";
+// import ManagerEditLead from "./components/manager/Leads/EditLead";
 
 import ManagerContact from "./components/manager/Contact/Contact";
 import ManagerEditContact from "./components/manager/Contact/EditContact";
@@ -101,11 +103,6 @@ const App = () => {
             exact
             component={AdminAddUser}
           />
-          <Route
-            path="/admindashboard/deleteuser"
-            exact
-            component={AdminDelUser}
-          />
 
           <Route
             path="/managerlogin"
@@ -132,9 +129,11 @@ const App = () => {
             component={() => <ManagerLead />}
           />
           <Route
-            path="/managerdashboard/lead/:id"
-            component={ManagerEditLead}
+            path="/managerdashboard/add"
+            exact
+            component={ManagerAddLead}
           />
+          <Route path="/managerdashboard/lead/:id" component={ManagerLeads} />
           <Route
             path="/managerdashboard/contact"
             exact
