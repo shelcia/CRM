@@ -32,7 +32,7 @@ const AddForm = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         if (data.status === 400) {
           alert("error in the input field");
         } else {
@@ -40,8 +40,9 @@ const AddForm = () => {
         }
       })
       .catch((err) => {
-        alert(err);
+        console.log(err);
       });
+    alert("successfully added");
   };
   return (
     <React.Fragment>

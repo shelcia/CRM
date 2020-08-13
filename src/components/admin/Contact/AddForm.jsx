@@ -37,7 +37,11 @@ const AddForm = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
+    alert("Added Succesfully");
   };
   return (
     <React.Fragment>

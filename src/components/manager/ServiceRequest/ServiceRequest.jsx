@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import Sidenav from "./Sidenav";
+import Sidenav from "../Sidenav";
 
 const ServiceRequest = () => {
   const [results, setResults] = useState([]);

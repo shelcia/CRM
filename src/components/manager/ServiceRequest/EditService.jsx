@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Sidenav from "./Sidenav";
+import Sidenav from "../Sidenav";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 

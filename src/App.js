@@ -26,12 +26,15 @@ import AdminDelUser from "./components/admin/User/DeleteUser";
 import AdminAllUsers from "./components/admin/User/AllUser";
 //MANAGER ROUTES
 import ManagerLogin from "./components/manager/ManagerLogin";
-import ManagerServiceRequest from "./components/manager/ServiceRequest";
-import ManagerLead from "./components/manager/Lead";
-import ManagerContact from "./components/manager/Contact";
-import ManagerEditServiceRequest from "./components/manager/EditService";
-import ManagerEditLead from "./components/manager/EditLead";
-import ManagerEditContact from "./components/manager/EditContact";
+
+import ManagerServiceRequest from "./components/manager/ServiceRequest/ServiceRequest";
+import ManagerEditServiceRequest from "./components/manager/ServiceRequest/EditService";
+
+import ManagerLead from "./components/manager/Leads/Lead";
+import ManagerEditLead from "./components/manager/Leads/EditLead";
+
+import ManagerContact from "./components/manager/Contact/Contact";
+import ManagerEditContact from "./components/manager/Contact/EditContact";
 //EMPLOYEE ROUTES
 import EmployeeLogin from "./components/employee/EmployeeLogin";
 import EmployeeServiceRequest from "./components/employee/ServiceRequest";
