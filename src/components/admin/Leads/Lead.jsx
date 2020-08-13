@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Sidenav from "../Sidenav";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { LoadLead } from "../../actions/index";
 
 const Lead = () => {
-  const [results, setResults] = useState([]);
+  // const [results, setResults] = useState([]);
+  const results = useSelector((state) => state.lead);
+  const dispatch = useDispatch();
   const token = localStorage.getItem("token");
-  const [title, setTitle] = useState("");
-  const [client, setClient] = useState("");
-  const [number, setNumber] = useState("");
-  const [status, setStatus] = useState("");
 
   useEffect(() => {
     getLeads();
@@ -27,42 +27,16 @@ const Lead = () => {
     })
       .then((response) => {
         console.log(response);
-        setResults(response.data);
+        dispatch(LoadLead(response.data));
+
+        // setResults(response.data);
       })
       .catch((err) => {
         console.log(err);
         alert(err);
       });
   };
-  const addLead = (e) => {
-    console.log(token);
-    e.preventDefault();
-    console.log("clicked");
-    const response = {
-      title: title,
-      client: client,
-      number: number,
-      status: status,
-    };
-    console.log(JSON.stringify(response));
 
-    fetch("https://crm-backend-nodejs.herokuapp.com/api/admindashboard/lead", {
-      method: "POST",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(response),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        alert(data);
-      });
-
-    getLeads();
-  };
   const delLead = (id) => {
     const token = localStorage.getItem("token");
     console.log("delete");
@@ -87,7 +61,35 @@ const Lead = () => {
   };
   return (
     <React.Fragment>
-      <div className="grid">
+      <div className="dashboard">
+        <div className="sidebar">
+          <Sidenav />
+        </div>
+        <div className="main-content">
+          <div className="header">
+            <div className="title">Lead</div>
+            <Link to="/admindashboard/lead/add">
+              <button type="button">
+                Add <i className="material-icons">&#xe147;</i>
+              </button>
+            </Link>
+          </div>
+          <hr />
+          <div className="content">
+            <ul>
+              {results.map((result) => (
+                <li key={result._id}>
+                  <p>{result.title}</p>
+                  <Link to={`/admindashboard/lead/${result._id}`}>
+                    <i className="material-icons">&#xe5c8;</i>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+      {/* <div className="grid">
         <div className="navbar-container">
           <Sidenav />
         </div>
@@ -139,7 +141,7 @@ const Lead = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </React.Fragment>
   );
 };

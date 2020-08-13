@@ -1,5 +1,6 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { DelService } from "../../actions/index";
 import { Link } from "react-router-dom";
 import Sidenav from "../Sidenav";
 
@@ -9,6 +10,7 @@ const ServiceRequest = ({ match }) => {
   console.log(results);
   const services = results.filter((result) => result._id === match.params.id);
   console.log(services);
+  const dispatch = useDispatch();
   const url =
     "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest";
 
@@ -31,7 +33,11 @@ const ServiceRequest = ({ match }) => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
+    dispatch(DelService(id));
   };
   return (
     <React.Fragment>

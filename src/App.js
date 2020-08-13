@@ -5,13 +5,17 @@ import LandingPage from "./components/LandingPage";
 
 //ADMIN ROUTES
 import AdminLogin from "./components/admin/AdminLogin";
+
 import AdminServiceRequest from "./components/admin/ServiceRequest/ServiceRequest";
 import AdminService from "./components/admin/ServiceRequest/Service";
-import AdminLead from "./components/admin/Leads/Lead";
-import AdminContact from "./components/admin/Contact/Contact";
-// import AdminEditServiceRequest from "./components/admin/ServiceRequest/EditService";
 import AdminAddServiceRequest from "./components/admin/ServiceRequest/AddForm";
-import AdminEditLead from "./components/admin/Leads/EditLead";
+// import AdminEditServiceRequest from "./components/admin/ServiceRequest/EditService";
+
+import AdminLead from "./components/admin/Leads/Lead";
+// import AdminEditLead from "./components/admin/Leads/EditLead";
+import AdminAddLead from "./components/admin/Leads/AddForm";
+
+import AdminContact from "./components/admin/Contact/Contact";
 import AdminEditContact from "./components/admin/Contact/EditContact";
 import AdminAddUser from "./components/admin/User/AddUser";
 import AdminDelUser from "./components/admin/User/DeleteUser";
@@ -58,7 +62,11 @@ const App = () => {
             exact
             component={() => <AdminLead />}
           />
-          <Route path="/admindashboard/lead/:id" component={AdminEditLead} />
+          <Route
+            path="/admindashboard/lead/:id"
+            // component={AdminEditLead}
+            component={AdminAddLead}
+          />
           <Route
             path="/admindashboard/contact"
             exact
