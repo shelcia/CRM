@@ -489,6 +489,34 @@ body ::-webkit-scrollbar-thumb:hover {
               @include mulishStyle($secondarycolor, 1rem, 500);
               width: 50%;
             }
+            input,
+            select {
+              background-color: rgba(0, 0, 0, 0) !important;
+              border: none;
+              border-bottom: 1.5px solid $primarycolor;
+              padding: 0.375rem 0.75rem;
+              margin: 0.4rem;
+              width: 100%;
+              color: $primarycolor;
+              &:focus {
+                outline: none;
+                background-color: rgba(0, 0, 0, 0) !important;
+              }
+            }
+            input:-webkit-autofill,
+            input:-webkit-autofill:hover,
+            input:-webkit-autofill:focus,
+            textarea:-webkit-autofill,
+            textarea:-webkit-autofill:hover,
+            textarea:-webkit-autofill:focus,
+            select:-webkit-autofill,
+            select:-webkit-autofill:hover,
+            select:-webkit-autofill:focus {
+              border-bottom: 1px solid $primarycolor;
+              -webkit-text-fill-color: $primarycolor;
+              box-shadow: 0 0 0px 1000px #00000000 inset;
+              transition: background-color 5000s ease-in-out 0s;
+            }
           }
         }
         .button-container {

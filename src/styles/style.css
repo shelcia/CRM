@@ -785,6 +785,40 @@ body ::-webkit-scrollbar-thumb:hover {
   width: 50%;
 }
 
+.dashboard .main-content .content .cards ul li input,
+.dashboard .main-content .content .cards ul li select {
+  background-color: rgba(0, 0, 0, 0) !important;
+  border: none;
+  border-bottom: 1.5px solid #897eff;
+  padding: 0.375rem 0.75rem;
+  margin: 0.4rem;
+  width: 100%;
+  color: #897eff;
+}
+
+.dashboard .main-content .content .cards ul li input:focus,
+.dashboard .main-content .content .cards ul li select:focus {
+  outline: none;
+  background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.dashboard .main-content .content .cards ul li input:-webkit-autofill,
+.dashboard .main-content .content .cards ul li input:-webkit-autofill:hover,
+.dashboard .main-content .content .cards ul li input:-webkit-autofill:focus,
+.dashboard .main-content .content .cards ul li textarea:-webkit-autofill,
+.dashboard .main-content .content .cards ul li textarea:-webkit-autofill:hover,
+.dashboard .main-content .content .cards ul li textarea:-webkit-autofill:focus,
+.dashboard .main-content .content .cards ul li select:-webkit-autofill,
+.dashboard .main-content .content .cards ul li select:-webkit-autofill:hover,
+.dashboard .main-content .content .cards ul li select:-webkit-autofill:focus {
+  border-bottom: 1px solid #897eff;
+  -webkit-text-fill-color: #897eff;
+  -webkit-box-shadow: 0 0 0px 1000px #00000000 inset;
+          box-shadow: 0 0 0px 1000px #00000000 inset;
+  -webkit-transition: background-color 5000s ease-in-out 0s;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .dashboard .main-content .content .cards .button-container {
   display: -webkit-box;
   display: -ms-flexbox;
