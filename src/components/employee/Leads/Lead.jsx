@@ -1,51 +1,65 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import Sidenav from "../Sidenav";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { LoadLead } from "../../actions/index";
 
 const Lead = () => {
-  const [results, setResults] = useState([]);
-  const token = localStorage.getItem("token");
-  useEffect(() => {
-    getLeads();
-  }, []);
+  const results = useSelector((state) => state.lead);
+  const dispatch = useDispatch();
 
-  const getLeads = async () => {
-    console.log(token);
-    axios({
-      url:
-        "https://crm-backend-nodejs.herokuapp.com/api/employeedashboard/lead",
-      method: "get",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        setResults(response.data);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const url =
+      "https://crm-backend-nodejs.herokuapp.com/api/employeedashboard/lead";
+    const getLeads = async () => {
+      console.log(token);
+      axios({
+        url: url,
+        method: "get",
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+        },
       })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+        .then((response) => {
+          console.log(response);
+          dispatch(LoadLead(response.data));
+
+          // setResults(response.data);
+        })
+        .catch((err) => {
+          console.log(err);
+          alert(err);
+        });
+    };
+    getLeads();
+  }, [dispatch]);
 
   return (
     <React.Fragment>
-      <div className="grid">
-        <div className="navbar-container">
+      <div className="dashboard">
+        <div className="sidebar">
           <Sidenav />
         </div>
-        <div className="card-container">
-          {results.map((result) => (
-            <div key={result._id} className="cards">
-              <ul>
-                <li>{result.title}</li>
-                <li>{result.client}</li>
-                <li>{result.number}</li>
-                <li>{result.status}</li>
-              </ul>
-            </div>
-          ))}
+        <div className="main-content">
+          <div className="header">
+            <div className="title">Lead</div>
+          </div>
+          <hr />
+          <div className="content">
+            <ul>
+              {results.map((result) => (
+                <li key={result._id}>
+                  <p>{result.title}</p>
+                  <Link to={`/employeedashboard/lead/${result._id}`}>
+                    <i className="material-icons">&#xe5c8;</i>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </React.Fragment>

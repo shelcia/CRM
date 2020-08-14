@@ -7,9 +7,7 @@ import Sidenav from "../Sidenav";
 const ServiceRequest = ({ match }) => {
   console.log(match.params.id);
   const results = useSelector((state) => state.service);
-  console.log(results);
   const services = results.filter((result) => result._id === match.params.id);
-  console.log(services);
   const dispatch = useDispatch();
   const url =
     "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest";

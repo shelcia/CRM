@@ -7,9 +7,7 @@ import Sidenav from "../Sidenav";
 const Contacts = ({ match }) => {
   console.log(match.params.id);
   const results = useSelector((state) => state.contact);
-  console.log(results);
   const contacts = results.filter((result) => result._id === match.params.id);
-  console.log(contacts);
   const dispatch = useDispatch();
   const url =
     "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/contact";
@@ -47,7 +45,7 @@ const Contacts = ({ match }) => {
         </div>
         <div className="main-content">
           <div className="header">
-            <div className="title">Lead</div>
+            <div className="title">Contact</div>
             <Link to="/admindashboard/contact/add">
               <button type="button">
                 Add <i className="material-icons">&#xe147;</i>

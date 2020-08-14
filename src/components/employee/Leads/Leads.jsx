@@ -7,10 +7,12 @@ import Sidenav from "../Sidenav";
 const Lead = ({ match }) => {
   console.log(match.params.id);
   const results = useSelector((state) => state.lead);
+  console.log(results);
   const services = results.filter((result) => result._id === match.params.id);
+  console.log(services);
   const dispatch = useDispatch();
   const url =
-    "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/lead";
+    "https://crm-backend-nodejs.herokuapp.com/api/employeedashboard/lead";
 
   const delLead = (id) => {
     const token = localStorage.getItem("token");
@@ -46,7 +48,7 @@ const Lead = ({ match }) => {
         <div className="main-content">
           <div className="header">
             <div className="title">Lead</div>
-            <Link to="/admindashboard/lead/add">
+            <Link to="/employeedashboard/lead/add">
               <button type="button">
                 Add <i className="material-icons">&#xe147;</i>
               </button>
@@ -75,7 +77,7 @@ const Lead = ({ match }) => {
                   </li>
                 </ul>
                 <div className="button-container">
-                  <Link to={`/admindashboard/Lead/${result._id}`}>
+                  <Link to={`/employeedashboard/Lead/${result._id}`}>
                     <button type="button">
                       Update
                       <i className="material-icons">&#xe3c9;</i>
@@ -83,7 +85,7 @@ const Lead = ({ match }) => {
                   </Link>
                   <Link
                     onClick={() => delLead(result._id)}
-                    to="/admindashboard/Lead"
+                    to="/employeedashboard/Lead"
                   >
                     <button type="button">
                       Delete

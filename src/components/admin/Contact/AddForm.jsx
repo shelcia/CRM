@@ -13,7 +13,6 @@ const AddForm = () => {
     "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/contact";
 
   const addContact = (e) => {
-    console.log(token);
     e.preventDefault();
     console.log("clicked");
     const response = {
@@ -36,7 +35,7 @@ const AddForm = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log(data.title);
       })
       .catch((error) => {
         console.log(error);

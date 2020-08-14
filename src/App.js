@@ -48,7 +48,9 @@ import EmployeeLogin from "./components/employee/EmployeeLogin";
 import EmployeeServiceRequest from "./components/employee/ServiceRequest/ServiceRequest";
 import EmployeeService from "./components/employee/ServiceRequest/Service";
 import EmployeeLead from "./components/employee/Leads/Lead";
+import EmployeeLeads from "./components/employee/Leads/Leads";
 import EmployeeContact from "./components/employee/Contact/Contact";
+import EmployeeContacts from "./components/employee/Contact/Contacts";
 
 import "./styles/style.css";
 
@@ -80,9 +82,7 @@ const App = () => {
             component={() => <AdminLead />}
           />
           <Route path="/admindashboard/lead/add" component={AdminAddLead} />
-
           <Route path="/admindashboard/lead/:id" component={AdminLeads} />
-
           <Route
             path="/admindashboard/contact"
             exact
@@ -102,13 +102,11 @@ const App = () => {
             exact
             component={AdminAllUsers}
           />
-
           <Route
             path="/admindashboard/adduser"
             exact
             component={AdminAddUser}
           />
-
           <Route
             path="/managerlogin"
             exact
@@ -174,9 +172,19 @@ const App = () => {
             component={() => <EmployeeLead />}
           />
           <Route
+            path="/employeedashboard/lead/:id"
+            exact
+            component={EmployeeLeads}
+          />
+          <Route
             path="/employeedashboard/contact"
             exact
             component={() => <EmployeeContact />}
+          />
+          <Route
+            path="/employeedashboard/contact/:id"
+            exact
+            component={EmployeeContacts}
           />
         </Switch>
       </Router>

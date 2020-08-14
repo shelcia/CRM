@@ -9,28 +9,29 @@ const AllUsers = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
+    const getUsers = async () => {
+      const token = localStorage.getItem("token");
+      const url = `https://crm-backend-nodejs.herokuapp.com/api/admindashboard/users`;
+      axios({
+        url: url,
+        method: "get",
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          console.log(response);
+          setUsers(response.data);
+        })
+        .catch((err) => {
+          console.log(err);
+          alert(err);
+        });
+    };
     getUsers();
   }, []);
 
-  const getUsers = async () => {
-    const url = `https://crm-backend-nodejs.herokuapp.com/api/admindashboard/users`;
-    axios({
-      url: url,
-      method: "get",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        setUsers(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-        alert(err);
-      });
-  };
   const delUser = (email) => {
     setUsers(users.filter((user) => user.email !== email));
     console.log("delete");

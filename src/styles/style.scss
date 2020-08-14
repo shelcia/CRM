@@ -60,7 +60,7 @@ a:active {
   border-radius: 50em;
   background-color: $color;
   text-transform: uppercase;
-  box-shadow: 0px 3px 10px #000000;
+  // box-shadow: 0px 3px 10px #000000;
   transition: all 0.2s ease-in;
   &:hover {
     background-color: darken($color: $color, $amount: 20);
@@ -78,7 +78,7 @@ a:active {
   border-radius: 50em;
   background-color: $color;
   text-transform: uppercase;
-  box-shadow: 0px 3px 10px #000000;
+  // box-shadow: 0px 3px 10px #000000;
   transition: all 0.2s ease-in;
   &:hover {
     background-color: darken($color: $color, $amount: 20);

@@ -14,7 +14,6 @@ const Lead = () => {
     const url =
       "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/lead";
     const getLeads = async () => {
-      console.log(token);
       axios({
         url: url,
         method: "get",

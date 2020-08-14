@@ -19,7 +19,6 @@ const AdminLogin = () => {
     e.preventDefault();
     console.log("clicked");
     const response = { email: email, password: password };
-    console.log(JSON.stringify(response));
     try {
       const result = await axios.post(
         "https://crm-backend-nodejs.herokuapp.com/api/admin/login",

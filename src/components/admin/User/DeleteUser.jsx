@@ -7,7 +7,7 @@ const DelUser = () => {
   const token = localStorage.getItem("token");
   const history = useHistory();
 
-  const delUser = (id) => {
+  const delUser = () => {
     console.log("delete");
     const response = {
       email: email,

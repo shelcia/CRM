@@ -140,8 +140,6 @@ a:active {
   border-radius: 50em;
   background-color: #897eff;
   text-transform: uppercase;
-  -webkit-box-shadow: 0px 3px 10px #000000;
-          box-shadow: 0px 3px 10px #000000;
   -webkit-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
 }
@@ -322,8 +320,6 @@ a:active {
   border-radius: 50em;
   background-color: #ffdf34;
   text-transform: uppercase;
-  -webkit-box-shadow: 0px 3px 10px #000000;
-          box-shadow: 0px 3px 10px #000000;
   -webkit-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
   margin: 2rem auto;
@@ -579,8 +575,6 @@ a:active {
   border-radius: 50em;
   background-color: #ffdf34;
   text-transform: uppercase;
-  -webkit-box-shadow: 0px 3px 10px #000000;
-          box-shadow: 0px 3px 10px #000000;
   -webkit-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
   font-family: "Mulish";
@@ -694,8 +688,6 @@ a:active {
   border-radius: 50em;
   background-color: #ffdf34;
   text-transform: uppercase;
-  -webkit-box-shadow: 0px 3px 10px #000000;
-          box-shadow: 0px 3px 10px #000000;
   -webkit-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
   font-family: "Mulish";
@@ -792,8 +784,6 @@ a:active {
   border-radius: 50em;
   background-color: #ffdf34;
   text-transform: uppercase;
-  -webkit-box-shadow: 0px 3px 10px #000000;
-          box-shadow: 0px 3px 10px #000000;
   -webkit-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
   font-family: "Mulish";
