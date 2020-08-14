@@ -44,9 +44,11 @@ import ManagerContacts from "./components/manager/Contact/Contacts";
 
 //EMPLOYEE ROUTES
 import EmployeeLogin from "./components/employee/EmployeeLogin";
-import EmployeeServiceRequest from "./components/employee/ServiceRequest";
-import EmployeeLead from "./components/employee/Lead";
-import EmployeeContact from "./components/employee/Contact";
+
+import EmployeeServiceRequest from "./components/employee/ServiceRequest/ServiceRequest";
+import EmployeeService from "./components/employee/ServiceRequest/Service";
+import EmployeeLead from "./components/employee/Leads/Lead";
+import EmployeeContact from "./components/employee/Contact/Contact";
 
 import "./styles/style.css";
 
@@ -160,6 +162,11 @@ const App = () => {
             path="/employeedashboard/servicerequest"
             exact
             component={() => <EmployeeServiceRequest />}
+          />
+          <Route
+            path="/employeedashboard/servicerequest/:id"
+            exact
+            component={EmployeeService}
           />
           <Route
             path="/employeedashboard/lead"

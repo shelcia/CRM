@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Sidenav from "./Sidenav";
+import Sidenav from "../Sidenav";
 
 const Lead = () => {
   const [results, setResults] = useState([]);
