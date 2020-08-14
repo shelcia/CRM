@@ -30,7 +30,27 @@ a:visited,
 a:active {
   text-decoration: none;
 }
+/* width */
+body ::-webkit-scrollbar {
+  height: 5px; /*for horizonatal scrollbar*/
+  width: 5px;
+}
 
+/* Track */
+body ::-webkit-scrollbar-track {
+  background: #f1f1f100;
+}
+
+/* Handle */
+body ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 2.5px;
+}
+
+/* Handle on hover */
+body ::-webkit-scrollbar-thumb:hover {
+  background: rgb(0, 0, 0);
+}
 @mixin displayFlex($justify) {
   display: flex;
   align-items: center;
@@ -396,7 +416,8 @@ a:active {
       // height: 1px;
       margin-top: 10px;
       color: $secondarycolor;
-      border: 1px solid $secondarycolor;
+      border: 0.5px solid $secondarycolor;
+      background-color: $secondarycolor;
     }
     .content {
       margin-top: 10px;

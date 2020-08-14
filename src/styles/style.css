@@ -26,6 +26,29 @@ a:active {
   text-decoration: none;
 }
 
+/* width */
+body ::-webkit-scrollbar {
+  height: 5px;
+  /*for horizonatal scrollbar*/
+  width: 5px;
+}
+
+/* Track */
+body ::-webkit-scrollbar-track {
+  background: #f1f1f100;
+}
+
+/* Handle */
+body ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 2.5px;
+}
+
+/* Handle on hover */
+body ::-webkit-scrollbar-thumb:hover {
+  background: black;
+}
+
 .landing-page .navbar-container {
   width: 100%;
   margin: auto;
@@ -611,7 +634,8 @@ a:active {
 .dashboard .main-content hr {
   margin-top: 10px;
   color: #ffdf34;
-  border: 1px solid #ffdf34;
+  border: 0.5px solid #ffdf34;
+  background-color: #ffdf34;
 }
 
 .dashboard .main-content .content {
