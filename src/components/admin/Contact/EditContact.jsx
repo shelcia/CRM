@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 
 const EditLead = ({ match }) => {
   console.log(match.params.id);
-  //   const token = localStorage.getItem("token");
   const [title, setTitle] = useState("");
   const [client, setClient] = useState("");
   const [number, setNumber] = useState("");

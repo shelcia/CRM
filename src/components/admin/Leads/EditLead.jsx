@@ -7,7 +7,6 @@ import { useHistory } from "react-router-dom";
 const EditLead = ({ id }) => {
   const results = useSelector((state) => state.service);
   const services = results.filter((result) => result._id === id);
-  //   const token = localStorage.getItem("token");
   const [title, setTitle] = useState("");
   const [client, setClient] = useState("");
   const [number, setNumber] = useState("");
@@ -127,52 +126,6 @@ const EditLead = ({ id }) => {
           </div>
         </div>
       </div>
-      {/* <div className="grid">
-        <div className="navbar-container">
-          <Sidenav />
-        </div>
-        <div className="card-container">
-          <div className="add-form">
-            <input
-              type="text"
-              name="title"
-              placeholder="title"
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <input
-              type="text"
-              name="client"
-              placeholder="client"
-              onChange={(e) => setClient(e.target.value)}
-            />
-            
-             <select name="status" id="status">
-                <option onSelect={() => setStatus("New")}>New</option>
-                <option onSelect={() => setStatus("Lost")}>Lost</option>
-                <option onSelect={() => setStatus("Contacted")}>
-                  Contacted
-                </option>
-                <option onSelect={() => setStatus("Qualified")}>
-                  Qualified
-                </option>
-                <option onSelect={() => setStatus("Cancelled")}>
-                  Cancelled
-                </option>
-                <option onSelect={() => setStatus("Confirmed")}>
-                  Confirmed
-                </option>
-              </select>
-            <button onClick={(e) => editLead(e)}>Edit Lead</button>
-            <button
-              onClick={() => {
-                history.goBack();
-              }}
-            >
-              Back
-            </button>
-          </div>
-        </div>
-      </div> */}
     </React.Fragment>
   );
 };

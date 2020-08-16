@@ -25,8 +25,6 @@ const Lead = () => {
         .then((response) => {
           console.log(response);
           dispatch(LoadLead(response.data));
-
-          // setResults(response.data);
         })
         .catch((err) => {
           console.log(err);
