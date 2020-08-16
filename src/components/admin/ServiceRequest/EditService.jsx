@@ -1,21 +1,69 @@
 import React, { useState } from "react";
 import Sidenav from "../Sidenav";
-import { useSelector } from "react-redux";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
 
-const EditService = ({ id }) => {
-  const results = useSelector((state) => state.service);
+const EditService = ({
+  id,
+  Title,
+  Client,
+  Manager,
+  Closing,
+  Priority,
+  Status,
+  Revenue,
+  Probability,
+}) => {
+  const [results, setResults] = useState([]);
   const services = results.filter((result) => result._id === id);
-  const [title, setTitle] = useState(services.title);
-  const [client, setClient] = useState(services.client);
-  const [manager, setManager] = useState(services.manager);
-  const [closing, setClosing] = useState(services.closing);
-  const [revenue, setRevenue] = useState(services.revenue);
-  const [prob, setProb] = useState(services.probability);
-  const [priority, setPriority] = useState(services.priority);
-  const [status, setStatus] = useState(services.status);
+  console.log(services);
+  const [title, setTitle] = useState(Title);
+  const [client, setClient] = useState(Client);
+  const [manager, setManager] = useState(Manager);
+  const [closing, setClosing] = useState(Closing);
+  const [revenue, setRevenue] = useState(Priority);
+  const [prob, setProb] = useState(Status);
+  const [priority, setPriority] = useState(Revenue);
+  const [status, setStatus] = useState(Probability);
   const history = useHistory();
+
+  console.log(
+    id,
+    Title,
+    Client,
+    Manager,
+    Closing,
+    Priority,
+    Status,
+    Revenue,
+    Probability
+  );
+
+  useEffect(() => {
+    const url =
+      "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest";
+    const getResult = async () => {
+      const token = localStorage.getItem("token");
+      axios({
+        url: url,
+        method: "get",
+        headers: {
+          "auth-token": token,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          console.log(response);
+          setResults(response.data);
+          setTitle(response.data.title);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    getResult();
+  }, []);
 
   const editServiceRequest = () => {
     console.log("put");
@@ -47,7 +95,7 @@ const EditService = ({ id }) => {
         </div>
         <div className="main-content">
           <div className="header">
-            <div className="title">Contact</div>
+            <div className="title">Service</div>
           </div>
           <hr />
           <div className="content">
@@ -97,32 +145,26 @@ const EditService = ({ id }) => {
                   <li>
                     <b>Priority</b>
                     <select name="priority" id="priority">
-                      <option onSelect={() => setPriority("High")}>High</option>
-                      <option onSelect={() => setPriority("Medium")}>
+                      <option onClick={() => setPriority("High")}>High</option>
+                      <option onClick={() => setPriority("Medium")}>
                         Medium
                       </option>
-                      <option onSelect={() => setPriority("Low")}>Low</option>
+                      <option onClick={() => setPriority("Low")}>Low</option>
                     </select>
                   </li>
                   <li>
                     <b>Status</b>
-                    <select name="status" id="status">
-                      <option onSelect={() => setStatus("Created")}>
-                        Created
-                      </option>
-                      <option onSelect={() => setStatus("Released")}>
-                        Released
-                      </option>
-                      <option onSelect={() => setStatus("Open")}>Open</option>
-                      <option onSelect={() => setStatus("In process")}>
-                        In process
-                      </option>
-                      <option onSelect={() => setStatus("Cancelled")}>
-                        Cancelled
-                      </option>
-                      <option onSelect={() => setStatus("Completed")}>
-                        Completed
-                      </option>
+                    <select
+                      name="status"
+                      id="status"
+                      onChange={(event) => setStatus(event.target.value)}
+                    >
+                      <option value="Created">Created</option>
+                      <option value="Released">Released</option>
+                      <option value="Open">Open</option>
+                      <option value="In Process">In process</option>
+                      <option value="Cancelled">Cancelled</option>
+                      <option value="Completed">Completed</option>
                     </select>
                   </li>
                   <li>
@@ -130,19 +172,16 @@ const EditService = ({ id }) => {
                     <input
                       type="text"
                       name="revenue"
-                      placeholder="revenue"
-                      value={revenue}
+                      placeholder=" Expected revenue"
                       onChange={(e) => setRevenue(e.target.value)}
                     />
                   </li>
                   <li>
                     <b>Probability</b>
                     <input
-                      type="text"
+                      type="number"
                       name="probability"
                       placeholder="probability"
-                      value={prob}
-                      defaultValue="0.4"
                       onChange={(e) => setProb(e.target.value)}
                     />
                   </li>
@@ -156,7 +195,7 @@ const EditService = ({ id }) => {
                     }}
                   >
                     Update
-                    <i className="material-icons">&#xe872;</i>
+                    <i className="material-icons">&#xe3c9;</i>
                   </button>
                   <button
                     type="button"
@@ -165,7 +204,7 @@ const EditService = ({ id }) => {
                     }
                   >
                     Back
-                    <i className="material-icons">&#xe3c9;</i>
+                    <i className="material-icons"> &#xe5c4;</i>
                   </button>
                 </div>
               </div>

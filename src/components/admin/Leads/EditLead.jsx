@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Sidenav from "../Sidenav";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-const EditLead = ({ match }) => {
-  console.log(match.params.id);
+const EditLead = ({ id }) => {
+  const results = useSelector((state) => state.service);
+  const services = results.filter((result) => result._id === id);
   //   const token = localStorage.getItem("token");
   const [title, setTitle] = useState("");
   const [client, setClient] = useState("");
@@ -17,7 +19,7 @@ const EditLead = ({ match }) => {
     console.log("put");
     e.preventDefault();
     const response = {
-      _id: match.params.id,
+      _id: id,
       title: title,
       client: client,
       number: number,
@@ -25,15 +27,107 @@ const EditLead = ({ match }) => {
     };
     axios
       .put(
-        `https://crm-backend-nodejs.herokuapp.com/api/admindashboard/lead/${match.params.id}`,
+        `https://crm-backend-nodejs.herokuapp.com/api/managerdashboard/lead/${id}`,
         response
       )
       .then((res) => console.log(res.data));
     alert("successfully edited");
   };
+
   return (
     <React.Fragment>
-      <div className="grid">
+      <div className="dashboard">
+        <div className="sidebar">
+          <Sidenav />
+        </div>
+        <div className="main-content">
+          <div className="header">
+            <div className="title">Manager</div>
+          </div>
+          <hr />
+          <div className="content">
+            {services.map((result) => (
+              <div key={result._id} className="cards">
+                <ul>
+                  <li>
+                    <b>Title:</b>
+                    <input
+                      type="text"
+                      name="title"
+                      placeholder="title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                    />
+                  </li>
+                  <li>
+                    <b>Client</b>
+                    <input
+                      type="text"
+                      name="client"
+                      placeholder="client"
+                      value={client}
+                      onChange={(e) => setClient(e.target.value)}
+                    />
+                  </li>
+                  <li>
+                    <b>Manager</b>
+                    <input
+                      type="text"
+                      name="number"
+                      placeholder="number"
+                      onChange={(e) => setNumber(e.target.value)}
+                    />
+                  </li>
+
+                  <li>
+                    <b>Status</b>
+                    <select name="status" id="status">
+                      <option onSelect={() => setStatus("Created")}>
+                        Created
+                      </option>
+                      <option onSelect={() => setStatus("Released")}>
+                        Released
+                      </option>
+                      <option onSelect={() => setStatus("Open")}>Open</option>
+                      <option onSelect={() => setStatus("In process")}>
+                        In process
+                      </option>
+                      <option onSelect={() => setStatus("Cancelled")}>
+                        Cancelled
+                      </option>
+                      <option onSelect={() => setStatus("Completed")}>
+                        Completed
+                      </option>
+                    </select>
+                  </li>
+                </ul>
+                <div className="button-container">
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      editLead(result._id);
+                    }}
+                  >
+                    Update
+                    <i className="material-icons">&#xe872;</i>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      history.push("/managerdashboard/servicerequest")
+                    }
+                  >
+                    Back
+                    <i className="material-icons">&#xe3c9;</i>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      {/* <div className="grid">
         <div className="navbar-container">
           <Sidenav />
         </div>
@@ -51,18 +145,23 @@ const EditLead = ({ match }) => {
               placeholder="client"
               onChange={(e) => setClient(e.target.value)}
             />
-            <input
-              type="text"
-              name="number"
-              placeholder="number"
-              onChange={(e) => setNumber(e.target.value)}
-            />
-            <input
-              type="text"
-              name="status"
-              placeholder="status"
-              onChange={(e) => setStatus(e.target.value)}
-            />
+            
+             <select name="status" id="status">
+                <option onSelect={() => setStatus("New")}>New</option>
+                <option onSelect={() => setStatus("Lost")}>Lost</option>
+                <option onSelect={() => setStatus("Contacted")}>
+                  Contacted
+                </option>
+                <option onSelect={() => setStatus("Qualified")}>
+                  Qualified
+                </option>
+                <option onSelect={() => setStatus("Cancelled")}>
+                  Cancelled
+                </option>
+                <option onSelect={() => setStatus("Confirmed")}>
+                  Confirmed
+                </option>
+              </select>
             <button onClick={(e) => editLead(e)}>Edit Lead</button>
             <button
               onClick={() => {
@@ -73,7 +172,7 @@ const EditLead = ({ match }) => {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
     </React.Fragment>
   );
 };

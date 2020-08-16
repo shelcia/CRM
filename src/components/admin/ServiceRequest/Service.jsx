@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { DelService } from "../../actions/index";
 import { Link } from "react-router-dom";
 import Sidenav from "../Sidenav";
-import { useState } from "react";
 import EditService from "./EditService";
 
 const ServiceRequest = ({ match }) => {
@@ -40,6 +39,17 @@ const ServiceRequest = ({ match }) => {
       });
     dispatch(DelService(id));
   };
+  const convertDate = (date) => {
+    const dates = new Date(date);
+    const formattedDate = Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+    }).format(dates);
+    console.log(formattedDate);
+    return formattedDate;
+  };
+
   return (
     <React.Fragment>
       {view === "noedit" && (
@@ -75,7 +85,7 @@ const ServiceRequest = ({ match }) => {
                     </li>
                     <li>
                       <b>Expected Closing</b>
-                      <p>{result.expected_closing}</p>
+                      <p>{convertDate(result.expected_closing)}</p>
                     </li>
                     <li>
                       <b>Priority</b>
@@ -115,7 +125,19 @@ const ServiceRequest = ({ match }) => {
           </div>
         </div>
       )}
-      {view === "edit" && <EditService id={match.params.id} />}
+      {view === "edit" && (
+        <EditService
+          id={match.params.id}
+          Title={results.title}
+          Client={results.client}
+          Manager={results.manager}
+          Closing={results.expected_closing}
+          Priority={results.priority}
+          Status={results.status}
+          Revenue={results.expected_revenue}
+          Probability={results.probability}
+        />
+      )}
     </React.Fragment>
   );
 };

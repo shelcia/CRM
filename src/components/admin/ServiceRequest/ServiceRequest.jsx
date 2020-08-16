@@ -23,7 +23,6 @@ const ServiceRequest = () => {
         },
       })
         .then((response) => {
-          console.log(response);
           dispatch(LoadService(response.data));
         })
         .catch((err) => {

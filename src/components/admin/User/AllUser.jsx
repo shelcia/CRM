@@ -9,6 +9,8 @@ const AllUsers = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
     const getUsers = async () => {
       const token = localStorage.getItem("token");
       const url = `https://crm-backend-nodejs.herokuapp.com/api/admindashboard/users`;
@@ -19,6 +21,7 @@ const AllUsers = () => {
           "auth-token": token,
           "Content-Type": "application/json",
         },
+        cancelToken: source.token,
       })
         .then((response) => {
           console.log(response);
@@ -30,6 +33,9 @@ const AllUsers = () => {
         });
     };
     getUsers();
+    return () => {
+      source.cancel();
+    };
   }, []);
 
   const delUser = (email) => {
