@@ -35,21 +35,23 @@ const LandingPage = () => {
               <Link to="/employeelogin">
                 <img src={Employee} alt="employee" />
               </Link>
+              <p>Employee</p>
             </div>
             <div className="card">
               <Link to="/managerlogin">
                 <img src={Manager} alt="manager" />
               </Link>
+              <p>Manager</p>
             </div>
             <div className="card">
               <Link to="/adminlogin">
                 <img src={Admin} alt="admin" />
               </Link>
+              <p>Admin</p>
             </div>
           </div>
         </div>
       </div>
-      <nav></nav>
     </React.Fragment>
   );
 };

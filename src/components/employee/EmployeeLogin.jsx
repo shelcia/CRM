@@ -56,6 +56,16 @@ const EmployeeLogin = () => {
             <button type="button" onClick={(e) => loginUser(e)}>
               Login
             </button>
+            <button
+              type="button"
+              style={{ marginLeft: "2rem" }}
+              onClick={(event) => {
+                event.preventDefault();
+                history.push("/#Login");
+              }}
+            >
+              Back
+            </button>
             {/* <Link to="/employeelogin">Go to Employee Login Page</Link>
             <Link to="/managerlogin">Go to Manager Login Page</Link> */}
           </div>

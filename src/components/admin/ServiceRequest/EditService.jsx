@@ -17,7 +17,7 @@ const EditService = ({
 }) => {
   const [results, setResults] = useState([]);
   const services = results.filter((result) => result._id === id);
-  console.log(services);
+  // console.log(services);
   const [title, setTitle] = useState(Title);
   const [client, setClient] = useState(Client);
   const [manager, setManager] = useState(Manager);
@@ -28,17 +28,17 @@ const EditService = ({
   const [status, setStatus] = useState(Probability);
   const history = useHistory();
 
-  console.log(
-    id,
-    Title,
-    Client,
-    Manager,
-    Closing,
-    Priority,
-    Status,
-    Revenue,
-    Probability
-  );
+  // console.log(
+  //   id,
+  //   Title,
+  //   Client,
+  //   Manager,
+  //   Closing,
+  //   Priority,
+  //   Status,
+  //   Revenue,
+  //   Probability
+  // );
 
   useEffect(() => {
     const url =
@@ -95,7 +95,7 @@ const EditService = ({
         </div>
         <div className="main-content">
           <div className="header">
-            <div className="title">Service</div>
+            <div className="title">Edit Service Request</div>
           </div>
           <hr />
           <div className="content">
