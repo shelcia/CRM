@@ -6,7 +6,6 @@ import Sidenav from "../Sidenav";
 import EditService from "./EditService";
 
 const ServiceRequest = ({ match }) => {
-  console.log(match.params.id);
   const results = useSelector((state) => state.service);
   const services = results.filter((result) => result._id === match.params.id);
   const [view, setView] = useState("noedit");
@@ -16,11 +15,9 @@ const ServiceRequest = ({ match }) => {
 
   const delServiceRequest = (id) => {
     const token = localStorage.getItem("token");
-    console.log("delete");
     const response = {
       _id: id,
     };
-    console.log(response);
     fetch(url, {
       method: "DELETE",
       headers: {
@@ -46,7 +43,6 @@ const ServiceRequest = ({ match }) => {
       month: "short",
       day: "2-digit",
     }).format(dates);
-    console.log(formattedDate);
     return formattedDate;
   };
 

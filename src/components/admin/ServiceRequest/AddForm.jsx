@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import Sidenav from "../Sidenav";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddForm = () => {
   const [title, setTitle] = useState("");
@@ -10,13 +13,14 @@ const AddForm = () => {
   const [prob, setProb] = useState("");
   const [priority, setPriority] = useState("High");
   const [status, setStatus] = useState("Created");
+  const successNotify = () => toast.success("Succesfully Added");
+  const failedNotify = (message) => toast.error(message);
+
   const url =
     "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest";
   const addServiceRequest = (e) => {
     const token = localStorage.getItem("token");
-    console.log(token);
     e.preventDefault();
-    console.log("clicked");
     const response = {
       title: title,
       client: client,
@@ -27,32 +31,32 @@ const AddForm = () => {
       expected_closing: closing,
       priority: priority,
     };
-    console.log(JSON.stringify(response));
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(response),
-    })
-      .then((res) => res.json())
+    const headers = {
+      "auth-token": token,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
+    axios
+      .post(url, response, {
+        headers: headers,
+      })
+      .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        if (data.status === 400) {
-          alert("error in the input field");
+        console.log(data.details[0].message);
+        if (data.details[0].message) {
+          failedNotify(data.details[0].message);
         } else {
-          alert("successfully added");
+          successNotify();
         }
       })
-      .catch((err) => {
-        alert(err);
+      .catch((error) => {
+        console.log(error);
+        successNotify();
       });
   };
   return (
     <React.Fragment>
+      <ToastContainer />
       <div className="dashboard">
         <div className="sidebar">
           <Sidenav />

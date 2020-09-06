@@ -673,7 +673,7 @@ body ::-webkit-scrollbar-thumb:hover {
   letter-spacing: 0.2;
   font-weight: 800;
   color: #897eff;
-  font-size: 1rem;
+  font-size: 1.1rem;
   width: 50%;
 }
 
@@ -682,7 +682,7 @@ body ::-webkit-scrollbar-thumb:hover {
   letter-spacing: 0.2;
   font-weight: 500;
   color: #ffdf34;
-  font-size: 1rem;
+  font-size: 1.1rem;
   width: 50%;
 }
 
@@ -691,10 +691,14 @@ body ::-webkit-scrollbar-thumb:hover {
   background-color: rgba(0, 0, 0, 0) !important;
   border: none;
   border-bottom: 1.5px solid #897eff;
-  padding: 0.375rem 0.75rem;
+  padding: 0.75rem 0rem;
   margin: 0.4rem;
   width: 100%;
+  font-family: "Mulish";
+  letter-spacing: 0.2;
+  font-weight: 500;
   color: #897eff;
+  font-size: 1.1rem;
 }
 
 .dashboard .main-content .content .cards ul li input:focus,
@@ -730,6 +734,7 @@ body ::-webkit-scrollbar-thumb:hover {
   -webkit-box-pack: space-evenly;
       -ms-flex-pack: space-evenly;
           justify-content: space-evenly;
+  padding-top: 40px;
   padding-bottom: 30px;
 }
 
@@ -798,9 +803,9 @@ body ::-webkit-scrollbar-thumb:hover {
 .dashboard .main-content .content ul li p {
   font-family: "Mulish";
   letter-spacing: 0.2;
-  font-weight: 400;
+  font-weight: 500;
   color: #897eff;
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
 .dashboard .main-content .content ul li i {

@@ -16,12 +16,10 @@ const AdminLogin = () => {
   const history = useHistory();
 
   const ErrorNotify = () => toast.error("Please enter correct Credentials");
-  // const waitNotify = () => toast.info("Please wait while we verify");
 
   const loginUser = async (e) => {
     setLoading(true);
     e.preventDefault();
-    // waitNotify();
     const response = { email: email, password: password };
     try {
       const result = await axios.post(
@@ -42,7 +40,7 @@ const AdminLogin = () => {
       <ToastContainer />
       {isLoading && (
         <div className="loading">
-          <Loader type="Clock" color="#897eff" height={100} width={100} />
+          <Loader type="Audio" color="#897eff" height={100} width={100} />
           <p>Please wait while we verify....</p>
         </div>
       )}

@@ -395,11 +395,11 @@ body ::-webkit-scrollbar-thumb:hover {
             padding: 0.4rem 1rem;
             @include displayFlex(space-between);
             b {
-              @include mulishStyle($primarycolor, 1rem, 800);
+              @include mulishStyle($primarycolor, 1.1rem, 800);
               width: 50%;
             }
             p {
-              @include mulishStyle($secondarycolor, 1rem, 500);
+              @include mulishStyle($secondarycolor, 1.1rem, 500);
               width: 50%;
             }
             input,
@@ -407,10 +407,10 @@ body ::-webkit-scrollbar-thumb:hover {
               background-color: rgba(0, 0, 0, 0) !important;
               border: none;
               border-bottom: 1.5px solid $primarycolor;
-              padding: 0.375rem 0.75rem;
+              padding: 0.75rem 0rem;
               margin: 0.4rem;
               width: 100%;
-              color: $primarycolor;
+              @include mulishStyle($primarycolor, 1.1rem, 500);
               &:focus {
                 outline: none;
                 background-color: rgba(0, 0, 0, 0) !important;
@@ -434,8 +434,8 @@ body ::-webkit-scrollbar-thumb:hover {
         }
         .button-container {
           @include displayFlex(space-evenly);
+          padding-top: 40px;
           padding-bottom: 30px;
-
           button {
             @include smallButtonStyle($secondarycolor);
             @include mulishStyle($background, 1rem, 900);
@@ -456,7 +456,7 @@ body ::-webkit-scrollbar-thumb:hover {
           padding: 1rem 1rem;
           @include displayFlex(space-between);
           p {
-            @include mulishStyle($primarycolor, 1rem, 400);
+            @include mulishStyle($primarycolor, 1.1rem, 500);
           }
           i {
             color: $secondarycolor;
