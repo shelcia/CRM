@@ -1,21 +1,25 @@
 import React, { useState } from "react";
 import Sidenav from "../Sidenav";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const AddUser = ({ match }) => {
+const AddUser = () => {
   const token = localStorage.getItem("token");
-  console.log(match.params.id);
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [type, setType] = useState("Employee");
 
+  const successNotify = () => toast.success("Succesfully User Added");
+  const failedNotify = (message) => toast.error(message);
+
   const history = useHistory();
 
   //ADD EMPLOYEE
   const addUser = (e) => {
-    console.log(token);
     e.preventDefault();
     console.log("clicked");
     const response = {
@@ -25,59 +29,71 @@ const AddUser = ({ match }) => {
       password: password,
     };
 
+    const headers = {
+      "auth-token": token,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
+
     if (type === "Employee") {
-      fetch("https://crm-backend-nodejs.herokuapp.com/api/employee/register", {
-        method: "POST",
-        headers: {
-          "auth-token": token,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(response),
-      })
-        .then((res) => res.json())
+      const url =
+        "https://crm-backend-nodejs.herokuapp.com/api/employee/register";
+      axios
+        .post(url, response, {
+          headers: headers,
+        })
+        .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-          alert(data);
+          console.log(data.details[0].message);
+          if (data.details[0].message) {
+            failedNotify(data.details[0].message);
+          } else {
+            successNotify();
+          }
         })
         .catch((error) => {
           console.log(error);
+          successNotify();
         });
     } else if (type === "Manager") {
-      fetch("https://crm-backend-nodejs.herokuapp.com/api/manager/register", {
-        method: "POST",
-        headers: {
-          "auth-token": token,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(response),
-      })
-        .then((res) => res.json())
+      const url =
+        "https://crm-backend-nodejs.herokuapp.com/api/manager/register";
+
+      axios
+        .post(url, response, {
+          headers: headers,
+        })
+        .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-          alert(data);
+          console.log(data.details[0].message);
+          if (data.details[0].message) {
+            failedNotify(data.details[0].message);
+          } else {
+            successNotify();
+          }
         })
         .catch((error) => {
           console.log(error);
+          successNotify();
         });
     } else if (type === "Admin") {
-      fetch("https://crm-backend-nodejs.herokuapp.com/api/admin/register", {
-        method: "POST",
-        headers: {
-          "auth-token": token,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(response),
-      })
-        .then((res) => res.json())
+      const url = "https://crm-backend-nodejs.herokuapp.com/api/admin/register";
+      axios
+        .post(url, response, {
+          headers: headers,
+        })
+        .then((response) => response.json())
         .then((data) => {
-          console.log(data);
-          alert("created succesfully");
+          console.log(data.details[0].message);
+          if (data.details[0].message) {
+            failedNotify(data.details[0].message);
+          } else {
+            successNotify();
+          }
         })
         .catch((error) => {
           console.log(error);
+          successNotify();
         });
     }
     setFname("");
@@ -88,6 +104,7 @@ const AddUser = ({ match }) => {
 
   return (
     <React.Fragment>
+      <ToastContainer />
       <div className="dashboard">
         <div className="sidebar">
           <Sidenav />
@@ -127,10 +144,14 @@ const AddUser = ({ match }) => {
                 placeholder="password"
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <select name="type" id="type">
-                <option onSelect={() => setType("Employee")}>Employee</option>
-                <option onSelect={() => setType("Manager")}>Manager</option>
-                <option onSelect={() => setType("Admin")}>Admin</option>
+              <select
+                name="type"
+                id="type"
+                onChange={(event) => setType(event.target.value)}
+              >
+                <option value="Employee">Employee</option>
+                <option value="Manager">Manager</option>
+                <option value="Admin">Admin</option>
               </select>
               <div className="button-container">
                 <button onClick={(e) => addUser(e)}>Add User</button>

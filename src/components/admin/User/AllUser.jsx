@@ -3,8 +3,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Sidenav from "../Sidenav";
 import { Link } from "react-router-dom";
+import Loader from "react-loader-spinner";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 const AllUsers = () => {
+  const [isLoading, setLoading] = useState(true);
   const [users, setUsers] = useState([]);
   const token = localStorage.getItem("token");
 
@@ -25,11 +28,12 @@ const AllUsers = () => {
       })
         .then((response) => {
           console.log(response);
+          setLoading(false);
           setUsers(response.data);
         })
         .catch((err) => {
           console.log(err);
-          alert(err);
+          setLoading(false);
         });
     };
     getUsers();
@@ -61,6 +65,30 @@ const AllUsers = () => {
   };
   return (
     <React.Fragment>
+      {isLoading && (
+        <div className="dashboard">
+          <div className="sidebar">
+            <Sidenav />
+          </div>
+          <div className="main-content">
+            <div className="header">
+              <div className="title">All Users</div>
+              <Link to="/admindashboard/addUser">
+                <button type="button">
+                  Add <i className="material-icons">&#xe147;</i>
+                </button>
+              </Link>
+            </div>
+            <hr />
+            <div className="content">
+              <div className="loading">
+                <Loader type="Audio" color="#897eff" height={100} width={100} />
+                <p>Loading All Users...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="dashboard">
         <div className="sidebar">
           <Sidenav />

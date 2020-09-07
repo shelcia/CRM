@@ -7,7 +7,7 @@ import { LoadContact } from "../../actions/index";
 import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
-const Contact = () => {
+const Contact = ({ match }) => {
   const [isLoading, setLoading] = useState(true);
 
   const results = useSelector((state) => state.contact);

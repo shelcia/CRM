@@ -9,17 +9,14 @@ import AdminLogin from "./components/admin/AdminLogin";
 import AdminServiceRequest from "./components/admin/ServiceRequest/ServiceRequest";
 import AdminService from "./components/admin/ServiceRequest/Service";
 import AdminAddServiceRequest from "./components/admin/ServiceRequest/AddForm";
-// import AdminEditServiceRequest from "./components/admin/ServiceRequest/EditService";
 
 import AdminLeads from "./components/admin/Leads/Leads";
 import AdminLead from "./components/admin/Leads/Lead";
 import AdminAddLead from "./components/admin/Leads/AddFormLead";
-// import AdminEditLead from "./components/admin/Leads/EditLead";
 
 import AdminContact from "./components/admin/Contact/Contact";
 import AdminContacts from "./components/admin/Contact/Contacts";
 import AdminAddContact from "./components/admin/Contact/AddForm";
-// import AdminEditContact from "./components/admin/Contact/EditContact";
 
 import AdminAddUser from "./components/admin/User/AddUser";
 import AdminAllUsers from "./components/admin/User/AllUser";
@@ -30,17 +27,14 @@ import ManagerLogin from "./components/manager/ManagerLogin";
 import ManagerServiceRequest from "./components/manager/ServiceRequest/ServiceRequest";
 import ManagerAddService from "./components/manager/ServiceRequest/AddForm";
 import ManagerService from "./components/manager/ServiceRequest/Service";
-// import ManagerEditServiceRequest from "./components/manager/ServiceRequest/EditService";
 
 import ManagerLead from "./components/manager/Leads/Lead";
 import ManagerAddLead from "./components/manager/Leads/AddForm";
 import ManagerLeads from "./components/manager/Leads/Leads";
-// import ManagerEditLead from "./components/manager/Leads/EditLead";
 
 import ManagerContact from "./components/manager/Contact/Contact";
 import ManagerAddContact from "./components/manager/Contact/AddForm";
 import ManagerContacts from "./components/manager/Contact/Contacts";
-// import ManagerEditContact from "./components/manager/Contact/EditContact";
 
 //EMPLOYEE ROUTES
 import EmployeeLogin from "./components/employee/EmployeeLogin";

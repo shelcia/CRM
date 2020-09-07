@@ -55,7 +55,6 @@ const EditLead = ({ id, Title, Client, Number, Status }) => {
   }, []);
 
   const editLead = () => {
-    const ac = new AbortController();
     const response = {
       _id: id,
       title: title,
@@ -75,7 +74,6 @@ const EditLead = ({ id, Title, Client, Number, Status }) => {
         failedNotify();
         console.log(error);
       });
-    return () => ac.abort();
   };
 
   return (
@@ -167,7 +165,7 @@ const EditLead = ({ id, Title, Client, Number, Status }) => {
                           editLead();
                         }}
                       >
-                        Update
+                        Confirm
                         <i className="material-icons">&#xe3c9;</i>
                       </button>
                       <button
