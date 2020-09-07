@@ -8,8 +8,11 @@ import EditService from "./EditService";
 const ServiceRequest = ({ match }) => {
   const results = useSelector((state) => state.service);
   const services = results.filter((result) => result._id === match.params.id);
+
   const [view, setView] = useState("noedit");
+
   const dispatch = useDispatch();
+
   const url =
     "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest";
 

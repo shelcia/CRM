@@ -94,24 +94,26 @@ const AddForm = () => {
                 placeholder="closing"
                 onChange={(e) => setClosing(e.target.value)}
               />
-              <select name="status" id="status">
-                <option onSelect={() => setStatus("Created")}>Created</option>
-                <option onSelect={() => setStatus("Released")}>Released</option>
-                <option onSelect={() => setStatus("Open")}>Open</option>
-                <option onSelect={() => setStatus("In process")}>
-                  In process
-                </option>
-                <option onSelect={() => setStatus("Cancelled")}>
-                  Cancelled
-                </option>
-                <option onSelect={() => setStatus("Completed")}>
-                  Completed
-                </option>
+              <select
+                name="status"
+                id="status"
+                onChange={(event) => setStatus(event.target.value)}
+              >
+                <option value="Created">Created</option>
+                <option value="Released">Released</option>
+                <option value="Open">Open</option>
+                <option value="In Process">In process</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="Completed">Completed</option>
               </select>
-              <select name="priority" id="priority">
-                <option onSelect={() => setPriority("High")}>High</option>
-                <option onSelect={() => setPriority("Medium")}>Medium</option>
-                <option onSelect={() => setPriority("Low")}>Low</option>
+              <select
+                name="priority"
+                id="priority"
+                onChange={(event) => setPriority(event.target.value)}
+              >
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
               </select>
               <input
                 type="text"

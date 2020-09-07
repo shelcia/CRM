@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import Sidenav from "../Sidenav";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddForm = () => {
   const [title, setTitle] = useState("");
@@ -10,14 +13,16 @@ const AddForm = () => {
   const [prob, setProb] = useState("");
   const [priority, setPriority] = useState("High");
   const [status, setStatus] = useState("Created");
+
+  const successNotify = () => toast.success("Succesfully Added");
+  const failedNotify = (message) => toast.error(message);
+
   const url =
     "https://crm-backend-nodejs.herokuapp.com/api/managerdashboard/servicerequest";
 
   const addServiceRequest = (e) => {
     const token = localStorage.getItem("token");
-    console.log(token);
     e.preventDefault();
-    console.log("clicked");
     const response = {
       title: title,
       client: client,
@@ -28,32 +33,32 @@ const AddForm = () => {
       expected_closing: closing,
       priority: priority,
     };
-    console.log(JSON.stringify(response));
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(response),
-    })
-      .then((res) => res.json())
+    const headers = {
+      "auth-token": token,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
+    axios
+      .post(url, response, {
+        headers: headers,
+      })
+      .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        if (data.status === 400) {
-          alert("error in the input field");
+        console.log(data.details[0].message);
+        if (data.details[0].message) {
+          failedNotify(data.details[0].message);
         } else {
-          alert("successfully added");
+          successNotify();
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((error) => {
+        console.log(error);
+        successNotify();
       });
   };
   return (
     <React.Fragment>
+      <ToastContainer />
       <div className="dashboard">
         <div className="sidebar">
           <Sidenav />
@@ -89,24 +94,26 @@ const AddForm = () => {
                 placeholder="closing"
                 onChange={(e) => setClosing(e.target.value)}
               />
-              <select name="status" id="status">
-                <option onSelect={() => setStatus("Created")}>Created</option>
-                <option onSelect={() => setStatus("Released")}>Released</option>
-                <option onSelect={() => setStatus("Open")}>Open</option>
-                <option onSelect={() => setStatus("In process")}>
-                  In process
-                </option>
-                <option onSelect={() => setStatus("Cancelled")}>
-                  Cancelled
-                </option>
-                <option onSelect={() => setStatus("Completed")}>
-                  Completed
-                </option>
+              <select
+                name="status"
+                id="status"
+                onChange={(event) => setStatus(event.target.value)}
+              >
+                <option value="Created">Created</option>
+                <option value="Released">Released</option>
+                <option value="Open">Open</option>
+                <option value="In Process">In process</option>
+                <option value="Cancelled">Cancelled</option>
+                <option value="Completed">Completed</option>
               </select>
-              <select name="priority" id="priority">
-                <option onSelect={() => setPriority("High")}>High</option>
-                <option onSelect={() => setPriority("Medium")}>Medium</option>
-                <option onSelect={() => setPriority("Low")}>Low</option>
+              <select
+                name="priority"
+                id="priority"
+                onChange={(event) => setPriority(event.target.value)}
+              >
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
               </select>
               <input
                 type="text"
