@@ -191,66 +191,6 @@ const EditLead = ({ id, Title, Client, Number, Email, Address }) => {
         </React.Fragment>
       )}
     </React.Fragment>
-    // <React.Fragment>
-    //   <div className="grid">
-    //     <div className="navbar-container">
-    //       <Sidenav />
-    //     </div>
-    //     <div className="card-container">
-    //       <div className="add-form">
-    //         <input
-    //           type="text"
-    //           name="title"
-    //           placeholder="title"
-    //           onChange={(e) => setTitle(e.target.value)}
-    //         />
-    //         <input
-    //           type="text"
-    //           name="client"
-    //           placeholder="client"
-    //           onChange={(e) => setClient(e.target.value)}
-    //         />
-    //         <input
-    //           type="text"
-    //           name="number"
-    //           placeholder="number"
-    //           onChange={(e) => setNumber(e.target.value)}
-    //         />
-    //         <input
-    //           type="text"
-    //           name="email"
-    //           placeholder="email"
-    //           onChange={(e) => setEmail(e.target.value)}
-    //         />
-    //         <input
-    //           type="text"
-    //           name="address"
-    //           placeholder="address"
-    //           onChange={(e) => setAddress(e.target.value)}
-    //         />
-    //         <div className="button-container">
-    //           <button
-    //             type="button"
-    //             onClick={(event) => {
-    //               event.preventDefault();
-    //               editLead();
-    //             }}
-    //           >
-    //             Confirm
-    //             <i className="material-icons">&#xe3c9;</i>
-    //           </button>
-    //           <button
-    //             type="button"
-    //             onClick={() => history.push("/admindashboard/contact")}
-    //           >
-    //             Back
-    //             <i className="material-icons"> &#xe5c4;</i>
-    //           </button>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </React.Fragment>
   );
 };
 
