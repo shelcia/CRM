@@ -21,35 +21,26 @@ const EditService = ({
 }) => {
   const [results, setResults] = useState([]);
   const services = results.filter((result) => result._id === id);
-  // console.log(services);
   const [title, setTitle] = useState(Title);
   const [client, setClient] = useState(Client);
   const [manager, setManager] = useState(Manager);
   const [closing, setClosing] = useState(Closing);
   const [revenue, setRevenue] = useState(Priority);
-  const [prob, setProb] = useState(Status);
+  const [prob, setProb] = useState(Probability);
   const [priority, setPriority] = useState(Revenue);
-  const [status, setStatus] = useState(Probability);
+  const [status, setStatus] = useState(Status);
+
   const [isLoading, setLoading] = useState(true);
+
   const history = useHistory();
 
   const successNotify = () => toast.success("Succesfully Edited");
   const failedNotify = () =>
     toast.error("Oops!..please make sure the input field values are valid");
 
-  // console.log(
-  //   id,
-  //   Title,
-  //   Client,
-  //   Manager,
-  //   Closing,
-  //   Priority,
-  //   Status,
-  //   Revenue,
-  //   Probability
-  // );
-
   useEffect(() => {
+    const abortController = new AbortController();
+    const signal = abortController.signal;
     const url =
       "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest";
     const getResult = async () => {
@@ -61,6 +52,7 @@ const EditService = ({
           "auth-token": token,
           "Content-Type": "application/json",
         },
+        signal: signal,
       })
         .then((response) => {
           console.log(response);
@@ -73,21 +65,20 @@ const EditService = ({
         });
     };
     getResult();
+    return () => abortController.abort();
   }, []);
 
   const editServiceRequest = () => {
-    console.log("put");
-
     const response = {
       _id: id,
       title: title,
       client: client,
       manager: manager,
-      closing: closing,
-      revenue: revenue,
-      prob: prob,
-      priority: priority,
+      expected_revenue: revenue,
+      probability: prob,
       status: status,
+      expected_closing: closing,
+      priority: priority,
     };
     axios
       .put(
@@ -134,7 +125,6 @@ const EditService = ({
                           type="text"
                           name="title"
                           placeholder="title"
-                          value={title}
                           onChange={(e) => setTitle(e.target.value)}
                         />
                       </li>
@@ -144,7 +134,6 @@ const EditService = ({
                           type="text"
                           name="client"
                           placeholder="client"
-                          value={client}
                           onChange={(e) => setClient(e.target.value)}
                         />
                       </li>
@@ -154,7 +143,6 @@ const EditService = ({
                           type="text"
                           name="manager"
                           placeholder="manager"
-                          value={manager}
                           onChange={(e) => setManager(e.target.value)}
                         />
                       </li>
@@ -164,22 +152,19 @@ const EditService = ({
                           type="date"
                           name="closing"
                           placeholder="closing"
-                          value={closing}
                           onChange={(e) => setClosing(e.target.value)}
                         />
                       </li>
                       <li>
                         <b>Priority</b>
-                        <select name="priority" id="priority">
-                          <option onClick={() => setPriority("High")}>
-                            High
-                          </option>
-                          <option onClick={() => setPriority("Medium")}>
-                            Medium
-                          </option>
-                          <option onClick={() => setPriority("Low")}>
-                            Low
-                          </option>
+                        <select
+                          name="priority"
+                          id="priority"
+                          onChange={(event) => setPriority(event.target.value)}
+                        >
+                          <option value="High">High</option>
+                          <option value="Medium">Medium</option>
+                          <option value="Low">Low</option>
                         </select>
                       </li>
                       <li>
@@ -202,7 +187,7 @@ const EditService = ({
                         <input
                           type="text"
                           name="revenue"
-                          placeholder=" Expected revenue"
+                          placeholder="Expected revenue"
                           onChange={(e) => setRevenue(e.target.value)}
                         />
                       </li>
@@ -221,10 +206,10 @@ const EditService = ({
                         type="button"
                         onClick={(event) => {
                           event.preventDefault();
-                          editServiceRequest(result._id);
+                          editServiceRequest();
                         }}
                       >
-                        Update
+                        Confirm
                         <i className="material-icons">&#xe3c9;</i>
                       </button>
                       <button

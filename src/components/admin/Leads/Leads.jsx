@@ -7,7 +7,6 @@ import { useState } from "react";
 import EditLead from "./EditLead";
 
 const Lead = ({ match }) => {
-  console.log(match.params.id);
   const results = useSelector((state) => state.lead);
   const services = results.filter((result) => result._id === match.params.id);
   const dispatch = useDispatch();
@@ -100,7 +99,15 @@ const Lead = ({ match }) => {
           </div>
         </div>
       )}
-      {view === "edit" && <EditLead id={match.params.id} />}
+      {view === "edit" && (
+        <EditLead
+          id={match.params.id}
+          Title={results.title}
+          Client={results.client}
+          Number={results.number}
+          Status={results.status}
+        />
+      )}
     </React.Fragment>
   );
 };
