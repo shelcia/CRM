@@ -40,7 +40,7 @@ const AddForm = () => {
         if (response.status === 200) {
           successNotify();
         } else if (response.status === 400) {
-          failedNotify("error");
+          failedNotify("Please fill out all the fields");
         }
       })
       .then((data) => console.log(data))

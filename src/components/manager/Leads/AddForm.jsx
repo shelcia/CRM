@@ -17,9 +17,7 @@ const AddForm = () => {
     "https://crm-backend-nodejs.herokuapp.com/api/managerdashboard/lead";
   const addServiceRequest = (e) => {
     const token = localStorage.getItem("token");
-    console.log(token);
     e.preventDefault();
-    console.log("clicked");
     const response = {
       title: title,
       client: client,
@@ -40,7 +38,7 @@ const AddForm = () => {
         if (response.status === 200) {
           successNotify();
         } else if (response.status === 400) {
-          failedNotify("error");
+          failedNotify("Please fill out all the fields");
         }
       })
       .then((data) => {

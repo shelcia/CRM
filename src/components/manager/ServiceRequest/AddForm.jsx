@@ -47,7 +47,7 @@ const AddForm = () => {
         if (response.status === 200) {
           successNotify();
         } else if (response.status === 400) {
-          failedNotify("error");
+          failedNotify("Please fill out all the fields");
         }
       })
       .then((data) => {
@@ -117,13 +117,13 @@ const AddForm = () => {
                 <option value="Low">Low</option>
               </select>
               <input
-                type="text"
+                type="number"
                 name="probability"
                 placeholder="probability"
                 onChange={(e) => setProb(e.target.value)}
               />
               <input
-                type="text"
+                type="number"
                 name="revenue"
                 placeholder="revenue"
                 onChange={(e) => setRevenue(e.target.value)}

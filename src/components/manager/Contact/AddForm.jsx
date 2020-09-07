@@ -18,9 +18,7 @@ const AddForm = () => {
   const failedNotify = (message) => toast.error(message);
 
   const addContact = (e) => {
-    console.log(token);
     e.preventDefault();
-    console.log("clicked");
     const response = {
       title: title,
       client: client,
@@ -28,8 +26,6 @@ const AddForm = () => {
       email: email,
       address: address,
     };
-    console.log(JSON.stringify(response));
-
     fetch(url, {
       method: "POST",
       headers: {
@@ -44,7 +40,7 @@ const AddForm = () => {
         if (response.status === 200) {
           successNotify();
         } else if (response.status === 400) {
-          failedNotify("error");
+          failedNotify("Please fill out all the fields");
         }
       })
       .then((data) => {
