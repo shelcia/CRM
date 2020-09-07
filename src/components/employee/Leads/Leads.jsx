@@ -1,44 +1,13 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { DelLead } from "../../actions/index";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Sidenav from "../Sidenav";
 
 const Lead = ({ match }) => {
   console.log(match.params.id);
   const results = useSelector((state) => state.lead);
-  console.log(results);
   const services = results.filter((result) => result._id === match.params.id);
-  console.log(services);
-  const dispatch = useDispatch();
-  const url =
-    "https://crm-backend-nodejs.herokuapp.com/api/employeedashboard/lead";
 
-  const delLead = (id) => {
-    const token = localStorage.getItem("token");
-    console.log("delete");
-    const response = {
-      _id: id,
-    };
-    console.log(response);
-    fetch(url, {
-      method: "DELETE",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(response),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    dispatch(DelLead(id));
-  };
   return (
     <React.Fragment>
       <div className="dashboard">
@@ -76,23 +45,6 @@ const Lead = ({ match }) => {
                     <p>{result.status}</p>
                   </li>
                 </ul>
-                <div className="button-container">
-                  <Link to={`/employeedashboard/Lead/${result._id}`}>
-                    <button type="button">
-                      Update
-                      <i className="material-icons">&#xe3c9;</i>
-                    </button>
-                  </Link>
-                  <Link
-                    onClick={() => delLead(result._id)}
-                    to="/employeedashboard/Lead"
-                  >
-                    <button type="button">
-                      Delete
-                      <i className="material-icons">&#xe872;</i>
-                    </button>
-                  </Link>
-                </div>
               </div>
             ))}
           </div>

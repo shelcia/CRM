@@ -7,6 +7,16 @@ const ServiceRequest = ({ match }) => {
   const results = useSelector((state) => state.service);
   const services = results.filter((result) => result._id === match.params.id);
 
+  const convertDate = (date) => {
+    const dates = new Date(date);
+    const formattedDate = Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+    }).format(dates);
+    return formattedDate;
+  };
+
   return (
     <React.Fragment>
       <div className="dashboard">
@@ -36,7 +46,7 @@ const ServiceRequest = ({ match }) => {
                   </li>
                   <li>
                     <b>Expected Closing</b>
-                    <p>{result.expected_closing}</p>
+                    <p>{convertDate(result.expected_closing)}</p>
                   </li>
                   <li>
                     <b>Priority</b>
