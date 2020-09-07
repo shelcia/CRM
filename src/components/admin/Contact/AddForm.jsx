@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import Sidenav from "../Sidenav";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddForm = () => {
   const [title, setTitle] = useState("");
@@ -7,7 +10,11 @@ const AddForm = () => {
   const [number, setNumber] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+
   const token = localStorage.getItem("token");
+
+  const successNotify = () => toast.success("Succesfully Added");
+  const failedNotify = (message) => toast.error(message);
 
   const url =
     "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/contact";
@@ -22,28 +29,33 @@ const AddForm = () => {
       email: email,
       address: address,
     };
-    console.log(JSON.stringify(response));
 
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "auth-token": token,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(response),
-    })
-      .then((res) => res.json())
+    const headers = {
+      "auth-token": token,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    };
+    axios
+      .post(url, response, {
+        headers: headers,
+      })
+      .then((response) => response.json())
       .then((data) => {
-        console.log(data.title);
+        console.log(data.details[0].message);
+        if (data.details[0].message) {
+          failedNotify(data.details[0].message);
+        } else {
+          successNotify();
+        }
       })
       .catch((error) => {
         console.log(error);
+        successNotify();
       });
-    alert("Added Succesfully");
   };
   return (
     <React.Fragment>
+      <ToastContainer />
       <div className="dashboard">
         <div className="sidebar">
           <Sidenav />

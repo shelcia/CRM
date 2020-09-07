@@ -3,7 +3,7 @@ const leadReducer = (state = [], action) => {
     case "LOAD_LEAD":
       return action.result;
     case "DEL_LEAD":
-      return [...state].filter((load) => load._id !== action.id);
+      return [...state].filter((lead) => lead._id !== action.id);
     default:
       return state;
   }

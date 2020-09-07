@@ -97,9 +97,20 @@ const EditService = ({
   return (
     <React.Fragment>
       {isLoading && (
-        <div className="loading">
-          <Loader type="Audio" color="#897eff" height={100} width={100} />
-          <p>Editing Service Requests...</p>
+        <div className="dashboard">
+          <div className="sidebar">
+            <Sidenav />
+          </div>
+          <div className="main-content">
+            <div className="header">
+              <div className="title">Edit Service Request</div>
+            </div>
+            <hr />
+            <div className="loading">
+              <Loader type="Audio" color="#897eff" height={100} width={100} />
+              <p>Editing Service Requests...</p>
+            </div>
+          </div>
         </div>
       )}
       {!isLoading && (

@@ -81,9 +81,20 @@ const EditLead = ({ id, Title, Client, Number, Status }) => {
   return (
     <React.Fragment>
       {isLoading && (
-        <div className="loading">
-          <Loader type="Audio" color="#897eff" height={100} width={100} />
-          <p>Editing Leads...</p>
+        <div className="dashboard">
+          <div className="sidebar">
+            <Sidenav />
+          </div>
+          <div className="main-content">
+            <div className="header">
+              <div className="title">Edit Leads</div>
+            </div>
+            <hr />
+            <div className="loading">
+              <Loader type="Audio" color="#897eff" height={100} width={100} />
+              <p>Editing Leads...</p>
+            </div>
+          </div>
         </div>
       )}
       {!isLoading && (
