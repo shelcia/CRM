@@ -335,7 +335,7 @@ body ::-webkit-scrollbar-thumb:hover {
     .content {
       margin-top: 10px;
       @include mulishStyle($primarycolor, 1.1rem, 500);
-      height: 400px;
+      height: 85vh;
       overflow-y: scroll;
       .add-form {
         @include marginauto(80%);

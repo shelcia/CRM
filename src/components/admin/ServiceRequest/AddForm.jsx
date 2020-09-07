@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Sidenav from "../Sidenav";
-import axios from "axios";
+// import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -33,27 +33,27 @@ const AddForm = () => {
       expected_closing: closing,
       priority: priority,
     };
-    const headers = {
-      "auth-token": token,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    };
-    axios
-      .post(url, response, {
-        headers: headers,
-      })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.details[0].message);
-        if (data.details[0].message) {
-          failedNotify(data.details[0].message);
-        } else {
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "auth-token": token,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(response),
+    })
+      .then((response) => {
+        response.json();
+        console.log(response.status);
+        if (response.status === 200) {
           successNotify();
+        } else if (response.status === 400) {
+          failedNotify("error");
         }
       })
+      .then((data) => console.log(data))
       .catch((error) => {
         console.log(error);
-        successNotify();
       });
   };
   return (

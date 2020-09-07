@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Sidenav from "../Sidenav";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const AddForm = () => {
   const [title, setTitle] = useState("");
@@ -11,6 +13,9 @@ const AddForm = () => {
 
   const url =
     "https://crm-backend-nodejs.herokuapp.com/api/managerdashboard/contact";
+
+  const successNotify = () => toast.success("Succesfully Added");
+  const failedNotify = (message) => toast.error(message);
 
   const addContact = (e) => {
     console.log(token);
@@ -34,17 +39,24 @@ const AddForm = () => {
       },
       body: JSON.stringify(response),
     })
-      .then((res) => res.json())
+      .then((response) => {
+        response.json();
+        if (response.status === 200) {
+          successNotify();
+        } else if (response.status === 400) {
+          failedNotify("error");
+        }
+      })
       .then((data) => {
         console.log(data);
       })
       .catch((error) => {
         console.log(error);
       });
-    alert("Added Succesfully");
   };
   return (
     <React.Fragment>
+      <ToastContainer />
       <div className="dashboard">
         <div className="sidebar">
           <Sidenav />

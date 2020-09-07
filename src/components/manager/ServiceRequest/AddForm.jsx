@@ -42,18 +42,19 @@ const AddForm = () => {
       .post(url, response, {
         headers: headers,
       })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.details[0].message);
-        if (data.details[0].message) {
-          failedNotify(data.details[0].message);
-        } else {
+      .then((response) => {
+        response.json();
+        if (response.status === 200) {
           successNotify();
+        } else if (response.status === 400) {
+          failedNotify("error");
         }
+      })
+      .then((data) => {
+        console.log(data);
       })
       .catch((error) => {
         console.log(error);
-        successNotify();
       });
   };
   return (

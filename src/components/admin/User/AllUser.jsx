@@ -126,7 +126,7 @@ const AllUsers = () => {
                     <p>{result.email}</p>
                   </li>
                   <li>
-                    <b>Type</b>
+                    <b>Type: </b>
                     <p>{result.type}</p>
                   </li>
                 </ul>

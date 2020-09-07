@@ -538,7 +538,7 @@ body ::-webkit-scrollbar-thumb:hover {
   font-weight: 500;
   color: #897eff;
   font-size: 1.1rem;
-  height: 400px;
+  height: 85vh;
   overflow-y: scroll;
 }
 
