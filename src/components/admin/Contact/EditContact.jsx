@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Sidenav from "../Sidenav";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
-const EditLead = ({ id, Title, Client, Number, Email, Address }) => {
-  console.log(id);
-  const [results, setResults] = useState([]);
-  const contact = results.filter((contact) => contact._id === id);
-  console.log(contact);
-  const [title, setTitle] = useState(Title);
-  const [client, setClient] = useState(Client);
-  const [number, setNumber] = useState(Number);
-  const [email, setEmail] = useState(Email);
-  const [address, setAddress] = useState(Address);
+const EditLead = () => {
+  const id = localStorage.getItem("key");
+  const results = useSelector((state) => state.contact);
+  const contact = results.filter((result) => result._id === id);
+  const [title, setTitle] = useState(contact[0].title);
+  const [client, setClient] = useState(contact[0].client);
+  const [number, setNumber] = useState(contact[0].number);
+  const [email, setEmail] = useState(contact[0].email);
+  const [address, setAddress] = useState(contact[0].address);
 
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(false);
 
   const history = useHistory();
 
@@ -26,37 +26,8 @@ const EditLead = ({ id, Title, Client, Number, Email, Address }) => {
   const failedNotify = () =>
     toast.error("Oops!..please make sure the input field values are valid");
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    const url =
-      "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/contact";
-    const getResult = async () => {
-      const token = localStorage.getItem("token");
-      axios({
-        url: url,
-        method: "get",
-        headers: {
-          "auth-token": token,
-          "Content-Type": "application/json",
-        },
-        signal: signal,
-      })
-        .then((response) => {
-          console.log(response);
-          setResults(response.data);
-          setTitle(response.data.title);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    getResult();
-    return () => abortController.abort();
-  }, []);
-
   const editContact = () => {
+    setLoading(true);
     const response = {
       _id: id,
       title: title,
@@ -72,10 +43,12 @@ const EditLead = ({ id, Title, Client, Number, Email, Address }) => {
       )
       .then((res) => {
         successNotify();
+        setLoading(false);
       })
       .catch((error) => {
         failedNotify();
         console.log(error);
+        setLoading(false);
       });
   };
   return (
@@ -135,22 +108,22 @@ const EditLead = ({ id, Title, Client, Number, Email, Address }) => {
                       </li>
                       <li>
                         <b>Number</b>
-
                         <input
                           type="text"
                           name="number"
                           placeholder="number"
+                          value={number}
                           onChange={(e) => setNumber(e.target.value)}
                         />
                       </li>
 
                       <li>
                         <b>Email</b>
-
                         <input
                           type="text"
                           name="email"
                           placeholder="email"
+                          value={email}
                           onChange={(e) => setEmail(e.target.value)}
                         />
                       </li>
@@ -160,6 +133,7 @@ const EditLead = ({ id, Title, Client, Number, Email, Address }) => {
                           type="text"
                           name="address"
                           placeholder="address"
+                          value={address}
                           onChange={(e) => setAddress(e.target.value)}
                         />
                       </li>

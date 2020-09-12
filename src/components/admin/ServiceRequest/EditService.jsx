@@ -2,35 +2,26 @@ import React, { useState } from "react";
 import Sidenav from "../Sidenav";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
-const EditService = ({
-  id,
-  Title,
-  Client,
-  Manager,
-  Closing,
-  Priority,
-  Status,
-  Revenue,
-  Probability,
-}) => {
-  const [results, setResults] = useState([]);
+const EditService = () => {
+  const id = localStorage.getItem("key");
+  const results = useSelector((state) => state.service);
   const services = results.filter((result) => result._id === id);
-  const [title, setTitle] = useState(Title);
-  const [client, setClient] = useState(Client);
-  const [manager, setManager] = useState(Manager);
-  const [closing, setClosing] = useState(Closing);
-  const [revenue, setRevenue] = useState(Priority);
-  const [prob, setProb] = useState(Probability);
-  const [priority, setPriority] = useState(Revenue);
-  const [status, setStatus] = useState(Status);
+  const [title, setTitle] = useState(services[0].title);
+  const [client, setClient] = useState(services[0].client);
+  const [manager, setManager] = useState(services[0].manager);
+  const [closing, setClosing] = useState(services[0].closing);
+  const [revenue, setRevenue] = useState(services[0].expected_revenue);
+  const [prob, setProb] = useState(services[0].probability);
+  const [priority, setPriority] = useState(services[0].priority);
+  const [status, setStatus] = useState(services[0].state);
 
-  const [isLoading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const history = useHistory();
 
@@ -38,37 +29,8 @@ const EditService = ({
   const failedNotify = () =>
     toast.error("Oops!..please make sure the input field values are valid");
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    const url =
-      "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/servicerequest";
-    const getResult = async () => {
-      const token = localStorage.getItem("token");
-      axios({
-        url: url,
-        method: "get",
-        headers: {
-          "auth-token": token,
-          "Content-Type": "application/json",
-        },
-        signal: signal,
-      })
-        .then((response) => {
-          console.log(response);
-          setResults(response.data);
-          setTitle(response.data.title);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    getResult();
-    return () => abortController.abort();
-  }, []);
-
   const editServiceRequest = () => {
+    setLoading(true);
     const response = {
       _id: id,
       title: title,
@@ -88,6 +50,7 @@ const EditService = ({
       .then((res) => {
         console.log(res.data);
         successNotify();
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
@@ -96,7 +59,7 @@ const EditService = ({
   };
   return (
     <React.Fragment>
-      {isLoading && (
+      {loading && (
         <div className="dashboard">
           <div className="sidebar">
             <Sidenav />
@@ -108,15 +71,14 @@ const EditService = ({
             <hr />
             <div className="loading">
               <Loader type="Audio" color="#897eff" height={100} width={100} />
-              <p>Editing Service Requests...</p>
+              <p>Updating Service Request...</p>
             </div>
           </div>
         </div>
       )}
-      {!isLoading && (
+      {!loading && (
         <React.Fragment>
           <ToastContainer />
-
           <div className="dashboard">
             <div className="sidebar">
               <Sidenav />
@@ -136,6 +98,7 @@ const EditService = ({
                           type="text"
                           name="title"
                           placeholder="title"
+                          value={title}
                           onChange={(e) => setTitle(e.target.value)}
                         />
                       </li>
@@ -145,6 +108,7 @@ const EditService = ({
                           type="text"
                           name="client"
                           placeholder="client"
+                          value={client}
                           onChange={(e) => setClient(e.target.value)}
                         />
                       </li>
@@ -154,6 +118,7 @@ const EditService = ({
                           type="text"
                           name="manager"
                           placeholder="manager"
+                          value={manager}
                           onChange={(e) => setManager(e.target.value)}
                         />
                       </li>
@@ -163,6 +128,7 @@ const EditService = ({
                           type="date"
                           name="closing"
                           placeholder="closing"
+                          value={closing}
                           onChange={(e) => setClosing(e.target.value)}
                         />
                       </li>
@@ -171,6 +137,7 @@ const EditService = ({
                         <select
                           name="priority"
                           id="priority"
+                          value={priority}
                           onChange={(event) => setPriority(event.target.value)}
                         >
                           <option value="High">High</option>
@@ -183,6 +150,7 @@ const EditService = ({
                         <select
                           name="status"
                           id="status"
+                          value={status}
                           onChange={(event) => setStatus(event.target.value)}
                         >
                           <option value="Created">Created</option>
@@ -199,6 +167,7 @@ const EditService = ({
                           type="text"
                           name="revenue"
                           placeholder="Expected revenue"
+                          value={revenue}
                           onChange={(e) => setRevenue(e.target.value)}
                         />
                       </li>
@@ -208,6 +177,7 @@ const EditService = ({
                           type="number"
                           name="probability"
                           placeholder="probability"
+                          value={prob}
                           onChange={(e) => setProb(e.target.value)}
                         />
                       </li>
@@ -225,9 +195,10 @@ const EditService = ({
                       </button>
                       <button
                         type="button"
-                        onClick={() =>
-                          history.push("/admindashboard/servicerequest")
-                        }
+                        onClick={() => {
+                          history.push("/admindashboard/servicerequest");
+                          localStorage.removeItem("key");
+                        }}
                       >
                         Back
                         <i className="material-icons"> &#xe5c4;</i>

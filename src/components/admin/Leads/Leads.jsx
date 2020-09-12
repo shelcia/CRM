@@ -21,7 +21,6 @@ const Lead = ({ match }) => {
     const response = {
       _id: id,
     };
-    console.log(response);
     fetch(url, {
       method: "DELETE",
       headers: {
@@ -79,7 +78,13 @@ const Lead = ({ match }) => {
                     </li>
                   </ul>
                   <div className="button-container">
-                    <button type="button" onClick={() => setView("edit")}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setView("edit");
+                        localStorage.setItem("key", result._id);
+                      }}
+                    >
                       Update
                       <i className="material-icons">&#xe3c9;</i>
                     </button>
@@ -99,15 +104,7 @@ const Lead = ({ match }) => {
           </div>
         </div>
       )}
-      {view === "edit" && (
-        <EditLead
-          id={match.params.id}
-          Title={results.title}
-          Client={results.client}
-          Number={results.number}
-          Status={results.status}
-        />
-      )}
+      {view === "edit" && <EditLead />}
     </React.Fragment>
   );
 };

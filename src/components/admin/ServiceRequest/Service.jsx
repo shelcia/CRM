@@ -104,7 +104,13 @@ const ServiceRequest = ({ match }) => {
                     </li>
                   </ul>
                   <div className="button-container">
-                    <button type="button" onClick={() => setView("edit")}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        localStorage.setItem("key", result._id);
+                        setView("edit");
+                      }}
+                    >
                       Update
                       <i className="material-icons">&#xe3c9;</i>
                     </button>
@@ -124,19 +130,7 @@ const ServiceRequest = ({ match }) => {
           </div>
         </div>
       )}
-      {view === "edit" && (
-        <EditService
-          id={match.params.id}
-          Title={results.title}
-          Client={results.client}
-          Manager={results.manager}
-          Closing={results.expected_closing}
-          Priority={results.priority}
-          Status={results.status}
-          Revenue={results.expected_revenue}
-          Probability={results.probability}
-        />
-      )}
+      {view === "edit" && <EditService />}
     </React.Fragment>
   );
 };

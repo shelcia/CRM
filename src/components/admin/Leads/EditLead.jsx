@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Sidenav from "../Sidenav";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
-const EditLead = ({ id, Title, Client, Number, Status }) => {
-  const [results, setResults] = useState([]);
-  // const results = useSelector((state) => state.lead);
+const EditLead = () => {
+  const id = localStorage.getItem("key");
+  const results = useSelector((state) => state.lead);
   const leads = results.filter((result) => result._id === id);
-  const [title, setTitle] = useState(Title);
-  const [client, setClient] = useState(Client);
-  const [number, setNumber] = useState(Number);
-  const [status, setStatus] = useState(Status);
+  const [title, setTitle] = useState(leads[0].title);
+  const [client, setClient] = useState(leads[0].client);
+  const [number, setNumber] = useState(leads[0].number);
+  const [status, setStatus] = useState(leads[0].status);
 
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(false);
 
   const history = useHistory();
 
@@ -24,37 +25,8 @@ const EditLead = ({ id, Title, Client, Number, Status }) => {
   const failedNotify = () =>
     toast.error("Oops!..please make sure the input field values are valid");
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-    const url =
-      "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/lead";
-    const getResult = async () => {
-      const token = localStorage.getItem("token");
-      axios({
-        url: url,
-        method: "get",
-        headers: {
-          "auth-token": token,
-          "Content-Type": "application/json",
-        },
-        signal: signal,
-      })
-        .then((response) => {
-          console.log(response);
-          setResults(response.data);
-          setTitle(response.data.title);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    getResult();
-    return () => abortController.abort();
-  }, []);
-
   const editLead = () => {
+    setLoading(true);
     const response = {
       _id: id,
       title: title,
@@ -69,10 +41,12 @@ const EditLead = ({ id, Title, Client, Number, Status }) => {
       )
       .then((res) => {
         successNotify();
+        setLoading(false);
       })
       .catch((error) => {
         failedNotify();
         console.log(error);
+        setLoading(false);
       });
   };
 
@@ -137,15 +111,16 @@ const EditLead = ({ id, Title, Client, Number, Status }) => {
                           type="text"
                           name="number"
                           placeholder="number"
+                          value={number}
                           onChange={(e) => setNumber(e.target.value)}
                         />
                       </li>
-
                       <li>
                         <b>Status</b>
                         <select
                           name="status"
                           id="status"
+                          value={status}
                           onChange={(event) => setStatus(event.target.value)}
                         >
                           <option value="New">New</option>
@@ -170,7 +145,10 @@ const EditLead = ({ id, Title, Client, Number, Status }) => {
                       </button>
                       <button
                         type="button"
-                        onClick={() => history.push("/admindashboard/lead")}
+                        onClick={() => {
+                          history.push("/admindashboard/lead");
+                          localStorage.removeItem("key");
+                        }}
                       >
                         Back
                         <i className="material-icons"> &#xe5c4;</i>
