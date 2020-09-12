@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 const delToken = () => {
   localStorage.removeItem("token");
@@ -9,22 +9,45 @@ const Sidenav = () => {
     <React.Fragment>
       <nav className="nav">
         <ul>
-          <Link to="/admindashboard/servicerequest">
-            <li className="nav-items">Service Request</li>
-          </Link>
-          <Link to="/admindashboard/lead">
-            <li className="nav-items">Leads</li>
-          </Link>
-          <Link to="/admindashboard/contact">
-            <li className="nav-items">Contacts</li>
-          </Link>
-          <Link to="/admindashboard/allusers">
-            <li className="nav-items">All Users</li>
-          </Link>
-
-          <Link onClick={() => delToken()} to="/">
-            <li className="nav-items">Logout</li>
-          </Link>
+          <li>
+            <NavLink
+              to="/admindashboard/servicerequest"
+              className="nav-items"
+              activeClassName={`nav-items active`}
+            >
+              Service Request
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/admindashboard/lead"
+              className="nav-items"
+              activeClassName={`nav-items active`}
+            >
+              Leads
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/admindashboard/contact"
+              className="nav-items"
+              activeClassName={`nav-items active`}
+            >
+              Contacts
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/admindashboard/allusers"
+              className="nav-items"
+              activeClassName={`nav-items active`}
+            >
+              All Users
+            </NavLink>
+          </li>
+          <li>
+            <Link onClick={() => delToken()} to="/" />
+          </li>
         </ul>
       </nav>
     </React.Fragment>

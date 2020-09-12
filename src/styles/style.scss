@@ -275,28 +275,24 @@ body ::-webkit-scrollbar-thumb:hover {
     border-top-right-radius: 25px;
 
     .nav {
-      // padding-left: 20px;
       margin-top: 20%;
       @include displayFlex(right);
       ul {
         list-style: none;
         width: 100%;
-        a {
-          .nav-items {
+        li {
+          @include padding(1rem, 1.5rem, 2rem, 1rem);
+          a.nav-items {
+            width: 100%;
             @include mulishStyle($primarycolor, 1.2rem, 600);
-            @include padding(1rem, 1.5rem, 2rem, 1rem);
             transition: all 0.2s ease-in;
             cursor: pointer;
-            // border-bottom: 1px solid $primarycolor;
-            &:hover {
-              background-color: $hoverbg;
-            }
-            &::after {
-              display: fixed;
-              height: 1px;
-              widows: 40%;
-              color: $primarycolor;
-            }
+          }
+          .active {
+            color: $secondarycolor !important;
+          }
+          &:hover {
+            background-color: $hoverbg;
           }
         }
       }

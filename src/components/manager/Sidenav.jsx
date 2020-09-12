@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 const delToken = () => {
   localStorage.removeItem("token");
@@ -9,18 +9,36 @@ const Sidenav = () => {
     <React.Fragment>
       <nav className="nav">
         <ul>
-          <Link to="/managerdashboard/servicerequest">
-            <li className="nav-items">Service Request</li>
-          </Link>
-          <Link to="/managerdashboard/lead">
-            <li className="nav-items">Leads</li>
-          </Link>
-          <Link to="/managerdashboard/contact">
-            <li className="nav-items">Contacts</li>
-          </Link>
-          <Link onClick={() => delToken()} to="/managerlogin">
-            <li className="nav-items">Logout</li>
-          </Link>
+          <li>
+            <NavLink
+              to="/managerdashboard/servicerequest"
+              className="nav-items"
+              activeClassName={`nav-items active`}
+            >
+              Service Request
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/managerdashboard/lead"
+              className="nav-items"
+              activeClassName={`nav-items active`}
+            >
+              Lead
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to="/managerdashboard/contact"
+              className="nav-items"
+              activeClassName={`nav-items active`}
+            >
+              Contacts
+            </NavLink>
+          </li>
+          <li>
+            <Link onClick={() => delToken()} to="/managerlogin" />
+          </li>
         </ul>
       </nav>
     </React.Fragment>

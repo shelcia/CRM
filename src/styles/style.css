@@ -427,30 +427,31 @@ body ::-webkit-scrollbar-thumb:hover {
   width: 100%;
 }
 
-.dashboard .sidebar .nav ul a .nav-items {
+.dashboard .sidebar .nav ul li {
+  padding-top: 1rem;
+  padding-bottom: 1.5rem;
+  padding-left: 2rem;
+  padding-right: 1rem;
+}
+
+.dashboard .sidebar .nav ul li a.nav-items {
+  width: 100%;
   font-family: "Mulish";
   letter-spacing: 0.2;
   font-weight: 600;
   color: #897eff;
   font-size: 1.2rem;
-  padding-top: 1rem;
-  padding-bottom: 1.5rem;
-  padding-left: 2rem;
-  padding-right: 1rem;
   -webkit-transition: all 0.2s ease-in;
   transition: all 0.2s ease-in;
   cursor: pointer;
 }
 
-.dashboard .sidebar .nav ul a .nav-items:hover {
-  background-color: #272727;
+.dashboard .sidebar .nav ul li .active {
+  color: #ffdf34 !important;
 }
 
-.dashboard .sidebar .nav ul a .nav-items::after {
-  display: fixed;
-  height: 1px;
-  widows: 40%;
-  color: #897eff;
+.dashboard .sidebar .nav ul li:hover {
+  background-color: #272727;
 }
 
 .dashboard .main-content {
