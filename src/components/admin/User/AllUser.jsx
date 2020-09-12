@@ -89,61 +89,63 @@ const AllUsers = () => {
           </div>
         </div>
       )}
-      <div className="dashboard">
-        <div className="sidebar">
-          <Sidenav />
-        </div>
-        <div className="main-content">
-          <div className="header">
-            <div className="title">All Users</div>
-            <Link to="/admindashboard/addUser">
-              <button type="button">
-                Add <i className="material-icons">&#xe147;</i>
-              </button>
-            </Link>
+      {!isLoading && (
+        <div className="dashboard">
+          <div className="sidebar">
+            <Sidenav />
           </div>
-          <hr />
-          <div className="content">
-            {users.map((result) => (
-              <div
-                key={result._id}
-                className="cards"
-                style={{
-                  marginBottom: "1rem",
-                  paddingTop: "1rem",
-                  paddingBottom: "1rem",
-                }}
-              >
-                <ul>
-                  <li>
-                    <b>Name:</b>
-                    <p>
-                      {result.fname} {result.lname}
-                    </p>
-                  </li>
-                  <li>
-                    <b>Email: </b>
-                    <p>{result.email}</p>
-                  </li>
-                  <li>
-                    <b>Type: </b>
-                    <p>{result.type}</p>
-                  </li>
-                </ul>
+          <div className="main-content">
+            <div className="header">
+              <div className="title">All Users</div>
+              <Link to="/admindashboard/addUser">
+                <button type="button">
+                  Add <i className="material-icons">&#xe147;</i>
+                </button>
+              </Link>
+            </div>
+            <hr />
+            <div className="content">
+              {users.map((result) => (
                 <div
-                  className="button-container"
-                  style={{ paddingBottom: "0.2rem" }}
+                  key={result._id}
+                  className="cards"
+                  style={{
+                    marginBottom: "1rem",
+                    paddingTop: "1rem",
+                    paddingBottom: "1rem",
+                  }}
                 >
-                  <button type="button" onClick={() => delUser(result.email)}>
-                    Delete
-                    <i className="material-icons">&#xe872;</i>
-                  </button>
+                  <ul>
+                    <li>
+                      <b>Name:</b>
+                      <p>
+                        {result.fname} {result.lname}
+                      </p>
+                    </li>
+                    <li>
+                      <b>Email: </b>
+                      <p>{result.email}</p>
+                    </li>
+                    <li>
+                      <b>Type: </b>
+                      <p>{result.type}</p>
+                    </li>
+                  </ul>
+                  <div
+                    className="button-container"
+                    style={{ paddingBottom: "0.2rem" }}
+                  >
+                    <button type="button" onClick={() => delUser(result.email)}>
+                      Delete
+                      <i className="material-icons">&#xe872;</i>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </React.Fragment>
   );
 };
