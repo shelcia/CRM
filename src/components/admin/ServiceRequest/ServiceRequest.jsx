@@ -56,8 +56,8 @@ const ServiceRequest = () => {
             <TitleTemplate
               title={`Service Request`}
               link={`/admindashboard/servicerequest/add`}
+              isAdd={true}
             />
-            <hr />
             <div className="content">
               <ul>
                 {results.map((result) => (

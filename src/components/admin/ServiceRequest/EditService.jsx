@@ -78,8 +78,8 @@ const EditService = () => {
               <TitleTemplate
                 title={`Service Request`}
                 link={`/admindashboard/servicerequest/add`}
+                isAdd={true}
               />
-              <hr />
               <div className="content">
                 {services.map((result) => (
                   <div key={result._id} className="cards">

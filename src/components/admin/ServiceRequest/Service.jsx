@@ -4,6 +4,7 @@ import { DelService } from "../../actions/index";
 import { Link } from "react-router-dom";
 import Sidenav from "../Sidenav";
 import EditService from "./EditService";
+import TitleTemplate from "../templates/TitleTemplate";
 
 const ServiceRequest = ({ match }) => {
   const results = useSelector((state) => state.service);
@@ -57,15 +58,11 @@ const ServiceRequest = ({ match }) => {
             <Sidenav />
           </div>
           <div className="main-content">
-            <div className="header">
-              <div className="title">Service Request</div>
-              <Link to="/admindashboard/servicerequest/add">
-                <button type="button">
-                  Add <i className="material-icons">&#xe147;</i>
-                </button>
-              </Link>
-            </div>
-            <hr />
+            <TitleTemplate
+              title={`Service Request`}
+              link={`/admindashboard/servicerequest/add`}
+              isAdd={true}
+            />
             <div className="content">
               {services.map((result) => (
                 <div key={result._id} className="cards">

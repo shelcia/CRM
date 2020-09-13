@@ -4,6 +4,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoaderTemplate from "../templates/LoaderTemplate";
+import TitleTemplate from "../templates/TitleTemplate";
 
 const AddForm = () => {
   const [title, setTitle] = useState();
@@ -100,10 +101,11 @@ const AddForm = () => {
               <Sidenav />
             </div>
             <div className="main-content">
-              <div className="header">
-                <div className="title">Service Request</div>
-              </div>
-              <hr />
+              <TitleTemplate
+                title={`Service Request`}
+                link={`/admindashboard/servicerequest/add`}
+                isAdd={false}
+              />
               <div className="content">
                 <div className="add-form">
                   <input
