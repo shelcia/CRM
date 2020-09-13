@@ -37,7 +37,13 @@ const Sidenav = () => {
             </NavLink>
           </li>
           <li>
-            <Link onClick={() => delToken()} to="/employeelogin" />
+            <Link
+              onClick={() => delToken()}
+              to="/employeelogin"
+              className="nav-items"
+            >
+              Logout
+            </Link>
           </li>
         </ul>
       </nav>

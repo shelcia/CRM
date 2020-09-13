@@ -4,8 +4,7 @@ import Sidenav from "../Sidenav";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadContact } from "../../actions/index";
-import Loader from "react-loader-spinner";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import LoaderTemplate from "../templates/LoaderTemplate";
 
 const Contact = () => {
   const results = useSelector((state) => state.contact);
@@ -39,25 +38,7 @@ const Contact = () => {
 
   return (
     <React.Fragment>
-      {isLoading && (
-        <div className="dashboard">
-          <div className="sidebar">
-            <Sidenav />
-          </div>
-          <div className="main-content">
-            <div className="header">
-              <div className="title">Contacts</div>
-            </div>
-            <hr />
-            <div className="content">
-              <div className="loading">
-                <Loader type="Audio" color="#897eff" height={100} width={100} />
-                <p>Loading Contacts...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {isLoading && <LoaderTemplate title={`Contacts`} />}
       {!isLoading && (
         <div className="dashboard">
           <div className="sidebar">
