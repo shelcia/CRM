@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Sidenav from "../Sidenav";
 import { useState } from "react";
 import EditLead from "./EditLead";
+import TitleTemplate from "../templates/TitleTemplate";
 
 const Lead = ({ match }) => {
   const results = useSelector((state) => state.lead);
@@ -47,15 +48,11 @@ const Lead = ({ match }) => {
             <Sidenav />
           </div>
           <div className="main-content">
-            <div className="header">
-              <div className="title">Lead</div>
-              <Link to="/admindashboard/lead/add">
-                <button type="button">
-                  Add <i className="material-icons">&#xe147;</i>
-                </button>
-              </Link>
-            </div>
-            <hr />
+            <TitleTemplate
+              title={`Lead`}
+              link={`/admindashboard/lead/add`}
+              isAdd={true}
+            />
             <div className="content">
               {services.map((result) => (
                 <div key={result._id} className="cards">

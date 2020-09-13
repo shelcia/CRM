@@ -48,7 +48,6 @@ const EditService = () => {
         response
       )
       .then((res) => {
-        console.log(res.data);
         successNotify();
         setLoading(false);
       })

@@ -3,6 +3,8 @@ import Sidenav from "../Sidenav";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import LoaderTemplate from "../templates/LoaderTemplate";
+import TitleTemplate from "../templates/TitleTemplate";
 
 const AddForm = () => {
   const [title, setTitle] = useState("");
@@ -10,6 +12,8 @@ const AddForm = () => {
   const [number, setNumber] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const token = localStorage.getItem("token");
 
@@ -20,8 +24,15 @@ const AddForm = () => {
     "https://crm-backend-nodejs.herokuapp.com/api/admindashboard/contact";
 
   const addContact = (e) => {
+    setIsLoading(true);
     e.preventDefault();
-    console.log("clicked");
+
+    if (!title || !client || !number || !email || !address) {
+      setIsLoading(false);
+      failedNotify("Please fill out all the fields");
+      return;
+    }
+
     const response = {
       title: title,
       client: client,
@@ -29,82 +40,95 @@ const AddForm = () => {
       email: email,
       address: address,
     };
-
-    const headers = {
-      "auth-token": token,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    };
-    axios
-      .post(url, response, {
-        headers: headers,
-      })
+    axios({
+      url: url,
+      method: "POST",
+      headers: {
+        "auth-token": token,
+        "Content-Type": "application/json",
+      },
+      data: response,
+    })
       .then((response) => {
-        response.json();
-        if (response.status === 200) {
+        console.log(response);
+        if (response.status === 400) {
+          failedNotify("Oops! we are facing some issue try again later");
+          setIsLoading(false);
+        } else if (response.status === 200) {
           successNotify();
-        } else if (response.status === 400) {
-          failedNotify("Please fill out all the fields");
+          setIsLoading(false);
+          setTitle("");
+          setClient("");
+          setNumber("");
+          setEmail("");
+          setAddress("");
         }
       })
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
       });
   };
   return (
     <React.Fragment>
-      <ToastContainer />
-      <div className="dashboard">
-        <div className="sidebar">
-          <Sidenav />
-        </div>
-        <div className="main-content">
-          <div className="header">
-            <div className="title">Contact</div>
-          </div>
-          <hr />
-          <div className="content">
-            <div className="add-form">
-              <input
-                type="text"
-                name="title"
-                placeholder="title"
-                onChange={(e) => setTitle(e.target.value)}
-              />
-              <input
-                type="text"
-                name="client"
-                placeholder="client"
-                onChange={(e) => setClient(e.target.value)}
-              />
-              <input
-                type="number"
-                name="number"
-                placeholder="number"
-                onChange={(e) => setNumber(e.target.value)}
-              />
-              <input
-                type="email"
-                name="email"
-                placeholder="email"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <input
-                type="text"
-                name="address"
-                placeholder="addresst"
-                onChange={(e) => setAddress(e.target.value)}
-              />
-              <div className="button-container">
-                <button onClick={(e) => addContact(e)}>Add Contact</button>
+      {isLoading && (
+        <LoaderTemplate
+          title={`Contact`}
+          isAdd={false}
+          link={`/admindashboard/servicerequest/add`}
+          content={`Adding`}
+        />
+      )}
+      {!isLoading && (
+        <React.Fragment>
+          <ToastContainer />
+          <div className="dashboard">
+            <div className="sidebar">
+              <Sidenav />
+            </div>
+            <div className="main-content">
+              <TitleTemplate title={`Add Contact`} isAdd={false} />
+              <div className="content">
+                <div className="add-form">
+                  <input
+                    type="text"
+                    name="title"
+                    placeholder="title"
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    name="client"
+                    placeholder="client"
+                    onChange={(e) => setClient(e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    name="number"
+                    placeholder="number"
+                    onChange={(e) => setNumber(e.target.value)}
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="email"
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    name="address"
+                    placeholder="address"
+                    onChange={(e) => setAddress(e.target.value)}
+                  />
+                  <div className="button-container">
+                    <button onClick={(e) => addContact(e)}>Add Contact</button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };

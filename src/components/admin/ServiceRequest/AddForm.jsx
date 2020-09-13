@@ -76,6 +76,14 @@ const AddForm = () => {
         } else if (response.status === 200) {
           successNotify();
           setIsLoading(false);
+          setTitle();
+          setClient();
+          setManager();
+          setClosing();
+          setRevenue();
+          setProb();
+          setPriority("High");
+          setStatus("Created");
         }
       })
       .catch((err) => {
@@ -87,7 +95,7 @@ const AddForm = () => {
     <React.Fragment>
       {isloading && (
         <LoaderTemplate
-          title={`Service Request`}
+          title={`Add Service Request`}
           isAdd={false}
           link={`/admindashboard/servicerequest/add`}
           content={`Adding`}

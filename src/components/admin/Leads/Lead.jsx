@@ -4,8 +4,8 @@ import Sidenav from "../Sidenav";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadLead } from "../../actions/index";
-import Loader from "react-loader-spinner";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import LoaderTemplate from "../templates/LoaderTemplate";
+import TitleTemplate from "../templates/TitleTemplate";
 
 const Lead = () => {
   const [isLoading, setLoading] = useState(true);
@@ -39,26 +39,12 @@ const Lead = () => {
   return (
     <React.Fragment>
       {isLoading && (
-        <div className="dashboard">
-          <div className="sidebar">
-            <Sidenav />
-          </div>
-          <div className="main-content">
-            <div className="header">
-              <div className="title">Lead</div>
-              <Link to="/admindashboard/lead/add">
-                <button type="button">
-                  Add <i className="material-icons">&#xe147;</i>
-                </button>
-              </Link>
-            </div>
-            <hr />
-            <div className="loading">
-              <Loader type="Audio" color="#897eff" height={100} width={100} />
-              <p>Loading Leads...</p>
-            </div>
-          </div>
-        </div>
+        <LoaderTemplate
+          title={`Lead`}
+          isAdd={true}
+          link={`/admindashboard/lead/add`}
+          content={`Loading`}
+        />
       )}
       {!isLoading && (
         <div className="dashboard">
@@ -66,15 +52,11 @@ const Lead = () => {
             <Sidenav />
           </div>
           <div className="main-content">
-            <div className="header">
-              <div className="title">Lead</div>
-              <Link to="/admindashboard/lead/add">
-                <button type="button">
-                  Add <i className="material-icons">&#xe147;</i>
-                </button>
-              </Link>
-            </div>
-            <hr />
+            <TitleTemplate
+              title={`Lead`}
+              link={`/admindashboard/lead/add`}
+              isAdd={true}
+            />
             <div className="content">
               <ul>
                 {results.map((result) => (

@@ -5,8 +5,8 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Loader from "react-loader-spinner";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import TitleTemplate from "../templates/TitleTemplate";
+import LoaderTemplate from "../templates/LoaderTemplate";
 
 const EditLead = () => {
   const id = localStorage.getItem("key");
@@ -53,21 +53,12 @@ const EditLead = () => {
   return (
     <React.Fragment>
       {isLoading && (
-        <div className="dashboard">
-          <div className="sidebar">
-            <Sidenav />
-          </div>
-          <div className="main-content">
-            <div className="header">
-              <div className="title">Edit Leads</div>
-            </div>
-            <hr />
-            <div className="loading">
-              <Loader type="Audio" color="#897eff" height={100} width={100} />
-              <p>Editing Leads...</p>
-            </div>
-          </div>
-        </div>
+        <LoaderTemplate
+          title={`Lead`}
+          isAdd={true}
+          link={`/admindashboard/lead/add`}
+          content={`Updating`}
+        />
       )}
       {!isLoading && (
         <React.Fragment>
@@ -77,10 +68,11 @@ const EditLead = () => {
               <Sidenav />
             </div>
             <div className="main-content">
-              <div className="header">
-                <div className="title">Edit Leads</div>
-              </div>
-              <hr />
+              <TitleTemplate
+                title={`Lead`}
+                link={`/admindashboard/lead/add`}
+                isAdd={true}
+              />
               <div className="content">
                 {leads.map((result) => (
                   <div key={result._id} className="cards">
