@@ -5,8 +5,7 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Loader from "react-loader-spinner";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import LoaderTemplate from "../templates/LoaderTemplate";
 
 const EditLead = () => {
   const id = localStorage.getItem("key");
@@ -54,21 +53,12 @@ const EditLead = () => {
   return (
     <React.Fragment>
       {isLoading && (
-        <div className="dashboard">
-          <div className="sidebar">
-            <Sidenav />
-          </div>
-          <div className="main-content">
-            <div className="header">
-              <div className="title">Edit Contact</div>
-            </div>
-            <hr />
-            <div className="loading">
-              <Loader type="Audio" color="#897eff" height={100} width={100} />
-              <p>Editing Contact...</p>
-            </div>
-          </div>
-        </div>
+        <LoaderTemplate
+          title={`Edit Contact`}
+          isAdd={false}
+          link={``}
+          content={`Loading`}
+        />
       )}
       {!isLoading && (
         <React.Fragment>
