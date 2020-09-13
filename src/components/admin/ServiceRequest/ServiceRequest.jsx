@@ -4,8 +4,8 @@ import axios from "axios";
 import Sidenav from "../Sidenav";
 import { useSelector, useDispatch } from "react-redux";
 import { LoadService } from "../../actions/index";
-import Loader from "react-loader-spinner";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import LoaderTemplate from "../templates/LoaderTemplate";
+import TitleTemplate from "../templates/TitleTemplate";
 
 const ServiceRequest = () => {
   const [isLoading, setLoading] = useState(true);
@@ -40,28 +40,12 @@ const ServiceRequest = () => {
   return (
     <React.Fragment>
       {isLoading && (
-        <div className="dashboard">
-          <div className="sidebar">
-            <Sidenav />
-          </div>
-          <div className="main-content">
-            <div className="header">
-              <div className="title">Service Request</div>
-              <Link to="/admindashboard/servicerequest/add">
-                <button type="button">
-                  Add <i className="material-icons">&#xe147;</i>
-                </button>
-              </Link>
-            </div>
-            <hr />
-            <div className="content">
-              <div className="loading">
-                <Loader type="Audio" color="#897eff" height={100} width={100} />
-                <p>Loading Service Requests...</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <LoaderTemplate
+          title={`Service Request`}
+          isAdd={true}
+          link={`/admindashboard/servicerequest/add`}
+          content={`Loading`}
+        />
       )}
       {!isLoading && (
         <div className="dashboard">
@@ -69,14 +53,10 @@ const ServiceRequest = () => {
             <Sidenav />
           </div>
           <div className="main-content">
-            <div className="header">
-              <div className="title">Service Request</div>
-              <Link to="/admindashboard/servicerequest/add">
-                <button type="button">
-                  Add <i className="material-icons">&#xe147;</i>
-                </button>
-              </Link>
-            </div>
+            <TitleTemplate
+              title={`Service Request`}
+              link={`/admindashboard/servicerequest/add`}
+            />
             <hr />
             <div className="content">
               <ul>

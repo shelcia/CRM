@@ -5,8 +5,8 @@ import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Loader from "react-loader-spinner";
-import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import TitleTemplate from "../templates/TitleTemplate";
+import LoaderTemplate from "../templates/LoaderTemplate";
 
 const EditService = () => {
   const id = localStorage.getItem("key");
@@ -60,21 +60,12 @@ const EditService = () => {
   return (
     <React.Fragment>
       {loading && (
-        <div className="dashboard">
-          <div className="sidebar">
-            <Sidenav />
-          </div>
-          <div className="main-content">
-            <div className="header">
-              <div className="title">Edit Service Request</div>
-            </div>
-            <hr />
-            <div className="loading">
-              <Loader type="Audio" color="#897eff" height={100} width={100} />
-              <p>Updating Service Request...</p>
-            </div>
-          </div>
-        </div>
+        <LoaderTemplate
+          title={`Service Request`}
+          isAdd={true}
+          link={`/admindashboard/servicerequest/add`}
+          content={`Updating`}
+        />
       )}
       {!loading && (
         <React.Fragment>
@@ -84,9 +75,10 @@ const EditService = () => {
               <Sidenav />
             </div>
             <div className="main-content">
-              <div className="header">
-                <div className="title">Edit Service Request</div>
-              </div>
+              <TitleTemplate
+                title={`Service Request`}
+                link={`/admindashboard/servicerequest/add`}
+              />
               <hr />
               <div className="content">
                 {services.map((result) => (
