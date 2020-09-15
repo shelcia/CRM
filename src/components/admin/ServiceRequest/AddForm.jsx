@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoaderTemplate from "../templates/LoaderTemplate";
 import TitleTemplate from "../templates/TitleTemplate";
+// import Calendar from "react-calendar";
 
 const AddForm = () => {
   const [title, setTitle] = useState();
@@ -134,6 +135,12 @@ const AddForm = () => {
                     placeholder="manager"
                     onChange={(e) => setManager(e.target.value)}
                   />
+                  {/* <Calendar
+                    name="closing"
+                    //  placeholder="closing"
+                    value={closing}
+                    onChange={(date) => setClosing(date)}
+                  /> */}
                   <input
                     type="date"
                     name="closing"

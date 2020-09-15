@@ -112,7 +112,7 @@ const AddUser = () => {
         </div>
         <div className="main-content">
           <div className="header">
-            <div className="title">Contact</div>
+            <div className="title">Add User</div>
           </div>
           <hr />
           <div className="content">

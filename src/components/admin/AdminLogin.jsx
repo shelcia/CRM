@@ -15,25 +15,35 @@ const AdminLogin = () => {
 
   const history = useHistory();
 
-  const ErrorNotify = () => toast.error("Please enter correct Credentials");
+  const url = `https://crm-backend-nodejs.herokuapp.com/api/admin/login`;
 
-  const loginUser = async (e) => {
+  const ErrorNotify = (message) => toast.error(message);
+
+  const loginUser = (event) => {
     setLoading(true);
-    e.preventDefault();
+    event.preventDefault();
     const response = { email: email, password: password };
-    try {
-      const result = await axios.post(
-        "https://crm-backend-nodejs.herokuapp.com/api/admin/login",
-        response
-      );
-      setLoading(false);
-      localStorage.setItem("token", result.data);
-      history.push("/admindashboard/servicerequest");
-    } catch (e) {
-      setLoading(false);
-      ErrorNotify();
-      console.log(`Axios request failed: ${e}`);
-    }
+    axios({
+      url: url,
+      method: "POST",
+      data: response,
+    })
+      .then((response) => {
+        // console.log(response);
+        setLoading(false);
+        if (response.data.message) {
+          ErrorNotify(response.data.message);
+        } else {
+          setLoading(false);
+          localStorage.setItem("token", response.data);
+          history.push("/admindashboard/servicerequest");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+        ErrorNotify("Incorrect Credentials");
+      });
   };
   return (
     <React.Fragment>

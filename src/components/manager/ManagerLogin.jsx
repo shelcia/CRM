@@ -12,27 +12,54 @@ const ManagerLogin = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setLoading] = useState(false);
 
+  const url = `https://crm-backend-nodejs.herokuapp.com/api/manager/login`;
+
   const history = useHistory();
 
   const ErrorNotify = () => toast.error("Please enter correct Credentials");
 
-  const loginUser = async (e) => {
+  const loginUser = async (event) => {
     setLoading(true);
-    e.preventDefault();
+    event.preventDefault();
     const response = { email: email, password: password };
-    try {
-      const result = await axios.post(
-        "https://crm-backend-nodejs.herokuapp.com/api/manager/login",
-        response
-      );
-      setLoading(false);
-      localStorage.setItem("token", result.data);
-      history.push("/managerdashboard/servicerequest");
-    } catch (error) {
-      setLoading(false);
-      ErrorNotify();
-      console.log(`Axios request failed: ${error}`);
-    }
+    axios({
+      url: url,
+      method: "POST",
+      data: response,
+    })
+      .then((response) => {
+        // console.log(response);
+        setLoading(false);
+        if (response.data.message) {
+          ErrorNotify(response.data.message);
+        } else {
+          setLoading(false);
+          localStorage.setItem("token", response.data);
+          history.push("/managerdashboard/servicerequest");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+        ErrorNotify("Incorrect Credentials");
+      });
+
+    // setLoading(true);
+    // e.preventDefault();
+    // const response = { email: email, password: password };
+    // try {
+    //   const result = await axios.post(
+    //     "https://crm-backend-nodejs.herokuapp.com/api/manager/login",
+    //     response
+    //   );
+    //   setLoading(false);
+    //   localStorage.setItem("token", result.data);
+    //   history.push("/managerdashboard/servicerequest");
+    // } catch (error) {
+    //   setLoading(false);
+    //   ErrorNotify();
+    //   console.log(`Axios request failed: ${error}`);
+    // }
   };
   return (
     <React.Fragment>
