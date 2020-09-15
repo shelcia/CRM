@@ -1,6 +1,9 @@
 Deployment Link : https://freee-crm.netlify.app/
 
 
+Frontend Link : https://github.com/shelcia/crm-frontend
+
+
 Backend Link : https://github.com/shelcia/CRM-backend
 
 
