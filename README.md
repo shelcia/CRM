@@ -1,3 +1,8 @@
+Want to contribute ? Join our server (NWoC'20)
+
+https://discord.gg/BqYZG47V
+
+
 Deployment Link : https://freee-crm.netlify.app/
 
 
