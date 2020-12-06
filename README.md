@@ -50,7 +50,6 @@ For major changes, you are welcome to open an issue to discuss what you would li
 
 </p>
 
-Check out my Github profile [Tejas1510!](https://github.com/Tejas1510)
 
 # Want to contribute ? Join our server (NWoC'20)
 
