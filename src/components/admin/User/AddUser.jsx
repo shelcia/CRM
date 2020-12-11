@@ -53,7 +53,7 @@ const AddUser = () => {
         })
         .catch((error) => {
           console.log(error);
-          successNotify();
+          failedNotify("Failed to Add User");
         });
     } else if (type === "Manager") {
       const url =
@@ -74,7 +74,7 @@ const AddUser = () => {
         })
         .catch((error) => {
           console.log(error);
-          successNotify();
+          failedNotify("Failed to Add User");
         });
     } else if (type === "Admin") {
       const url = "https://crm-backend-nodejs.herokuapp.com/api/admin/register";
@@ -95,6 +95,7 @@ const AddUser = () => {
         })
         .catch((error) => {
           console.log(error);
+          failedNotify("Failed to Add User");
         });
     }
     setFname("");
