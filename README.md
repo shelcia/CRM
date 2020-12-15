@@ -18,6 +18,7 @@
 <img src="https://img.shields.io/github/issues-pr-closed-raw/shelcia/CRM?style=for-the-badge" >
 </p>
 
+![CRM](https://socialify.git.ci/shelcia/CRM/image?description=1&font=Source%20Code%20Pro&forks=1&issues=1&language=1&owner=1&pattern=Signal&pulls=1&stargazers=1&theme=Dark)
 ## 📌 Introduction
 
 Customer relations management tool built in MERN stack
@@ -31,6 +32,24 @@ You can refer to the following articles on the basics of Git and Github and also
 - [Cloning a Repo](https://help.github.com/en/desktop/contributing-to-projects/creating-a-pull-request)
 - [How to create a Pull Request](https://opensource.com/article/19/7/create-pull-request-github)
 - [Getting started with Git and GitHub](https://towardsdatascience.com/getting-started-with-git-and-github-6fcd0f2d4ac6)
+
+## ⭐ Features of the app
+Three sections of this app:-
+- Employer (access the details about service requested, leads, contacts)
+  - Service Request is the task that needs to be performed by the employer
+  - can access the leads with their details and contacts contains the complete contact details
+  
+
+- Manager (manage employer)
+  - can create and update service requests for a employer.
+  - can create and update leads and contacts.
+
+
+- Admin (manage both employer and manager)
+  - can add or delete employers and manager
+  - can create and update service requests, leads and contacts.
+
+
 
 ## 💥 How to Contribute?
 
