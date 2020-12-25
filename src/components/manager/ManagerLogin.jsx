@@ -6,6 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+import ErrorMsg from '../ErrorMsg';
 
 const ManagerLogin = () => {
   const [email, setEmail] = useState("");
@@ -61,6 +62,36 @@ const ManagerLogin = () => {
     //   console.log(`Axios request failed: ${error}`);
     // }
   };
+
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
+
+  const [validEmail, setValidEmail] = useState(false);
+  const [showEmailError, setShowEmailError] = useState(false);
+  const [validPassword, setValidPassword] = useState(false);
+  const [showPasswordError, setShowPasswordError] = useState(false);
+
+  const validateAndSetEmail = (v) => {
+    if (emailPattern.test(v)) {
+      setValidEmail(true);
+      setShowEmailError(false);
+    } else {
+      setValidEmail(false);
+      setShowEmailError(true);
+    }
+    setEmail(v);
+  };
+
+  const validateAndSetPassword = (v) => {
+    if (v.length < 1) {
+      setValidPassword(false);
+      setShowPasswordError(true);
+    } else {
+      setValidPassword(true);
+      setShowPasswordError(false);
+    }
+    setPassword(v);
+  };
+
   return (
     <React.Fragment>
       <ToastContainer />
@@ -81,14 +112,16 @@ const ManagerLogin = () => {
               <input
                 type="text"
                 placeholder="enter email-id"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => validateAndSetEmail(e.target.value)}
               />
+              <ErrorMsg show={showEmailError} msg={'Invalid e-mail!'} />
               <input
                 type="password"
                 placeholder="enter password"
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => validateAndSetPassword(e.target.value)}
               />
-              <button type="button" onClick={(e) => loginUser(e)}>
+              <ErrorMsg show={showPasswordError} msg={'Empty password!'} />
+              <button type="button" onClick={(e) => loginUser(e)} disabled={!validEmail || !validPassword}>
                 Login
               </button>
               <button
