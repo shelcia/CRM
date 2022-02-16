@@ -1,469 +1,478 @@
-$bg: #212732;
-$emtxt: rgba(255, 255, 255, 0.87);
-
-$primarycolor: #897eff;
-$secondarycolor: #ffdf34;
-$background: #212121;
-$hoverbg: #272727;
-
 * {
   box-sizing: border-box;
   margin: 0px;
   padding: 0px;
-  font-family: "Mulish", sans-serif;
+  font-family: "Poppins", "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
   scroll-behavior: smooth;
 }
-body {
-  background-color: $background;
-  background-repeat: no-repeat;
-  background-size: cover;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
-a:link,
-a:visited,
-a:active {
-  text-decoration: none;
-}
-/* width */
-body ::-webkit-scrollbar {
-  height: 5px; /*for horizonatal scrollbar*/
-  width: 5px;
-}
 
-/* Track */
-body ::-webkit-scrollbar-track {
-  background: #f1f1f100;
-}
+// $bg: #212732;
+// $emtxt: rgba(255, 255, 255, 0.87);
 
-/* Handle */
-body ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.4);
-  border-radius: 2.5px;
-}
+// $primarycolor: #897eff;
+// $secondarycolor: #ffdf34;
+// $background: #212121;
+// $hoverbg: #272727;
 
-/* Handle on hover */
-body ::-webkit-scrollbar-thumb:hover {
-  background: rgb(0, 0, 0);
-}
-@mixin displayFlex($justify) {
-  display: flex;
-  align-items: center;
-  justify-content: $justify;
-}
-@mixin marginauto($width) {
-  width: $width;
-  margin: auto;
-}
-@mixin mulishStyle($color, $size, $weight) {
-  font-family: "Mulish";
-  letter-spacing: 0.2;
-  font-weight: $weight;
-  color: $color;
-  font-size: $size;
-}
-@mixin padding($top, $bottom, $left, $right) {
-  padding-top: $top;
-  padding-bottom: $bottom;
-  padding-left: $left;
-  padding-right: $right;
-}
-@mixin buttonStyle($color) {
-  @include padding(0.8rem, 0.8rem, 2.5rem, 2.5rem);
-  border: none;
-  cursor: pointer;
-  border-radius: 50em;
-  background-color: $color;
-  text-transform: uppercase;
-  // box-shadow: 0px 3px 10px #000000;
-  transition: all 0.2s ease-in;
-  &:hover {
-    background-color: darken($color: $color, $amount: 20);
-  }
-  &:focus,
-  &:active {
-    outline: none !important;
-    border: none;
-  }
-}
-@mixin smallButtonStyle($color) {
-  @include padding(0.5rem, 0.5rem, 1.5rem, 1.5rem);
-  border: none;
-  cursor: pointer;
-  border-radius: 50em;
-  background-color: $color;
-  text-transform: uppercase;
-  // box-shadow: 0px 3px 10px #000000;
-  transition: all 0.2s ease-in;
-  &:hover {
-    background-color: darken($color: $color, $amount: 20);
-  }
-  &:focus,
-  &:active {
-    outline: none !important;
-    border: none;
-  }
-}
-//LANDING PAGE
+// * {
+//   box-sizing: border-box;
+//   margin: 0px;
+//   padding: 0px;
+//   font-family: "Mulish", sans-serif;
+//   scroll-behavior: smooth;
+// }
+// body {
+//   background-color: $background;
+//   background-repeat: no-repeat;
+//   background-size: cover;
+//   -webkit-font-smoothing: antialiased;
+//   -moz-osx-font-smoothing: grayscale;
+//   overflow-x: hidden;
+// }
+// code {
+//   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+//     monospace;
+// }
+// a:link,
+// a:visited,
+// a:active {
+//   text-decoration: none;
+// }
+// /* width */
+// body ::-webkit-scrollbar {
+//   height: 5px; /*for horizonatal scrollbar*/
+//   width: 5px;
+// }
 
-.landing-page {
-  .navbar-container {
-    @include marginauto(100%);
-    nav {
-      @include marginauto(85%);
-      @include displayFlex(space-between);
-      .logo-container {
-        img {
-          @include padding(1rem, 1rem, 0.75rem, 0.75rem);
-          height: 80px;
-          width: auto;
-        }
-      }
-      .navlist-container {
-        @include displayFlex(space-evenly);
-        a {
-          @include mulishStyle($secondarycolor, 1rem, bold);
-          @include padding(1rem, 1rem, 1.5rem, 1.5rem);
-        }
-      }
-    }
-  }
-  .img-container {
-    @include marginauto(100%);
-    @include displayFlex(center);
-    img {
-      height: 40vh;
-    }
-  }
-  .headliner-container {
-    @include marginauto(100%);
-    @include displayFlex(center);
-    flex-direction: column;
-    text-align: center;
-    div.headliner {
-      @include mulishStyle($secondarycolor, 2rem, bold);
-      text-transform: uppercase;
-      margin: 2rem auto;
-    }
-    button {
-      @include mulishStyle($emtxt, 1rem, bold);
-      @include buttonStyle($primarycolor);
-    }
-  }
-  .login-cards {
-    @include displayFlex(center);
-    flex-direction: column;
-    margin-bottom: 100px;
-    div.headliner {
-      @include mulishStyle($primarycolor, 2rem, bold);
-      text-transform: uppercase;
-      margin: 5rem auto;
-    }
-    .card-container {
-      @include displayFlex(space-evenly);
-      flex-wrap: wrap;
-      .card {
-        @include displayFlex(center);
-        flex-direction: column;
-        margin: 1rem;
-        background-color: $secondarycolor;
-        border-radius: 50%;
-        width: 200px;
-        height: 200px;
-        text-align: center;
-        box-shadow: 0px 3px 10px #000000;
-        transition: all 0.2 ease-in;
-        &:hover {
-          box-shadow: 0px 3px 30px #000000;
-        }
-        img {
-          width: auto;
-          height: 100px;
-        }
-      }
-    }
-  }
-}
+// /* Track */
+// body ::-webkit-scrollbar-track {
+//   background: #f1f1f100;
+// }
 
-//LOGIN PAGE
-.login-container {
-  @include marginauto(85%);
-  .flexbox {
-    @include displayFlex(space-between);
-    div.illustrator {
-      @include marginauto(60%);
-      @include displayFlex(center);
-      height: 80vh;
-    }
-    div.login {
-      @include marginauto(40%);
-      div.headliner {
-        @include mulishStyle($secondarycolor, 2rem, bold);
-        text-transform: uppercase;
-        margin: 2rem auto;
-      }
-      input {
-        background-color: rgba(0, 0, 0, 0) !important;
-        border: none;
-        border-bottom: 1.5px solid $primarycolor;
-        padding: 0.75rem 0rem;
-        margin: 0.4rem;
-        width: 100%;
-        // color: $primarycolor;
-        @include mulishStyle($primarycolor, 1.2rem, 500);
-        &:focus {
-          outline: none;
-          background-color: rgba(0, 0, 0, 0) !important;
-        }
-      }
-      input:-webkit-autofill,
-      input:-webkit-autofill:hover,
-      input:-webkit-autofill:focus,
-      textarea:-webkit-autofill,
-      textarea:-webkit-autofill:hover,
-      textarea:-webkit-autofill:focus,
-      select:-webkit-autofill,
-      select:-webkit-autofill:hover,
-      select:-webkit-autofill:focus {
-        border-bottom: 1px solid $primarycolor;
-        -webkit-text-fill-color: $primarycolor;
-        box-shadow: 0 0 0px 1000px #00000000 inset;
-        transition: background-color 5000s ease-in-out 0s;
-      }
-    }
-  }
+// /* Handle */
+// body ::-webkit-scrollbar-thumb {
+//   background: rgba(0, 0, 0, 0.4);
+//   border-radius: 2.5px;
+// }
 
-  button {
-    left: 50%;
-    @include mulishStyle($background, 1.2rem, bold);
-    @include buttonStyle($secondarycolor);
-    margin: 2rem auto;
-  }
-}
+// /* Handle on hover */
+// body ::-webkit-scrollbar-thumb:hover {
+//   background: rgb(0, 0, 0);
+// }
+// @mixin displayFlex($justify) {
+//   display: flex;
+//   align-items: center;
+//   justify-content: $justify;
+// }
+// @mixin marginauto($width) {
+//   width: $width;
+//   margin: auto;
+// }
+// @mixin mulishStyle($color, $size, $weight) {
+//   font-family: "Mulish";
+//   letter-spacing: 0.2;
+//   font-weight: $weight;
+//   color: $color;
+//   font-size: $size;
+// }
+// @mixin padding($top, $bottom, $left, $right) {
+//   padding-top: $top;
+//   padding-bottom: $bottom;
+//   padding-left: $left;
+//   padding-right: $right;
+// }
+// @mixin buttonStyle($color) {
+//   @include padding(0.8rem, 0.8rem, 2.5rem, 2.5rem);
+//   border: none;
+//   cursor: pointer;
+//   border-radius: 50em;
+//   background-color: $color;
+//   text-transform: uppercase;
+//   // box-shadow: 0px 3px 10px #000000;
+//   transition: all 0.2s ease-in;
+//   &:hover {
+//     background-color: darken($color: $color, $amount: 20);
+//   }
+//   &:focus,
+//   &:active {
+//     outline: none !important;
+//     border: none;
+//   }
+// }
+// @mixin smallButtonStyle($color) {
+//   @include padding(0.5rem, 0.5rem, 1.5rem, 1.5rem);
+//   border: none;
+//   cursor: pointer;
+//   border-radius: 50em;
+//   background-color: $color;
+//   text-transform: uppercase;
+//   // box-shadow: 0px 3px 10px #000000;
+//   transition: all 0.2s ease-in;
+//   &:hover {
+//     background-color: darken($color: $color, $amount: 20);
+//   }
+//   &:focus,
+//   &:active {
+//     outline: none !important;
+//     border: none;
+//   }
+// }
+// //LANDING PAGE
 
-//LOADER STYLE
-.loading {
-  width: 100%;
-  height: 100vh;
-  @include displayFlex(center);
-  flex-direction: column;
-  p {
-    color: $secondarycolor;
-    font-size: 1.2rem;
-    margin-top: 10px;
-    font-weight: 700;
-  }
-}
+// .landing-page {
+//   .navbar-container {
+//     @include marginauto(100%);
+//     nav {
+//       @include marginauto(85%);
+//       @include displayFlex(space-between);
+//       .logo-container {
+//         img {
+//           @include padding(1rem, 1rem, 0.75rem, 0.75rem);
+//           height: 80px;
+//           width: auto;
+//         }
+//       }
+//       .navlist-container {
+//         @include displayFlex(space-evenly);
+//         a {
+//           @include mulishStyle($secondarycolor, 1rem, bold);
+//           @include padding(1rem, 1rem, 1.5rem, 1.5rem);
+//         }
+//       }
+//     }
+//   }
+//   .img-container {
+//     @include marginauto(100%);
+//     @include displayFlex(center);
+//     img {
+//       height: 40vh;
+//     }
+//   }
+//   .headliner-container {
+//     @include marginauto(100%);
+//     @include displayFlex(center);
+//     flex-direction: column;
+//     text-align: center;
+//     div.headliner {
+//       @include mulishStyle($secondarycolor, 2rem, bold);
+//       text-transform: uppercase;
+//       margin: 2rem auto;
+//     }
+//     button {
+//       @include mulishStyle($emtxt, 1rem, bold);
+//       @include buttonStyle($primarycolor);
+//     }
+//   }
+//   .login-cards {
+//     @include displayFlex(center);
+//     flex-direction: column;
+//     margin-bottom: 100px;
+//     div.headliner {
+//       @include mulishStyle($primarycolor, 2rem, bold);
+//       text-transform: uppercase;
+//       margin: 5rem auto;
+//     }
+//     .card-container {
+//       @include displayFlex(space-evenly);
+//       flex-wrap: wrap;
+//       .card {
+//         @include displayFlex(center);
+//         flex-direction: column;
+//         margin: 1rem;
+//         background-color: $secondarycolor;
+//         border-radius: 50%;
+//         width: 200px;
+//         height: 200px;
+//         text-align: center;
+//         box-shadow: 0px 3px 10px #000000;
+//         transition: all 0.2 ease-in;
+//         &:hover {
+//           box-shadow: 0px 3px 30px #000000;
+//         }
+//         img {
+//           width: auto;
+//           height: 100px;
+//         }
+//       }
+//     }
+//   }
+// }
 
-// DASHBOARD GRID STRUCTURE
+// //LOGIN PAGE
+// .login-container {
+//   @include marginauto(85%);
+//   .flexbox {
+//     @include displayFlex(space-between);
+//     div.illustrator {
+//       @include marginauto(60%);
+//       @include displayFlex(center);
+//       height: 80vh;
+//     }
+//     div.login {
+//       @include marginauto(40%);
+//       div.headliner {
+//         @include mulishStyle($secondarycolor, 2rem, bold);
+//         text-transform: uppercase;
+//         margin: 2rem auto;
+//       }
+//       input {
+//         background-color: rgba(0, 0, 0, 0) !important;
+//         border: none;
+//         border-bottom: 1.5px solid $primarycolor;
+//         padding: 0.75rem 0rem;
+//         margin: 0.4rem;
+//         width: 100%;
+//         // color: $primarycolor;
+//         @include mulishStyle($primarycolor, 1.2rem, 500);
+//         &:focus {
+//           outline: none;
+//           background-color: rgba(0, 0, 0, 0) !important;
+//         }
+//       }
+//       input:-webkit-autofill,
+//       input:-webkit-autofill:hover,
+//       input:-webkit-autofill:focus,
+//       textarea:-webkit-autofill,
+//       textarea:-webkit-autofill:hover,
+//       textarea:-webkit-autofill:focus,
+//       select:-webkit-autofill,
+//       select:-webkit-autofill:hover,
+//       select:-webkit-autofill:focus {
+//         border-bottom: 1px solid $primarycolor;
+//         -webkit-text-fill-color: $primarycolor;
+//         box-shadow: 0 0 0px 1000px #00000000 inset;
+//         transition: background-color 5000s ease-in-out 0s;
+//       }
+//     }
+//   }
 
-.dashboard {
-  overflow-y: hidden;
-  height: 100vh;
-  display: grid;
-  grid-template-columns: 250px auto;
-  .sidebar {
-    background-color: $background;
-    height: 100vh;
-    box-shadow: 6px 0px 20px #00000029;
-    border-bottom-right-radius: 25px;
-    border-top-right-radius: 25px;
+//   button {
+//     left: 50%;
+//     @include mulishStyle($background, 1.2rem, bold);
+//     @include buttonStyle($secondarycolor);
+//     margin: 2rem auto;
+//   }
+// }
 
-    .nav {
-      margin-top: 20%;
-      @include displayFlex(right);
-      ul {
-        list-style: none;
-        width: 100%;
-        li {
-          @include padding(1rem, 1.5rem, 2rem, 1rem);
-          a.nav-items {
-            width: 100%;
-            @include mulishStyle($primarycolor, 1.2rem, 600);
-            transition: all 0.2s ease-in;
-            cursor: pointer;
-          }
-          .active {
-            color: $secondarycolor !important;
-          }
-          &:hover {
-            background-color: $hoverbg;
-          }
-        }
-      }
-    }
-  }
-  .main-content {
-    margin-top: 15px;
-    padding-left: 50px;
-    padding-right: 50px;
-    position: relative;
+// //LOADER STYLE
+// .loading {
+//   width: 100%;
+//   height: 100vh;
+//   @include displayFlex(center);
+//   flex-direction: column;
+//   p {
+//     color: $secondarycolor;
+//     font-size: 1.2rem;
+//     margin-top: 10px;
+//     font-weight: 700;
+//   }
+// }
 
-    .header {
-      @include displayFlex(space-between);
-      z-index: 2;
-      .title {
-        @include mulishStyle($secondarycolor, 2.5rem, bold);
-      }
-      button {
-        @include smallButtonStyle($secondarycolor);
-        @include mulishStyle($background, 1rem, 900);
-        @include displayFlex(space-between);
-        text-transform: uppercase;
-        i {
-          font-size: 25px;
-          padding-left: 10px;
-        }
-      }
-    }
-    hr {
-      // height: 1px;
-      margin-top: 10px;
-      color: $secondarycolor;
-      border: 0.5px solid $secondarycolor;
-      background-color: $secondarycolor;
-    }
-    .content {
-      margin-top: 10px;
-      @include mulishStyle($primarycolor, 1.1rem, 500);
-      height: 83vh;
-      overflow-y: scroll;
-      .add-form {
-        @include marginauto(80%);
-        background-color: $hoverbg;
-        box-shadow: 6px 3px 20px #00000029;
-        padding: 1.5rem;
-        input,
-        select {
-          background-color: rgba(0, 0, 0, 0) !important;
-          border: none;
-          border-bottom: 1.5px solid $primarycolor;
-          padding: 0.75rem 0rem;
-          margin: 0.4rem;
-          width: 100%;
-          @include mulishStyle($primarycolor, 1.1rem, 500);
-          &:focus {
-            outline: none;
-            background-color: rgba(0, 0, 0, 0) !important;
-          }
-        }
-        input:-webkit-autofill,
-        input:-webkit-autofill:hover,
-        input:-webkit-autofill:focus,
-        textarea:-webkit-autofill,
-        textarea:-webkit-autofill:hover,
-        textarea:-webkit-autofill:focus,
-        select:-webkit-autofill,
-        select:-webkit-autofill:hover,
-        select:-webkit-autofill:focus {
-          border-bottom: 1px solid $primarycolor;
-          -webkit-text-fill-color: $primarycolor;
-          box-shadow: 0 0 0px 1000px #00000000 inset;
-          transition: background-color 5000s ease-in-out 0s;
-        }
-        .button-container {
-          @include displayFlex(space-evenly);
-          padding-top: 30px;
-          padding-bottom: 30px;
-          button {
-            @include smallButtonStyle($secondarycolor);
-            @include mulishStyle($background, 1rem, 900);
-            @include displayFlex(space-between);
-            text-transform: uppercase;
-            i {
-              font-size: 25px;
-              padding-left: 10px;
-            }
-          }
-        }
-      }
-      .cards {
-        width: 100%;
-        background-color: $hoverbg;
-        ul {
-          list-style: none;
-          li {
-            padding: 0.4rem 1rem;
-            @include displayFlex(space-between);
-            b {
-              @include mulishStyle($primarycolor, 1.1rem, 800);
-              width: 50%;
-            }
-            p {
-              @include mulishStyle($secondarycolor, 1.1rem, 500);
-              width: 50%;
-            }
-            input,
-            select {
-              background-color: rgba(0, 0, 0, 0) !important;
-              border: none;
-              border-bottom: 1.5px solid $primarycolor;
-              padding: 0.75rem 0rem;
-              margin: 0.4rem;
-              width: 100%;
-              @include mulishStyle($primarycolor, 1.1rem, 500);
-              &:focus {
-                outline: none;
-                background-color: rgba(0, 0, 0, 0) !important;
-              }
-            }
-            input:-webkit-autofill,
-            input:-webkit-autofill:hover,
-            input:-webkit-autofill:focus,
-            textarea:-webkit-autofill,
-            textarea:-webkit-autofill:hover,
-            textarea:-webkit-autofill:focus,
-            select:-webkit-autofill,
-            select:-webkit-autofill:hover,
-            select:-webkit-autofill:focus {
-              border-bottom: 1px solid $primarycolor;
-              -webkit-text-fill-color: $primarycolor;
-              box-shadow: 0 0 0px 1000px #00000000 inset;
-              transition: background-color 5000s ease-in-out 0s;
-            }
-          }
-        }
-        .button-container {
-          @include displayFlex(space-evenly);
-          padding-top: 40px;
-          padding-bottom: 30px;
-          button {
-            @include smallButtonStyle($secondarycolor);
-            @include mulishStyle($background, 1rem, 900);
-            @include displayFlex(space-between);
-            text-transform: uppercase;
-            i {
-              font-size: 25px;
-              padding-left: 10px;
-            }
-          }
-        }
-      }
-      ul {
-        list-style: none;
-        li {
-          margin-bottom: 10px;
-          background-color: $hoverbg;
-          padding: 1rem 1rem;
-          @include displayFlex(space-between);
-          p {
-            @include mulishStyle($primarycolor, 1.1rem, 500);
-          }
-          i {
-            color: $secondarycolor;
-            cursor: pointer;
-            transition: all 0.2s ease-out;
-            &:hover {
-              transform: translateX(10px);
-            }
-          }
-        }
-      }
-    }
-  }
-}
+// // DASHBOARD GRID STRUCTURE
+
+// .dashboard {
+//   overflow-y: hidden;
+//   height: 100vh;
+//   display: grid;
+//   grid-template-columns: 250px auto;
+//   .sidebar {
+//     background-color: $background;
+//     height: 100vh;
+//     box-shadow: 6px 0px 20px #00000029;
+//     border-bottom-right-radius: 25px;
+//     border-top-right-radius: 25px;
+
+//     .nav {
+//       margin-top: 20%;
+//       @include displayFlex(right);
+//       ul {
+//         list-style: none;
+//         width: 100%;
+//         li {
+//           @include padding(1rem, 1.5rem, 2rem, 1rem);
+//           a.nav-items {
+//             width: 100%;
+//             @include mulishStyle($primarycolor, 1.2rem, 600);
+//             transition: all 0.2s ease-in;
+//             cursor: pointer;
+//           }
+//           .active {
+//             color: $secondarycolor !important;
+//           }
+//           &:hover {
+//             background-color: $hoverbg;
+//           }
+//         }
+//       }
+//     }
+//   }
+//   .main-content {
+//     margin-top: 15px;
+//     padding-left: 50px;
+//     padding-right: 50px;
+//     position: relative;
+
+//     .header {
+//       @include displayFlex(space-between);
+//       z-index: 2;
+//       .title {
+//         @include mulishStyle($secondarycolor, 2.5rem, bold);
+//       }
+//       button {
+//         @include smallButtonStyle($secondarycolor);
+//         @include mulishStyle($background, 1rem, 900);
+//         @include displayFlex(space-between);
+//         text-transform: uppercase;
+//         i {
+//           font-size: 25px;
+//           padding-left: 10px;
+//         }
+//       }
+//     }
+//     hr {
+//       // height: 1px;
+//       margin-top: 10px;
+//       color: $secondarycolor;
+//       border: 0.5px solid $secondarycolor;
+//       background-color: $secondarycolor;
+//     }
+//     .content {
+//       margin-top: 10px;
+//       @include mulishStyle($primarycolor, 1.1rem, 500);
+//       height: 83vh;
+//       overflow-y: scroll;
+//       .add-form {
+//         @include marginauto(80%);
+//         background-color: $hoverbg;
+//         box-shadow: 6px 3px 20px #00000029;
+//         padding: 1.5rem;
+//         input,
+//         select {
+//           background-color: rgba(0, 0, 0, 0) !important;
+//           border: none;
+//           border-bottom: 1.5px solid $primarycolor;
+//           padding: 0.75rem 0rem;
+//           margin: 0.4rem;
+//           width: 100%;
+//           @include mulishStyle($primarycolor, 1.1rem, 500);
+//           &:focus {
+//             outline: none;
+//             background-color: rgba(0, 0, 0, 0) !important;
+//           }
+//         }
+//         input:-webkit-autofill,
+//         input:-webkit-autofill:hover,
+//         input:-webkit-autofill:focus,
+//         textarea:-webkit-autofill,
+//         textarea:-webkit-autofill:hover,
+//         textarea:-webkit-autofill:focus,
+//         select:-webkit-autofill,
+//         select:-webkit-autofill:hover,
+//         select:-webkit-autofill:focus {
+//           border-bottom: 1px solid $primarycolor;
+//           -webkit-text-fill-color: $primarycolor;
+//           box-shadow: 0 0 0px 1000px #00000000 inset;
+//           transition: background-color 5000s ease-in-out 0s;
+//         }
+//         .button-container {
+//           @include displayFlex(space-evenly);
+//           padding-top: 30px;
+//           padding-bottom: 30px;
+//           button {
+//             @include smallButtonStyle($secondarycolor);
+//             @include mulishStyle($background, 1rem, 900);
+//             @include displayFlex(space-between);
+//             text-transform: uppercase;
+//             i {
+//               font-size: 25px;
+//               padding-left: 10px;
+//             }
+//           }
+//         }
+//       }
+//       .cards {
+//         width: 100%;
+//         background-color: $hoverbg;
+//         ul {
+//           list-style: none;
+//           li {
+//             padding: 0.4rem 1rem;
+//             @include displayFlex(space-between);
+//             b {
+//               @include mulishStyle($primarycolor, 1.1rem, 800);
+//               width: 50%;
+//             }
+//             p {
+//               @include mulishStyle($secondarycolor, 1.1rem, 500);
+//               width: 50%;
+//             }
+//             input,
+//             select {
+//               background-color: rgba(0, 0, 0, 0) !important;
+//               border: none;
+//               border-bottom: 1.5px solid $primarycolor;
+//               padding: 0.75rem 0rem;
+//               margin: 0.4rem;
+//               width: 100%;
+//               @include mulishStyle($primarycolor, 1.1rem, 500);
+//               &:focus {
+//                 outline: none;
+//                 background-color: rgba(0, 0, 0, 0) !important;
+//               }
+//             }
+//             input:-webkit-autofill,
+//             input:-webkit-autofill:hover,
+//             input:-webkit-autofill:focus,
+//             textarea:-webkit-autofill,
+//             textarea:-webkit-autofill:hover,
+//             textarea:-webkit-autofill:focus,
+//             select:-webkit-autofill,
+//             select:-webkit-autofill:hover,
+//             select:-webkit-autofill:focus {
+//               border-bottom: 1px solid $primarycolor;
+//               -webkit-text-fill-color: $primarycolor;
+//               box-shadow: 0 0 0px 1000px #00000000 inset;
+//               transition: background-color 5000s ease-in-out 0s;
+//             }
+//           }
+//         }
+//         .button-container {
+//           @include displayFlex(space-evenly);
+//           padding-top: 40px;
+//           padding-bottom: 30px;
+//           button {
+//             @include smallButtonStyle($secondarycolor);
+//             @include mulishStyle($background, 1rem, 900);
+//             @include displayFlex(space-between);
+//             text-transform: uppercase;
+//             i {
+//               font-size: 25px;
+//               padding-left: 10px;
+//             }
+//           }
+//         }
+//       }
+//       ul {
+//         list-style: none;
+//         li {
+//           margin-bottom: 10px;
+//           background-color: $hoverbg;
+//           padding: 1rem 1rem;
+//           @include displayFlex(space-between);
+//           p {
+//             @include mulishStyle($primarycolor, 1.1rem, 500);
+//           }
+//           i {
+//             color: $secondarycolor;
+//             cursor: pointer;
+//             transition: all 0.2s ease-out;
+//             &:hover {
+//               transform: translateX(10px);
+//             }
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
