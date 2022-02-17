@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 /*!
 
 =========================================================
@@ -24,7 +25,7 @@ import colors from "../../base/colors";
 // Vision UI Dashboard React helper functions
 import pxToRem from "../../functions/pxToRem";
 
-const { size, fontWeightRegular } = typography;
+const { size, fontWeightMedium } = typography;
 const { borderRadius } = borders;
 const { white } = colors;
 
@@ -39,13 +40,14 @@ export default {
       minWidth: "150px",
       minHeight: "35px",
       fontSize: size.xs,
-      fontWeight: fontWeightRegular,
+      fontWeight: fontWeightMedium,
       textTransform: "none",
       lineHeight: "inherit",
       padding: `${pxToRem(10)} !important`,
       borderRadius: borderRadius.md,
       color: `${white.main} !important`,
       opacity: "1 !important",
+      backgroundColor: "rgba(0, 0, 0, 0)",
 
       "& .material-icons, .material-icons-round": {
         marginBottom: "0 !important",

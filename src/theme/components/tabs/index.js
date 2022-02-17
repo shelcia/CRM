@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 /*!
 
 =========================================================
@@ -23,14 +24,15 @@ import borders from "../../base/borders";
 // Vision UI Dashboard React helper functions
 import pxToRem from "../../functions/pxToRem";
 
-const { grey, info } = colors;
+const { info } = colors;
 const { borderRadius } = borders;
 
 export default {
   styleOverrides: {
     root: {
       position: "relative",
-      backgroundColor: grey[100],
+      // backgroundColor: grey[100],
+      backgroundColor: "rgba(0,0,0,0)",
       borderRadius: borderRadius.md,
       minHeight: "unset",
       padding: pxToRem(4),

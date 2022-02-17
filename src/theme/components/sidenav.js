@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 /*!
 
 =========================================================
@@ -37,12 +38,14 @@ export default {
 
     paper: {
       width: pxToRem(250),
-      backgroundColor: rgba(white.main, 0.8),
-      backdropFilter: `saturate(200%) blur(${pxToRem(30)})`,
+      // backgroundColor: rgba(white.main, 0.8),
+      backgroundColor: rgba(white.main, 0.0),
+      // backdropFilter: `saturate(200%) blur(${pxToRem(30)})`,
       height: `calc(100vh - ${pxToRem(32)})`,
       margin: pxToRem(16),
       borderRadius: borderRadius.xl,
       border: "none",
+      color: rgba(white.main, 0.87),
     },
 
     paperAnchorDockedLeft: {

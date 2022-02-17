@@ -1,5 +1,5 @@
+import { Typography } from "@mui/material";
 import React from "react";
-import VuiTypography from "../../components/VuiTypography";
 
 const Home = () => {
   return (
@@ -8,9 +8,9 @@ const Home = () => {
         className="container d-flex justify-content-center align-items-center"
         style={{ height: "100vh" }}
       >
-        <VuiTypography variant="h1" color="white">
-          Site currrently under Construction !
-        </VuiTypography>
+        <Typography variant="h1" style={{ color: "white" }}>
+          Site is currrently under Construction !
+        </Typography>
       </div>
     </React.Fragment>
   );
