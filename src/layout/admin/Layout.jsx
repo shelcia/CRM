@@ -1,20 +1,30 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   AppBar,
-  Box,
   CssBaseline,
-  Tab,
-  Tabs,
   Toolbar,
   IconButton,
-  Typography,
   Drawer,
+  ListItemText,
+  List,
+  ListItem,
+  ListItemAvatar,
+  Avatar,
+  Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import FolderIcon from "@mui/icons-material/Folder";
+import { menuList } from "./Sidebar";
+import { useLocation, Outlet } from "react-router-dom";
+import CustomBox from "../../components/CustomBox";
+import CustomTypography from "../../components/CustomTypography";
+import CustomFlexbox from "../../components/CustomFlexbox";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { TitleContext } from "../../context/TitleContext";
 
 const drawerWidth = 240;
 
-function ResponsiveDrawer(props) {
+const ResponsiveDrawer = (props) => {
   const { window, children } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -22,35 +32,35 @@ function ResponsiveDrawer(props) {
     setMobileOpen(!mobileOpen);
   };
 
-  function a11yProps(index) {
-    return {
-      id: `vertical-tab-${index}`,
-      "aria-controls": `vertical-tabpanel-${index}`,
-    };
-  }
+  const location = useLocation();
+  console.log(location);
 
-  const [value, setValue] = React.useState(1);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const { title } = useContext(TitleContext);
 
   const drawer = (
     <div>
       <Toolbar />
-      <Tabs
-        orientation="vertical"
-        variant="scrollable"
-        value={value}
-        onChange={handleChange}
-        sx={{ borderRight: 1, borderColor: "divider" }}
-      >
-        <Tab label="Contact" {...a11yProps(0)} />
-        <Tab label="Tickets" {...a11yProps(1)} />
-        <Tab label="Todo" {...a11yProps(2)} />
-        <Tab label="Email" {...a11yProps(3)} />
-        <Tab label="CMS" {...a11yProps(4)} />
-      </Tabs>
+      <Divider />
+      <List dense={true}>
+        {menuList.map((item, index) => (
+          <ListItem style={{ marginTop: 10, marginBottom: 15 }} key={index}>
+            <ListItemAvatar>
+              <Avatar
+                sx={{
+                  width: 30,
+                  height: 30,
+                  backgroundColor: "rgb(26, 31, 55)",
+                }}
+                variant="rounded"
+              >
+                <FolderIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={item.title} />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
     </div>
   );
 
@@ -58,18 +68,20 @@ function ResponsiveDrawer(props) {
     window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <CustomBox sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar
         position="fixed"
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
+          backdropFilter: "blur(2.625rem)",
+          borderRadius: "1.25rem",
         }}
       >
-        <Toolbar>
+        <Toolbar className="w-100">
           <IconButton
-            color="inherit"
+            color="white"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
@@ -77,16 +89,24 @@ function ResponsiveDrawer(props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Responsive drawer
-          </Typography>
+          <CustomFlexbox
+            alignItems="center"
+            sx={{ justifyContent: "space-between" }}
+            className="w-100"
+          >
+            <CustomTypography textGradient={true} component="div" color="light">
+              {title}
+            </CustomTypography>
+            <IconButton color="white" edge="end">
+              <LogoutIcon color="white" />
+            </IconButton>
+          </CustomFlexbox>
         </Toolbar>
       </AppBar>
-      <Box
+      <CustomBox
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
           container={container}
           variant="temporary"
@@ -118,10 +138,11 @@ function ResponsiveDrawer(props) {
         >
           {drawer}
         </Drawer>
-      </Box>
+      </CustomBox>
       {children}
-    </Box>
+      <Outlet />
+    </CustomBox>
   );
-}
+};
 
 export default ResponsiveDrawer;
