@@ -14,12 +14,14 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 // import FolderIcon from "@mui/icons-material/Folder";
 import { menuList } from "./Sidebar";
-import { useLocation, Outlet, useNavigate } from "react-router-dom";
+import { useLocation, Outlet, useNavigate, Link } from "react-router-dom";
 import CustomBox from "../../components/CustomBox";
 import CustomTypography from "../../components/CustomTypography";
 import CustomFlexbox from "../../components/CustomFlexbox";
+import CustomAvatar from "../../components/CustomAvatar";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { TitleContext } from "../../context/TitleContext";
+import Logo from "../../assets/E.png";
 
 const drawerWidth = 240;
 
@@ -32,7 +34,7 @@ const AdminLayout = (props) => {
   };
 
   const location = useLocation();
-  console.log(location);
+  // console.log(location);
 
   const { title } = useContext(TitleContext);
 
@@ -44,7 +46,34 @@ const AdminLayout = (props) => {
 
   const drawer = (
     <section>
-      <Toolbar />
+      <Toolbar>
+        <CustomBox
+          component={Link}
+          to="/admin_dashboard/contacts"
+          py={1.5}
+          lineHeight={1}
+          className="d-flex justify-content-between align-items-center"
+        >
+          <CustomAvatar
+            src={Logo}
+            variant="square"
+            sx={{ width: 30, height: 30, marginRight: 1 }}
+          />
+          <CustomTypography
+            variant="button"
+            textGradient={true}
+            color="light"
+            fontSize={14}
+            letterSpacing={2}
+            fontWeight="medium"
+            // sx={{
+            //   margin: "0 auto",
+            // }}
+          >
+            EASY-CRM
+          </CustomTypography>
+        </CustomBox>
+      </Toolbar>
       <Divider />
       <List dense={true}>
         {menuList.map((item, index) => (

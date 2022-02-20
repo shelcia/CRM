@@ -151,8 +151,8 @@ import Typography from "@mui/material/Typography";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
+// import FormControlLabel from "@mui/material/FormControlLabel";
+// import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
@@ -349,13 +349,13 @@ const EnhancedTableToolbar = (props) => {
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
-            <DeleteIcon />
+            <DeleteIcon sx={{ color: "#f8f9fa" }} />
           </IconButton>
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
           <IconButton>
-            <FilterListIcon />
+            <FilterListIcon sx={{ color: "#f8f9fa" }} />
           </IconButton>
         </Tooltip>
       )}
@@ -372,7 +372,7 @@ export default function EnhancedTable() {
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
+  //   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (event, property) => {
@@ -419,9 +419,9 @@ export default function EnhancedTable() {
     setPage(0);
   };
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
+  //   const handleChangeDense = (event) => {
+  //     setDense(event.target.checked);
+  //   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
@@ -434,7 +434,10 @@ export default function EnhancedTable() {
       <CustomBox sx={{ width: "100%", mb: 2 }} color="white">
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
-          <Table sx={{ minWidth: 650 }} size={dense ? "small" : "medium"}>
+          <Table
+            sx={{ minWidth: 650 }}
+            //   size={dense ? "small" : "medium"}
+          >
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -486,9 +489,9 @@ export default function EnhancedTable() {
                 })}
               {emptyRows > 0 && (
                 <TableRow
-                  style={{
-                    height: (dense ? 10 : 53) * emptyRows,
-                  }}
+                //   style={{
+                //     height: (dense ? 10 : 53) * emptyRows,
+                //   }}
                 >
                   <TableCell colSpan={6} />
                 </TableRow>
@@ -506,10 +509,10 @@ export default function EnhancedTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </CustomBox>
-      <FormControlLabel
+      {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
-      />
+      /> */}
     </CustomBox>
   );
 }

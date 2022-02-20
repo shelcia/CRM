@@ -20,18 +20,18 @@
 // Vision UI Dashboard React base styles
 import colors from "../../base/colors";
 import boxShadows from "../../base/boxShadows";
-import borders from "../../base/borders";
+// import borders from "../../base/borders";
 
 const { transparent } = colors;
 const { xxl } = boxShadows;
-const { borderRadius } = borders;
+// const { borderRadius } = borders;
 
 export default {
   styleOverrides: {
     root: {
       backgroundColor: transparent.main,
       boxShadow: xxl,
-      borderRadius: borderRadius.xl,
+      // borderRadius: borderRadius.xl,
       "& thead": {
         "& tr": {
           "& th": {

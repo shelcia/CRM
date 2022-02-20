@@ -11,6 +11,10 @@ const Loadable = (Component) => (props) =>
 // LANDING PAGE
 const Home = Loadable(lazy(() => import("./pages/landing/Home")));
 
+const PrivacyPolicy = Loadable(
+  lazy(() => import("./pages/others/PrivacyPolicy"))
+);
+
 // ADMIN PAGE
 // const Dashboard = Loadable(lazy(() => import("./pages/admin/dashboard/Dashboard")));
 const Contacts = Loadable(lazy(() => import("./pages/admin/contact/Contacts")));
@@ -24,6 +28,10 @@ const routes = [
   {
     path: "",
     element: <Home />,
+  },
+  {
+    path: "privacy-policy",
+    element: <PrivacyPolicy />,
   },
   {
     path: "admin_dashboard",

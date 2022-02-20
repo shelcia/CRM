@@ -27,6 +27,8 @@ import pxToRem from "../../functions/pxToRem";
 const { borderWidth } = borders;
 const { light, white } = colors;
 
+console.log({ borderWidth });
+
 export default {
   styleOverrides: {
     root: {
@@ -36,7 +38,7 @@ export default {
       //   pl: "0px !important",
       // },
       color: white,
-      borderBottom: `${borderWidth[1]} solid ${light.main}`,
+      borderBottom: `${borderWidth[1]} solid ${light.main} !important`,
     },
   },
 };

@@ -3,6 +3,7 @@ import { Toolbar, Card, TableRow, TableCell } from "@mui/material";
 import CustomBox from "../../../components/CustomBox";
 import CustomTable from "../../../components/CustomTable";
 import useTitle from "../../../hooks/useTitle";
+import Footer from "../../../layout/common/Footer";
 
 const Contacts = () => {
   useTitle("All Contacts");
@@ -94,6 +95,7 @@ const Contacts = () => {
           </CustomBox>
         </CustomBox>
       </Card>
+      <Footer />
     </CustomBox>
   );
 };
