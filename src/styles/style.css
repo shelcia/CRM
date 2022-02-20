@@ -16,8 +16,7 @@ thead th {
   color: #a0aec0 !important;
 }
 
-.MuiTable-root,
-.MuiSvgIcon-root {
+.MuiTableSortLabel-icon {
   color: #f8f9fa !important;
 }
 

@@ -81,7 +81,7 @@ const Contacts = () => {
       <Toolbar />
       <Card>
         <CustomBox bgColor={"white"} variant="gradient">
-          <CustomBox pt={3} px={3}>
+          <CustomBox pt={3} px={3} className="table">
             <CustomTable headers={headers} rows={contacts}>
               {contacts.map((user, index) => (
                 <TableRow key={user._id}>

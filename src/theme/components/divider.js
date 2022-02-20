@@ -30,14 +30,19 @@ export default {
   styleOverrides: {
     root: {
       backgroundColor: transparent.main,
+      // backgroundImage: `linear-gradient(to right, ${rgba(dark.main, 0)}, ${rgba(
+      //   dark.main,
+      //   0.5
+      // )}, ${rgba(dark.main, 0)}) !important`,
       backgroundImage: `linear-gradient(to right, ${rgba(dark.main, 0)}, ${rgba(
         dark.main,
-        0.5
+        0.9
       )}, ${rgba(dark.main, 0)}) !important`,
       height: pxToRem(1),
       margin: `${pxToRem(16)} 0`,
       borderBottom: "none",
-      opacity: 0.25,
+      // opacity: 0.25,
+      opacity: 1,
     },
 
     vertical: {

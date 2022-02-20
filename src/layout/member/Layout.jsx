@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   AppBar,
   CssBaseline,
@@ -9,12 +9,13 @@ import {
   List,
   ListItem,
   ListItemAvatar,
+  Avatar,
   Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 // import FolderIcon from "@mui/icons-material/Folder";
 import { menuList } from "./Sidebar";
-import { useLocation, Outlet, useNavigate } from "react-router-dom";
+import { useLocation, Outlet, NavLink } from "react-router-dom";
 import CustomBox from "../../components/CustomBox";
 import CustomTypography from "../../components/CustomTypography";
 import CustomFlexbox from "../../components/CustomFlexbox";
@@ -23,9 +24,9 @@ import { TitleContext } from "../../context/TitleContext";
 
 const drawerWidth = 240;
 
-const AdminLayout = (props) => {
+const MemberLayout = (props) => {
   const { window, children } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -36,40 +37,35 @@ const AdminLayout = (props) => {
 
   const { title } = useContext(TitleContext);
 
-  const isLocationIncluded = (path) => {
-    return path.includes(location.pathname);
-  };
-
-  const navigate = useNavigate();
-
   const drawer = (
-    <section>
+    <div>
       <Toolbar />
       <Divider />
       <List dense={true}>
         {menuList.map((item, index) => (
           <ListItem
-            style={{
-              marginBottom: 8,
-              background: isLocationIncluded(item.path)
-                ? "rgba(26, 31, 55, 0.6)"
-                : "rgba(0, 0, 0, 0)",
-              padding: "0.475rem 0.6rem 0.475rem 0.8rem",
-              borderRadius: "0.85rem",
-              cursor: "pointer",
-            }}
+            style={{ marginTop: 10, marginBottom: 15 }}
             key={index}
-            onClick={() => navigate(item.path)}
+            components={NavLink}
           >
             <ListItemAvatar>
-              {isLocationIncluded(item.path) ? item.ActiveIcon : item.Icon}
+              <Avatar
+                sx={{
+                  width: 30,
+                  height: 30,
+                  backgroundColor: "rgb(26, 31, 55)",
+                }}
+                variant="rounded"
+              >
+                {item.Icon}
+              </Avatar>
             </ListItemAvatar>
             <ListItemText primary={item.title} />
           </ListItem>
         ))}
       </List>
       <Divider />
-    </section>
+    </div>
   );
 
   const container =
@@ -148,9 +144,20 @@ const AdminLayout = (props) => {
         </Drawer>
       </CustomBox>
       {children}
-      <Outlet />
+      <CustomBox
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: { sm: `calc(100% - 260px)` },
+          minHeight: "100vh",
+        }}
+      >
+        <Toolbar />
+        <Outlet />
+      </CustomBox>
     </CustomBox>
   );
 };
 
-export default AdminLayout;
+export default MemberLayout;

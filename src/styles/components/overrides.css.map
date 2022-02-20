@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAIA,AAAA,2BAA2B,CAAC,kBAAkB,CAAC;EAC7C,KAAK,EAAE,eAAe;CACvB;;AAED,AAAA,EAAE;AACF,EAAE,CAAC;EACD,KAAK,EAAE,kBAAkB;CAC1B;;AAED,AAAA,KAAK,CAAC,EAAE,CAAC;EACP,KAAK,EAAE,kBAAkB;EACzB,cAAc,EAAE,SAAS;CAC1B;;AAED,AAAA,sDAAsD,AAAA,WAAW,CAAC;EAChE,KAAK,EAAE,kBAAkB;CAC1B;;AAKD,AAAA,cAAc;AACd,gBAAgB,CAAC;EACf,KAAK,EAAE,kBAAkB;CAC1B",
-    "sources": [
-        "overrides.scss"
-    ],
-    "names": [],
-    "file": "overrides.css"
-}

@@ -15,6 +15,10 @@ const Home = Loadable(lazy(() => import("./pages/landing/Home")));
 // const Dashboard = Loadable(lazy(() => import("./pages/admin/dashboard/Dashboard")));
 const Contacts = Loadable(lazy(() => import("./pages/admin/contact/Contacts")));
 const Contact = Loadable(lazy(() => import("./pages/admin/contact/Contact")));
+const Tickets = Loadable(lazy(() => import("./pages/admin/tickets/Tickets")));
+const Todos = Loadable(lazy(() => import("./pages/admin/todo/Todos")));
+const Emails = Loadable(lazy(() => import("./pages/admin/emails/Emails")));
+const CMS = Loadable(lazy(() => import("./pages/admin/cms/CMS")));
 
 const routes = [
   {
@@ -32,6 +36,22 @@ const routes = [
       {
         path: "contacts/:id",
         element: <Contact />,
+      },
+      {
+        path: "tickets",
+        element: <Tickets />,
+      },
+      {
+        path: "todos",
+        element: <Todos />,
+      },
+      {
+        path: "emails",
+        element: <Emails />,
+      },
+      {
+        path: "cms",
+        element: <CMS />,
       },
     ],
   },
