@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 /*!
 
 =========================================================
@@ -24,16 +25,17 @@ import colors from "../../base/colors";
 import pxToRem from "../../functions/pxToRem";
 
 const { borderWidth } = borders;
-const { light } = colors;
+const { light, white } = colors;
 
 export default {
   styleOverrides: {
     root: {
-      backgroundColor: `${light.main} !important`,
+      // backgroundColor: `${light.main} !important`,
       padding: `${pxToRem(12)} ${pxToRem(16)}`,
-      "& .MuiBox-root": {
-        pl: "0px !important",
-      },
+      // "& .MuiBox-root": {
+      //   pl: "0px !important",
+      // },
+      color: white,
       borderBottom: `${borderWidth[1]} solid ${light.main}`,
     },
   },

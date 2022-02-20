@@ -15,7 +15,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import FolderIcon from "@mui/icons-material/Folder";
 import { menuList } from "./Sidebar";
-import { useLocation, Outlet } from "react-router-dom";
+import { useLocation, Outlet, NavLink } from "react-router-dom";
 import CustomBox from "../../components/CustomBox";
 import CustomTypography from "../../components/CustomTypography";
 import CustomFlexbox from "../../components/CustomFlexbox";
@@ -43,7 +43,11 @@ const ResponsiveDrawer = (props) => {
       <Divider />
       <List dense={true}>
         {menuList.map((item, index) => (
-          <ListItem style={{ marginTop: 10, marginBottom: 15 }} key={index}>
+          <ListItem
+            style={{ marginTop: 10, marginBottom: 15 }}
+            key={index}
+            components={NavLink}
+          >
             <ListItemAvatar>
               <Avatar
                 sx={{

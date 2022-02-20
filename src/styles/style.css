@@ -1,3 +1,26 @@
+.MuiTablePagination-toolbar .MuiInputBase-root {
+  width: 90px !important;
+}
+
+td,
+th {
+  color: #f8f9fa !important;
+}
+
+thead th {
+  color: #a0aec0 !important;
+  text-transform: uppercase;
+}
+
+.css-1qgma8u-MuiButtonBase-root-MuiTableSortLabel-root.Mui-active {
+  color: #a0aec0 !important;
+}
+
+.MuiTable-root,
+.MuiSvgIcon-root {
+  color: #f8f9fa !important;
+}
+
 * {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 /*!
 
 =========================================================
@@ -34,22 +35,22 @@ export default {
       "& thead": {
         "& tr": {
           "& th": {
-            "&:first-child": {
-              paddingLeft: "0px !important",
-            },
+            // "&:first-of-type": {
+            //   paddingLeft: "0px !important",
+            // },
           },
         },
       },
       "& .MuiTableBody-root": {
         "& tr": {
-          "& td": {
-            "&:first-child": {
-              paddingLeft: "0px !important",
-              "& .MuiBox-root": {
-                paddingLeft: "0px !important",
-              },
-            },
-          },
+          // "& td": {
+          //   "&:first-of-type": {
+          //     paddingLeft: "0px !important",
+          //     "& .MuiBox-root": {
+          //       paddingLeft: "0px !important",
+          //     },
+          //   },
+          // },
         },
       },
     },

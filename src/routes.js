@@ -13,6 +13,7 @@ const Home = Loadable(lazy(() => import("./pages/landing/Home")));
 
 // ADMIN PAGE
 // const Dashboard = Loadable(lazy(() => import("./pages/admin/dashboard/Dashboard")));
+const Contacts = Loadable(lazy(() => import("./pages/admin/contact/Contacts")));
 const Contact = Loadable(lazy(() => import("./pages/admin/contact/Contact")));
 
 const routes = [
@@ -25,7 +26,11 @@ const routes = [
     element: <Layout />,
     children: [
       {
-        path: "contact",
+        path: "contacts",
+        element: <Contacts />,
+      },
+      {
+        path: "contacts/:id",
         element: <Contact />,
       },
     ],
