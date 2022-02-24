@@ -12,6 +12,7 @@ const Loadable = (Component) => (props) =>
 const Home = Loadable(lazy(() => import("./pages/landing/Home")));
 
 const Signup = Loadable(lazy(() => import("./pages/auth/Signup")));
+const Login = Loadable(lazy(() => import("./pages/auth/Login")));
 
 const PrivacyPolicy = Loadable(
   lazy(() => import("./pages/others/PrivacyPolicy"))
@@ -34,6 +35,10 @@ const routes = [
   {
     path: "signup",
     element: <Signup />,
+  },
+  {
+    path: "login",
+    element: <Login />,
   },
   {
     path: "privacy-policy",

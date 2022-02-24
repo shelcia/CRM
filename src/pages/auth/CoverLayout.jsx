@@ -4,29 +4,9 @@ import CustomTypography from "../../components/CustomTypography";
 // import Footer from "../../layout/common/Footer";
 // import colors from "../../theme/base/colors";
 
-const CoverLayout = ({
-  color,
-  header,
-  title,
-  description,
-  motto,
-  premotto,
-  image,
-  top,
-  cardContent,
-  children,
-}) => {
+const CoverLayout = ({ motto, premotto, image, cardContent, children }) => {
   //   const { gradients } = colors;
   return (
-    // <PageLayout
-    //   background={tripleLinearGradient(
-    //     gradients.cover.main,
-    //     gradients.cover.state,
-    //     gradients.cover.stateSecondary,
-    //     gradients.cover.angle
-    //   )}
-    // >
-
     <CustomBox
       width="100vw"
       maxWidth="100%"
@@ -90,7 +70,7 @@ const CoverLayout = ({
             textAlign={cardContent ? "center" : "start"}
             variant="h2"
             fontWeight="bold"
-            color="logo"
+            color="white"
             mb="10px"
             textGradient
             sx={{ letterSpacing: "8px" }}
@@ -99,6 +79,7 @@ const CoverLayout = ({
           </CustomTypography>
         </CustomBox>
       </CustomBox>
+      {/* second box */}
       <CustomBox
         sx={{
           display: "flex",
@@ -108,12 +89,14 @@ const CoverLayout = ({
           maxWidth: "1044px",
           minHeight: "75vh",
           margin: "0 auto",
+          maxHeight: "100vh",
         }}
       >
         <CustomBox
-          mt={top}
+          //   mt={top}
           ml="auto !important"
           sx={({ breakpoints }) => ({
+            height: "100%",
             [breakpoints.down("xl")]: {
               mr: cardContent ? "50px" : "100px",
             },
@@ -129,49 +112,12 @@ const CoverLayout = ({
           })}
         >
           <CustomBox
-            pt={3}
-            px={3}
-            mx="auto !important"
-            maxWidth={cardContent ? "400px" : "350px"}
-          >
-            {!header ? (
-              <>
-                <CustomBox mb="35px">
-                  <CustomTypography
-                    textAlign={cardContent ? "center" : "start"}
-                    variant="h3"
-                    fontWeight="bold"
-                    color={color}
-                    mb="10px"
-                  >
-                    {title}
-                  </CustomTypography>
-                  <CustomTypography
-                    textAlign={
-                      cardContent ? "center !important" : "start !important"
-                    }
-                    mx="auto"
-                    sx={({ typography: { size }, functions: { pxToRem } }) => ({
-                      fontWeight: "regular",
-                      fontSize: size.sm,
-                    })}
-                    color="white"
-                  >
-                    {description}
-                  </CustomTypography>
-                </CustomBox>
-              </>
-            ) : (
-              header
-            )}
-          </CustomBox>
-          <CustomBox
             px={3}
             mb="50px"
             mx="auto"
             ml="auto !important"
             sx={({ breakpoints }) => ({
-              mt: cardContent ? "60px" : { top },
+              mt: "60px",
               maxWidth: cardContent ? "450px" : "350px",
               [breakpoints.down("xl")]: {
                 mr: cardContent ? "0px" : "100px",

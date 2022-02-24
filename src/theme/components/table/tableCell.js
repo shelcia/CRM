@@ -27,7 +27,7 @@ import pxToRem from "../../functions/pxToRem";
 const { borderWidth } = borders;
 const { white } = colors;
 
-console.log({ borderWidth });
+// console.log({ borderWidth });
 
 export default {
   styleOverrides: {
