@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import CustomBox from "../../components/CustomBox";
 import CustomTypography from "../../components/CustomTypography";
-import Footer from "../../layout/common/Footer";
+// import Footer from "../../layout/common/Footer";
 // import colors from "../../theme/base/colors";
 
 const CoverLayout = ({

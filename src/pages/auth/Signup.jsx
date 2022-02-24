@@ -1,9 +1,11 @@
-import { Icon, IconButton, Input, Stack, Switch } from "@mui/material";
 import React, { useState } from "react";
+import { Icon, IconButton, Stack, Switch } from "@mui/material";
 import { Link } from "react-router-dom";
+
 import CustomBox from "../../components/CustomBox";
 import CustomButton from "../../components/CustomButton";
 import CustomTypography from "../../components/CustomTypography";
+import CustomInput from "../../components/CustomInput";
 
 import radialGradient from "../../theme/functions/radialGradient";
 import rgba from "../../theme/functions/rgba";
@@ -28,7 +30,7 @@ const SignIn = () => {
       color="white"
       description="Use these awesome forms to login or create new account in your project for free."
       image={bgSignIn}
-      premotto="INSPIRED BY THE FUTURE:"
+      premotto="INSPIRED FROM"
       motto="THE VISION UI DASHBOARD"
       cardContent
     >
@@ -182,7 +184,7 @@ const SignIn = () => {
                 palette.gradients.borderLight.angle
               )}
             >
-              <Input
+              <CustomInput
                 placeholder="Your full name..."
                 sx={({ typography: { size } }) => ({
                   fontSize: size.sm,
@@ -211,7 +213,7 @@ const SignIn = () => {
                 palette.gradients.borderLight.angle
               )}
             >
-              <Input
+              <CustomInput
                 type="email"
                 placeholder="Your email..."
                 sx={({ typography: { size } }) => ({
@@ -241,7 +243,7 @@ const SignIn = () => {
                 palette.gradients.borderLight.angle
               )}
             >
-              <Input
+              <CustomInput
                 type="password"
                 placeholder="Your password..."
                 sx={({ typography: { size } }) => ({
