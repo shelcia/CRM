@@ -25,7 +25,7 @@ import colors from "../../base/colors";
 import pxToRem from "../../functions/pxToRem";
 
 const { borderWidth } = borders;
-const { light, white } = colors;
+const { white } = colors;
 
 console.log({ borderWidth });
 
@@ -38,7 +38,8 @@ export default {
       //   pl: "0px !important",
       // },
       color: white,
-      borderBottom: `${borderWidth[1]} solid ${light.main} !important`,
+      // borderBottom: `${borderWidth[1]} solid ${light.main} !important`,
+      borderBottom: `${borderWidth[1]} solid rgb(45, 55, 72) !important`,
     },
   },
 };

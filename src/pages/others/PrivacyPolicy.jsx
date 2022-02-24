@@ -1,6 +1,5 @@
 import React from "react";
 import CustomBox from "../../components/CustomBox";
-import { Card } from "@mui/material";
 import CustomTypography from "../../components/CustomTypography";
 
 const PrivacyPolicy = () => {
@@ -151,97 +150,112 @@ const PrivacyPolicy = () => {
                 which such individual is accessing or using the Service, as
                 applicable.
               </CustomTypography>
-              9
             </li>
           </ul>
-          <h1>Collecting and Using Your Personal Data</h1>
-          <h2>Types of Data Collected</h2>
-          <h3>Personal Data</h3>
-          <p>
+          <CustomTypography variant="h1" color="light" textGradient>
+            Collecting and Using Your Personal Data
+          </CustomTypography>
+          <br />
+          <br />
+          <CustomTypography variant="h2" color="info" textGradient>
+            Types of Data Collected
+          </CustomTypography>
+          <br />
+          <br />
+          <CustomTypography variant="h3" color="success" textGradient>
+            Personal Data
+          </CustomTypography>
+          <br />
+          <CustomTypography variant="body2" color="secondary" textGradient>
             While using Our Service, We may ask You to provide Us with certain
             personally identifiable information that can be used to contact or
             identify You. Personally identifiable information may include, but
             is not limited to:
-          </p>
-          <ul>
-            <li>
-              <p>Email address</p>
-            </li>
-            <li>
-              <p>First name and last name</p>
-            </li>
-            <li>
-              <p>Usage Data</p>
-            </li>
-          </ul>
-          <h3>Usage Data</h3>
-          <p>Usage Data is collected automatically when using the Service.</p>
-          <p>
+            <br />
+            <ul>
+              <li>Email address</li>
+              <li>First name and last name</li>
+              <li>Usage Data</li>
+            </ul>
+          </CustomTypography>
+          <br />
+          <br />
+          <CustomTypography variant="h3" color="success" textGradient>
+            Usage Data
+          </CustomTypography>
+          <br />
+          <CustomTypography variant="body2" color="secondary" textGradient>
+            Usage Data is collected automatically when using the Service.
+            <br />
             Usage Data may include information such as Your Device's Internet
             Protocol address (e.g. IP address), browser type, browser version,
             the pages of our Service that You visit, the time and date of Your
             visit, the time spent on those pages, unique device identifiers and
             other diagnostic data.
-          </p>
-          <p>
+            <br />
             When You access the Service by or through a mobile device, We may
             collect certain information automatically, including, but not
             limited to, the type of mobile device You use, Your mobile device
             unique ID, the IP address of Your mobile device, Your mobile
             operating system, the type of mobile Internet browser You use,
             unique device identifiers and other diagnostic data.
-          </p>
-          <p>
+            <br />
             We may also collect information that Your browser sends whenever You
             visit our Service or when You access the Service by or through a
             mobile device.
-          </p>
-          <h3>Tracking Technologies and Cookies</h3>
-          <p>
+          </CustomTypography>
+          <br />
+          <br />
+          <CustomTypography variant="h3" color="success" textGradient>
+            Tracking Technologies and Cookies
+          </CustomTypography>
+          <br />
+          <CustomTypography variant="body2" color="secondary" textGradient>
             We use Cookies and similar tracking technologies to track the
             activity on Our Service and store certain information. Tracking
             technologies used are beacons, tags, and scripts to collect and
             track information and to improve and analyze Our Service. The
             technologies We use may include:
-          </p>
-          <ul>
-            <li>
-              <strong>Cookies or Browser Cookies.</strong> A cookie is a small
-              file placed on Your Device. You can instruct Your browser to
-              refuse all Cookies or to indicate when a Cookie is being sent.
-              However, if You do not accept Cookies, You may not be able to use
-              some parts of our Service. Unless you have adjusted Your browser
-              setting so that it will refuse Cookies, our Service may use
-              Cookies.
-            </li>
-            <li>
-              <strong>Flash Cookies.</strong> Certain features of our Service
-              may use local stored objects (or Flash Cookies) to collect and
-              store information about Your preferences or Your activity on our
-              Service. Flash Cookies are not managed by the same browser
-              settings as those used for Browser Cookies. For more information
-              on how You can delete Flash Cookies, please read &quot;Where can I
-              change the settings for disabling, or deleting local shared
-              objects?&quot; available at{" "}
-              <a
-                href="https://helpx.adobe.com/flash-player/kb/disable-local-shared-objects-flash.html#main_Where_can_I_change_the_settings_for_disabling__or_deleting_local_shared_objects_"
-                rel="external nofollow noopener noreferrer"
-                target="_blank"
-              >
-                https://helpx.adobe.com/flash-player/kb/disable-local-shared-objects-flash.html#main_Where_can_I_change_the_settings_for_disabling__or_deleting_local_shared_objects_
-              </a>
-            </li>
-            <li>
-              <strong>Web Beacons.</strong> Certain sections of our Service and
-              our emails may contain small electronic files known as web beacons
-              (also referred to as clear gifs, pixel tags, and single-pixel
-              gifs) that permit the Company, for example, to count users who
-              have visited those pages or opened an email and for other related
-              website statistics (for example, recording the popularity of a
-              certain section and verifying system and server integrity).
-            </li>
-          </ul>
-          <p>
+            <br />
+            <ul>
+              <li>
+                <strong>Cookies or Browser Cookies.</strong> A cookie is a small
+                file placed on Your Device. You can instruct Your browser to
+                refuse all Cookies or to indicate when a Cookie is being sent.
+                However, if You do not accept Cookies, You may not be able to
+                use some parts of our Service. Unless you have adjusted Your
+                browser setting so that it will refuse Cookies, our Service may
+                use Cookies.
+              </li>
+              <li>
+                <strong>Flash Cookies.</strong> Certain features of our Service
+                may use local stored objects (or Flash Cookies) to collect and
+                store information about Your preferences or Your activity on our
+                Service. Flash Cookies are not managed by the same browser
+                settings as those used for Browser Cookies. For more information
+                on how You can delete Flash Cookies, please read &quot;Where can
+                I change the settings for disabling, or deleting local shared
+                objects?&quot; available at{" "}
+                <a
+                  href="https://helpx.adobe.com/flash-player/kb/disable-local-shared-objects-flash.html#main_Where_can_I_change_the_settings_for_disabling__or_deleting_local_shared_objects_"
+                  rel="external nofollow noopener noreferrer"
+                  target="_blank"
+                >
+                  https://helpx.adobe.com/flash-player/kb/disable-local-shared-objects-flash.html#main_Where_can_I_change_the_settings_for_disabling__or_deleting_local_shared_objects_
+                </a>
+              </li>
+              <li>
+                <strong>Web Beacons.</strong> Certain sections of our Service
+                and our emails may contain small electronic files known as web
+                beacons (also referred to as clear gifs, pixel tags, and
+                single-pixel gifs) that permit the Company, for example, to
+                count users who have visited those pages or opened an email and
+                for other related website statistics (for example, recording the
+                popularity of a certain section and verifying system and server
+                integrity).
+              </li>
+            </ul>
+            <br />
             Cookies can be &quot;Persistent&quot; or &quot;Session&quot;
             Cookies. Persistent Cookies remain on Your personal computer or
             mobile device when You go offline, while Session Cookies are deleted
@@ -254,86 +268,72 @@ const PrivacyPolicy = () => {
               Cookies by PrivacyPolicies Generator
             </a>
             .
-          </p>
-          <p>
+            <br />
             We use both Session and Persistent Cookies for the purposes set out
             below:
-          </p>
-          <ul>
-            <li>
-              <p>
+            <ul>
+              <li>
                 <strong>Necessary / Essential Cookies</strong>
-              </p>
-              <p>Type: Session Cookies</p>
-              <p>Administered by: Us</p>
-              <p>
-                Purpose: These Cookies are essential to provide You with
-                services available through the Website and to enable You to use
-                some of its features. They help to authenticate users and
-                prevent fraudulent use of user accounts. Without these Cookies,
-                the services that You have asked for cannot be provided, and We
-                only use these Cookies to provide You with those services.
-              </p>
-            </li>
-            <li>
-              <p>
+                Type: Session Cookies Administered by: Us Purpose: These Cookies
+                are essential to provide You with services available through the
+                Website and to enable You to use some of its features. They help
+                to authenticate users and prevent fraudulent use of user
+                accounts. Without these Cookies, the services that You have
+                asked for cannot be provided, and We only use these Cookies to
+                provide You with those services.
+              </li>
+              <li>
                 <strong>Cookies Policy / Notice Acceptance Cookies</strong>
-              </p>
-              <p>Type: Persistent Cookies</p>
-              <p>Administered by: Us</p>
-              <p>
-                Purpose: These Cookies identify if users have accepted the use
-                of cookies on the Website.
-              </p>
-            </li>
-            <li>
-              <p>
+                Type: Persistent Cookies Administered by: Us Purpose: These
+                Cookies identify if users have accepted the use of cookies on
+                the Website.
+              </li>
+              <li>
                 <strong>Functionality Cookies</strong>
-              </p>
-              <p>Type: Persistent Cookies</p>
-              <p>Administered by: Us</p>
-              <p>
+                <br />
+                Type: Persistent Cookies
+                <br />
+                Administered by: Us
+                <br />
                 Purpose: These Cookies allow us to remember choices You make
                 when You use the Website, such as remembering your login details
                 or language preference. The purpose of these Cookies is to
                 provide You with a more personal experience and to avoid You
                 having to re-enter your preferences every time You use the
                 Website.
-              </p>
-            </li>
-          </ul>
-          <p>
+              </li>
+            </ul>
+            <br />
             For more information about the cookies we use and your choices
             regarding cookies, please visit our Cookies Policy or the Cookies
             section of our Privacy Policy.
-          </p>
-          <h2>Use of Your Personal Data</h2>
-          <p>The Company may use Personal Data for the following purposes:</p>
-          <ul>
-            <li>
-              <p>
+          </CustomTypography>
+          <br />
+          <br />
+          <CustomTypography variant="h2" color="info" textGradient>
+            Use of Your Personal Data
+          </CustomTypography>
+          <CustomTypography variant="body2" color="secondary" textGradient>
+            The Company may use Personal Data for the following purposes:
+            <br /> <br />
+            <ul>
+              <li>
                 <strong>To provide and maintain our Service</strong>, including
                 to monitor the usage of our Service.
-              </p>
-            </li>
-            <li>
-              <p>
+              </li>
+              <li>
                 <strong>To manage Your Account:</strong> to manage Your
                 registration as a user of the Service. The Personal Data You
                 provide can give You access to different functionalities of the
                 Service that are available to You as a registered user.
-              </p>
-            </li>
-            <li>
-              <p>
+              </li>
+              <li>
                 <strong>For the performance of a contract:</strong> the
                 development, compliance and undertaking of the purchase contract
                 for the products, items or services You have purchased or of any
                 other contract with Us through the Service.
-              </p>
-            </li>
-            <li>
-              <p>
+              </li>
+              <li>
                 <strong>To contact You:</strong> To contact You by email,
                 telephone calls, SMS, or other equivalent forms of electronic
                 communication, such as a mobile application's push notifications
@@ -341,25 +341,19 @@ const PrivacyPolicy = () => {
                 functionalities, products or contracted services, including the
                 security updates, when necessary or reasonable for their
                 implementation.
-              </p>
-            </li>
-            <li>
-              <p>
+              </li>
+              <li>
                 <strong>To provide You</strong> with news, special offers and
                 general information about other goods, services and events which
                 we offer that are similar to those that you have already
                 purchased or enquired about unless You have opted not to receive
                 such information.
-              </p>
-            </li>
-            <li>
-              <p>
+              </li>
+              <li>
                 <strong>To manage Your requests:</strong> To attend and manage
                 Your requests to Us.
-              </p>
-            </li>
-            <li>
-              <p>
+              </li>
+              <li>
                 <strong>For business transfers:</strong> We may use Your
                 information to evaluate or conduct a merger, divestiture,
                 restructuring, reorganization, dissolution, or other sale or
@@ -367,76 +361,83 @@ const PrivacyPolicy = () => {
                 concern or as part of bankruptcy, liquidation, or similar
                 proceeding, in which Personal Data held by Us about our Service
                 users is among the assets transferred.
-              </p>
-            </li>
-            <li>
-              <p>
+              </li>
+              <li>
                 <strong>For other purposes</strong>: We may use Your information
                 for other purposes, such as data analysis, identifying usage
                 trends, determining the effectiveness of our promotional
                 campaigns and to evaluate and improve our Service, products,
                 services, marketing and your experience.
-              </p>
-            </li>
-          </ul>
-          <p>
+              </li>
+            </ul>
+            <br />
             We may share Your personal information in the following situations:
-          </p>
-          <ul>
-            <li>
-              <strong>With Service Providers:</strong> We may share Your
-              personal information with Service Providers to monitor and analyze
-              the use of our Service, to contact You.
-            </li>
-            <li>
-              <strong>For business transfers:</strong> We may share or transfer
-              Your personal information in connection with, or during
-              negotiations of, any merger, sale of Company assets, financing, or
-              acquisition of all or a portion of Our business to another
-              company.
-            </li>
-            <li>
-              <strong>With Affiliates:</strong> We may share Your information
-              with Our affiliates, in which case we will require those
-              affiliates to honor this Privacy Policy. Affiliates include Our
-              parent company and any other subsidiaries, joint venture partners
-              or other companies that We control or that are under common
-              control with Us.
-            </li>
-            <li>
-              <strong>With business partners:</strong> We may share Your
-              information with Our business partners to offer You certain
-              products, services or promotions.
-            </li>
-            <li>
-              <strong>With other users:</strong> when You share personal
-              information or otherwise interact in the public areas with other
-              users, such information may be viewed by all users and may be
-              publicly distributed outside.
-            </li>
-            <li>
-              <strong>With Your consent</strong>: We may disclose Your personal
-              information for any other purpose with Your consent.
-            </li>
-          </ul>
-          <h2>Retention of Your Personal Data</h2>
-          <p>
+            <br />
+            <ul>
+              <li>
+                <strong>With Service Providers:</strong> We may share Your
+                personal information with Service Providers to monitor and
+                analyze the use of our Service, to contact You.
+              </li>
+              <li>
+                <strong>For business transfers:</strong> We may share or
+                transfer Your personal information in connection with, or during
+                negotiations of, any merger, sale of Company assets, financing,
+                or acquisition of all or a portion of Our business to another
+                company.
+              </li>
+              <li>
+                <strong>With Affiliates:</strong> We may share Your information
+                with Our affiliates, in which case we will require those
+                affiliates to honor this Privacy Policy. Affiliates include Our
+                parent company and any other subsidiaries, joint venture
+                partners or other companies that We control or that are under
+                common control with Us.
+              </li>
+              <li>
+                <strong>With business partners:</strong> We may share Your
+                information with Our business partners to offer You certain
+                products, services or promotions.
+              </li>
+              <li>
+                <strong>With other users:</strong> when You share personal
+                information or otherwise interact in the public areas with other
+                users, such information may be viewed by all users and may be
+                publicly distributed outside.
+              </li>
+              <li>
+                <strong>With Your consent</strong>: We may disclose Your
+                personal information for any other purpose with Your consent.
+              </li>
+            </ul>
+          </CustomTypography>
+          <br /> <br />
+          <CustomTypography variant="h2" color="info" textGradient>
+            Retention of Your Personal Data
+          </CustomTypography>
+          <br /> <br />
+          <CustomTypography variant="body2" color="secondary" textGradient>
             The Company will retain Your Personal Data only for as long as is
             necessary for the purposes set out in this Privacy Policy. We will
             retain and use Your Personal Data to the extent necessary to comply
             with our legal obligations (for example, if we are required to
             retain your data to comply with applicable laws), resolve disputes,
             and enforce our legal agreements and policies.
-          </p>
-          <p>
+            <br />
             The Company will also retain Usage Data for internal analysis
             purposes. Usage Data is generally retained for a shorter period of
             time, except when this data is used to strengthen the security or to
             improve the functionality of Our Service, or We are legally
             obligated to retain this data for longer time periods.
-          </p>
-          <h2>Transfer of Your Personal Data</h2>
-          <p>
+          </CustomTypography>
+          <br />
+          <br />
+          <CustomTypography variant="h2" color="info" textGradient>
+            Transfer of Your Personal Data
+          </CustomTypography>
+          <br />
+          <br />
+          <CustomTypography variant="body2" color="secondary" textGradient>
             Your information, including Personal Data, is processed at the
             Company's operating offices and in any other places where the
             parties involved in the processing are located. It means that this
@@ -444,61 +445,81 @@ const PrivacyPolicy = () => {
             located outside of Your state, province, country or other
             governmental jurisdiction where the data protection laws may differ
             than those from Your jurisdiction.
-          </p>
-          <p>
+            <br />
             Your consent to this Privacy Policy followed by Your submission of
             such information represents Your agreement to that transfer.
-          </p>
-          <p>
+            <br />
             The Company will take all steps reasonably necessary to ensure that
             Your data is treated securely and in accordance with this Privacy
             Policy and no transfer of Your Personal Data will take place to an
             organization or a country unless there are adequate controls in
             place including the security of Your data and other personal
             information.
-          </p>
-          <h2>Disclosure of Your Personal Data</h2>
-          <h3>Business Transactions</h3>
-          <p>
+          </CustomTypography>
+          <br />
+          <br />
+          <CustomTypography variant="h2" color="info" textGradient>
+            Disclosure of Your Personal Data
+          </CustomTypography>
+          <br /> <br />
+          <CustomTypography variant="h3" color="success" textGradient>
+            Business Transactions
+          </CustomTypography>
+          <CustomTypography variant="body2" color="secondary" textGradient>
             If the Company is involved in a merger, acquisition or asset sale,
             Your Personal Data may be transferred. We will provide notice before
             Your Personal Data is transferred and becomes subject to a different
             Privacy Policy.
-          </p>
-          <h3>Law enforcement</h3>
-          <p>
+          </CustomTypography>
+          <br /> <br />
+          <CustomTypography variant="h3" color="success" textGradient>
+            Law enforcement
+          </CustomTypography>
+          <CustomTypography variant="body2" color="secondary" textGradient>
             Under certain circumstances, the Company may be required to disclose
             Your Personal Data if required to do so by law or in response to
             valid requests by public authorities (e.g. a court or a government
             agency).
-          </p>
-          <h3>Other legal requirements</h3>
-          <p>
+          </CustomTypography>
+          <br /> <br />
+          <CustomTypography variant="h3" color="success" textGradient>
+            Other legal requirements
+          </CustomTypography>
+          <CustomTypography variant="body2" color="secondary" textGradient>
             The Company may disclose Your Personal Data in the good faith belief
             that such action is necessary to:
-          </p>
-          <ul>
-            <li>Comply with a legal obligation</li>
-            <li>Protect and defend the rights or property of the Company</li>
-            <li>
-              Prevent or investigate possible wrongdoing in connection with the
-              Service
-            </li>
-            <li>
-              Protect the personal safety of Users of the Service or the public
-            </li>
-            <li>Protect against legal liability</li>
-          </ul>
-          <h2>Security of Your Personal Data</h2>
-          <p>
+            <br />
+            <ul>
+              <li>Comply with a legal obligation</li>
+              <li>Protect and defend the rights or property of the Company</li>
+              <li>
+                Prevent or investigate possible wrongdoing in connection with
+                the Service
+              </li>
+              <li>
+                Protect the personal safety of Users of the Service or the
+                public
+              </li>
+              <li>Protect against legal liability</li>
+            </ul>
+          </CustomTypography>
+          <br /> <br />
+          <CustomTypography variant="h3" color="success" textGradient>
+            Security of Your Personal Data
+          </CustomTypography>
+          <CustomTypography variant="body2" color="secondary" textGradient>
             The security of Your Personal Data is important to Us, but remember
             that no method of transmission over the Internet, or method of
             electronic storage is 100% secure. While We strive to use
             commercially acceptable means to protect Your Personal Data, We
             cannot guarantee its absolute security.
-          </p>
-          <h1>Children's Privacy</h1>
-          <p>
+          </CustomTypography>
+          <br /> <br />
+          <CustomTypography variant="h2" color="info" textGradient>
+            Children's Privacy
+          </CustomTypography>
+          <br /> <br />
+          <CustomTypography variant="body2" color="secondary" textGradient>
             Our Service does not address anyone under the age of 13. We do not
             knowingly collect personally identifiable information from anyone
             under the age of 13. If You are a parent or guardian and You are
@@ -506,13 +527,14 @@ const PrivacyPolicy = () => {
             contact Us. If We become aware that We have collected Personal Data
             from anyone under the age of 13 without verification of parental
             consent, We take steps to remove that information from Our servers.
-          </p>
-          <p>
+            <br />
             If We need to rely on consent as a legal basis for processing Your
             information and Your country requires consent from a parent, We may
             require Your parent's consent before We collect and use that
             information.
-          </p>
+          </CustomTypography>
+          <br />
+          <br />
           <CustomTypography variant="h2" color="info" textGradient>
             Links to Other Websites
           </CustomTypography>
@@ -527,6 +549,8 @@ const PrivacyPolicy = () => {
             content, privacy policies or practices of any third party sites or
             services.
           </CustomTypography>
+          <br />
+          <br />
           <CustomTypography variant="h2" color="info" textGradient>
             Changes to this Privacy Policy
           </CustomTypography>
