@@ -1,188 +1,30 @@
-// import React from "react";
-// import {
-//   Card,
-//   IconButton,
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableContainer,
-//   TableFooter,
-//   TableHead,
-//   TablePagination,
-//   TableRow,
-//   useTheme,
-// } from "@mui/material";
-// import FirstPageIcon from "@mui/icons-material/FirstPage";
-// import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
-// import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-// import LastPageIcon from "@mui/icons-material/LastPage";
-// import CustomBox from "./CustomBox";
-
-// function TablePaginationActions(props) {
-//   const theme = useTheme();
-//   const { count, page, rowsPerPage, onPageChange } = props;
-
-//   const handleFirstPageButtonClick = (event) => {
-//     onPageChange(event, 0);
-//   };
-
-//   const handleBackButtonClick = (event) => {
-//     onPageChange(event, page - 1);
-//   };
-
-//   const handleNextButtonClick = (event) => {
-//     onPageChange(event, page + 1);
-//   };
-
-//   const handleLastPageButtonClick = (event) => {
-//     onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-//   };
-
-//   return (
-//     <CustomBox sx={{ flexShrink: 0, ml: 2.5 }}>
-//       <IconButton
-//         onClick={handleFirstPageButtonClick}
-//         disabled={page === 0}
-//         aria-label="first page"
-//       >
-//         {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
-//       </IconButton>
-//       <IconButton
-//         onClick={handleBackButtonClick}
-//         disabled={page === 0}
-//         aria-label="previous page"
-//       >
-//         {theme.direction === "rtl" ? (
-//           <KeyboardArrowRight />
-//         ) : (
-//           <KeyboardArrowLeft />
-//         )}
-//       </IconButton>
-//       <IconButton
-//         onClick={handleNextButtonClick}
-//         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-//         aria-label="next page"
-//       >
-//         {theme.direction === "rtl" ? (
-//           <KeyboardArrowLeft />
-//         ) : (
-//           <KeyboardArrowRight />
-//         )}
-//       </IconButton>
-//       <IconButton
-//         onClick={handleLastPageButtonClick}
-//         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-//         aria-label="last page"
-//       >
-//         {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
-//       </IconButton>
-//     </CustomBox>
-//   );
-// }
-
-// const CustomTable = ({ children, headers, rows }) => {
-//   const [page, setPage] = React.useState(0);
-//   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-//   const handleChangePage = (event, newPage) => {
-//     setPage(newPage);
-//   };
-
-//   const handleChangeRowsPerPage = (event) => {
-//     setRowsPerPage(parseInt(event.target.value, 10));
-//     setPage(0);
-//   };
-
-//   return (
-//     <React.Fragment>
-//       <TableContainer component={Card}>
-//         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-//           <TableHead>
-//             <TableRow>
-//               {headers.map((header, index) => (
-//                 <TableCell key={index}>{header}</TableCell>
-//               ))}
-//             </TableRow>
-//           </TableHead>
-//           <TableBody>{children}</TableBody>
-//           <TableFooter>
-//             <TableRow>
-//               <TablePagination
-//                 rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-//                 colSpan={3}
-//                 count={rows.length}
-//                 rowsPerPage={rowsPerPage}
-//                 page={page}
-//                 SelectProps={{
-//                   inputProps: {
-//                     "aria-label": "rows per page",
-//                   },
-//                   native: true,
-//                 }}
-//                 onPageChange={handleChangePage}
-//                 onRowsPerPageChange={handleChangeRowsPerPage}
-//                 ActionsComponent={TablePaginationActions}
-//               />
-//             </TableRow>
-//           </TableFooter>
-//         </Table>
-//       </TableContainer>
-//     </React.Fragment>
-//   );
-// };
-
-// export default CustomTable;
-
 import React from "react";
 import PropTypes from "prop-types";
-import { alpha } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-// import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-// import FormControlLabel from "@mui/material/FormControlLabel";
-// import Switch from "@mui/material/Switch";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
+import {
+  alpha,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TableSortLabel,
+  Toolbar,
+  Typography,
+  Checkbox,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
+
+import {
+  Delete as DeleteIcon,
+  FilterList as FilterListIcon,
+} from "@mui/icons-material";
+
 import { visuallyHidden } from "@mui/utils";
 import CustomBox from "./CustomBox";
-
-function createData(name, calories, fat, carbs, protein) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  };
-}
-
-const rows = [
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Donut", 452, 25.0, 51, 4.9),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-  createData("Honeycomb", 408, 3.2, 87, 6.5),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Jelly Bean", 375, 0.0, 94, 0.0),
-  createData("KitKat", 518, 26.0, 65, 7.0),
-  createData("Lollipop", 392, 0.2, 98, 0.0),
-  createData("Marshmallow", 318, 0, 81, 2.0),
-  createData("Nougat", 360, 19.0, 9, 37.0),
-  createData("Oreo", 437, 18.0, 63, 4.0),
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -214,39 +56,6 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-const headCells = [
-  {
-    id: "name",
-    numeric: false,
-    disablePadding: true,
-    label: "Dessert (100g serving)",
-  },
-  {
-    id: "calories",
-    numeric: true,
-    disablePadding: false,
-    label: "Calories",
-  },
-  {
-    id: "fat",
-    numeric: true,
-    disablePadding: false,
-    label: "Fat (g)",
-  },
-  {
-    id: "carbs",
-    numeric: true,
-    disablePadding: false,
-    label: "Carbs (g)",
-  },
-  {
-    id: "protein",
-    numeric: true,
-    disablePadding: false,
-    label: "Protein (g)",
-  },
-];
-
 function EnhancedTableHead(props) {
   const {
     onSelectAllClick,
@@ -255,6 +64,7 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    headCells,
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -278,7 +88,7 @@ function EnhancedTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
+            padding="normal"
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -307,10 +117,11 @@ EnhancedTableHead.propTypes = {
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
+  headCells: PropTypes.array.isRequired,
 };
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
+  const { numSelected, title } = props;
 
   return (
     <Toolbar
@@ -342,7 +153,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          {title}
         </Typography>
       )}
 
@@ -365,9 +176,10 @@ const EnhancedTableToolbar = (props) => {
 
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
+  title: PropTypes.string,
 };
 
-export default function EnhancedTable() {
+const CustomTable = ({ headers, rows, rowSyntax, title }) => {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
@@ -432,7 +244,7 @@ export default function EnhancedTable() {
   return (
     <CustomBox sx={{ width: "100%" }}>
       <CustomBox sx={{ width: "100%", mb: 2 }} color="white">
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} title={title} />
         <TableContainer>
           <Table
             sx={{ minWidth: 650 }}
@@ -445,6 +257,7 @@ export default function EnhancedTable() {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
+              headCells={headers}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
@@ -472,26 +285,24 @@ export default function EnhancedTable() {
                           }}
                         />
                       </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="right">{row.calories}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
+                      {rowSyntax.map((rowSyn, index) => (
+                        <TableCell
+                          align={rowSyn?.align}
+                          key={index}
+                          onClick={rowSyn.func !== null && rowSyn.func}
+                          sx={{ cursor: rowSyn.func !== null && "pointer" }}
+                        >
+                          {row[rowSyn?.name]}
+                        </TableCell>
+                      ))}
                     </TableRow>
                   );
                 })}
               {emptyRows > 0 && (
                 <TableRow
-                //   style={{
-                //     height: (dense ? 10 : 53) * emptyRows,
-                //   }}
+                  style={{
+                    height: 53 * emptyRows,
+                  }}
                 >
                   <TableCell colSpan={6} />
                 </TableRow>
@@ -515,4 +326,6 @@ export default function EnhancedTable() {
       /> */}
     </CustomBox>
   );
-}
+};
+
+export default CustomTable;
