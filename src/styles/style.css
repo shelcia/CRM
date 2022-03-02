@@ -20,6 +20,10 @@ thead th {
   color: #f8f9fa !important;
 }
 
+.MuiTablePagination-root {
+  color: #f8f9fa !important;
+}
+
 * {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;

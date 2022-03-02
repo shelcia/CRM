@@ -38,6 +38,7 @@ export default {
       //   pl: "0px !important",
       // },
       color: white,
+      fontSize: 14,
       // borderBottom: `${borderWidth[1]} solid ${light.main} !important`,
       borderBottom: `${borderWidth[1]} solid rgb(45, 55, 72) !important`,
     },

@@ -4,6 +4,7 @@ import CustomBox from "../../../components/CustomBox";
 import CustomTable from "../../../components/CustomTable";
 import useTitle from "../../../hooks/useTitle";
 import Footer from "../../../layout/common/Footer";
+import ButtonGroups from "../../../common/ButtonGroups";
 // import toast from "react-hot-toast";
 
 const Contacts = () => {
@@ -158,32 +159,32 @@ const Contacts = () => {
     },
     {
       name: "email",
-      align: "right",
+      align: "left",
       func: null,
     },
     {
       name: "phoneNo",
-      align: "right",
+      align: "left",
       func: null,
     },
     {
       name: "company",
-      align: "right",
+      align: "left",
       func: null,
     },
     {
       name: "lastActivity",
-      align: "right",
+      align: "left",
       func: null,
     },
     {
       name: "leadStatus",
-      align: "right",
+      align: "left",
       func: null,
     },
     {
       name: "createdAt",
-      align: "right",
+      align: "left",
       func: null,
     },
     // {
@@ -208,12 +209,13 @@ const Contacts = () => {
       <Toolbar />
       <Card>
         <CustomBox bgColor={"white"} variant="gradient">
+          <ButtonGroups value1="Edit Columns" value2="Add Contact" />
           <CustomBox pt={3} px={3} className="table">
             <CustomTable
               headers={headers}
               rows={rows}
               rowSyntax={rowSyntax}
-              title="Some Table"
+              title="Contacts"
             />
           </CustomBox>
         </CustomBox>

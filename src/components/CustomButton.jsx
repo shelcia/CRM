@@ -120,9 +120,9 @@ const StyledButton = styled(Button)(({ theme, ownerState }) => {
   const gradientStyles = () => {
     // background value
     const backgroundValue = linearGradient(
-      palette.gradients[color].main,
-      palette.gradients[color].state,
-      palette.gradients[color].deg
+      palette.gradients[color]?.main,
+      palette.gradients[color]?.state,
+      palette.gradients[color]?.deg
     );
     // "linear-gradient(126.97deg, rgba(222, 11, 40, 0.74) 28.26%, rgba(10, 14, 35, 0.71) 91.2%)";
 

@@ -141,7 +141,7 @@ const EnhancedTableToolbar = (props) => {
         <Typography
           sx={{ flex: "1 1 100%" }}
           color="inherit"
-          variant="subtitle1"
+          variant="h6"
           component="div"
         >
           {numSelected} selected
@@ -152,6 +152,7 @@ const EnhancedTableToolbar = (props) => {
           variant="h6"
           id="tableTitle"
           component="div"
+          color="inherit"
         >
           {title}
         </Typography>
@@ -247,7 +248,7 @@ const CustomTable = ({ headers, rows, rowSyntax, title }) => {
         <EnhancedTableToolbar numSelected={selected.length} title={title} />
         <TableContainer>
           <Table
-            sx={{ minWidth: 650 }}
+            sx={{ minWidth: 700 }}
             //   size={dense ? "small" : "medium"}
           >
             <EnhancedTableHead
@@ -289,7 +290,9 @@ const CustomTable = ({ headers, rows, rowSyntax, title }) => {
                         <TableCell
                           align={rowSyn?.align}
                           key={index}
-                          onClick={rowSyn.func !== null && rowSyn.func}
+                          onClick={
+                            rowSyn.func !== null ? rowSyn.func : undefined
+                          }
                           sx={{ cursor: rowSyn.func !== null && "pointer" }}
                         >
                           {row[rowSyn?.name]}
