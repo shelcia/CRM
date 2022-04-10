@@ -20,7 +20,7 @@
     "react-hot-toast": "^2.2.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.0",
-    "uuidv4": "^6.2.12"
+    "uuidv4": "^6.2.13"
   },
   "scripts": {
     "start": "react-scripts start",
