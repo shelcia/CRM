@@ -1,185 +1,230 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
   AppBar,
+  Box,
   CssBaseline,
-  Toolbar,
-  IconButton,
+  Divider,
   Drawer,
-  ListItemText,
+  IconButton,
   List,
   ListItem,
-  ListItemAvatar,
-  Divider,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Typography,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-// import FolderIcon from "@mui/icons-material/Folder";
-import { menuList } from "./Sidebar";
-import { useLocation, Outlet, useNavigate, Link } from "react-router-dom";
-import CustomBox from "../../components/CustomBox";
-import CustomTypography from "../../components/CustomTypography";
-import CustomFlexbox from "../../components/CustomFlexbox";
-import CustomAvatar from "../../components/CustomAvatar";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { TitleContext } from "../../context/TitleContext";
-import Logo from "../../assets/E.png";
+import { NavLink, Outlet } from "react-router-dom";
+import {
+  Phone,
+  Package,
+  FileText,
+  Inbox,
+  Book,
+  Menu as MenuIcon,
+  MoreVertical,
+  User,
+  LogOut,
+} from "react-feather";
 
-const drawerWidth = 240;
+const drawerWidth = 250;
 
-const AdminLayout = (props) => {
-  const { window, children } = props;
+const Layout = (props) => {
+  const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
-  const location = useLocation();
-  // console.log(location);
-
-  const { title } = useContext(TitleContext);
-
-  const isLocationIncluded = (path) => {
-    return path.includes(location.pathname);
-  };
-
-  const navigate = useNavigate();
+  const sidebarContents = [
+    {
+      title: "Contacts",
+      link: "/admin_dashboard/contacts",
+      icon: <Phone strokeWidth={1} />,
+    },
+    {
+      title: "Tickets",
+      link: "/admin_dashboard/tickets",
+      icon: <Package strokeWidth={1} />,
+    },
+    {
+      title: "Todos",
+      link: "/admin_dashboard/todos",
+      icon: <FileText strokeWidth={1} />,
+    },
+    {
+      title: "Email",
+      link: "/",
+      icon: <Inbox strokeWidth={1} />,
+    },
+    {
+      title: "CMS",
+      link: "/",
+      icon: <Book strokeWidth={1} />,
+    },
+  ];
 
   const drawer = (
-    <section>
-      <Toolbar>
-        <CustomBox
-          component={Link}
-          to="/admin_dashboard/contacts"
-          py={1.5}
-          lineHeight={1}
-          className="d-flex justify-content-between align-items-center"
-        >
-          <CustomAvatar
-            src={Logo}
-            variant="square"
-            sx={{ width: 30, height: 30, marginRight: 1 }}
-          />
-          <CustomTypography
-            variant="button"
-            textGradient={true}
-            color="light"
-            fontSize={14}
-            letterSpacing={2}
-            fontWeight="medium"
-            // sx={{
-            //   margin: "0 auto",
-            // }}
-          >
-            EASY-CRM
-          </CustomTypography>
-        </CustomBox>
-      </Toolbar>
+    <div>
+      <Toolbar />
       <Divider />
-      <List dense={true}>
-        {menuList.map((item, index) => (
-          <ListItem
-            style={{
-              marginBottom: 8,
-              background: isLocationIncluded(item.path)
-                ? "rgba(26, 31, 55, 0.6)"
-                : "rgba(0, 0, 0, 0)",
-              padding: "0.475rem 0.6rem 0.475rem 0.8rem",
-              borderRadius: "0.85rem",
-              cursor: "pointer",
-            }}
-            key={index}
-            onClick={() => navigate(item.path)}
-          >
-            <ListItemAvatar>
-              {isLocationIncluded(item.path) ? item.ActiveIcon : item.Icon}
-            </ListItemAvatar>
+      <List>
+        {sidebarContents.map((item, index) => (
+          <ListItem button key={index} component={NavLink} to={item.link}>
+            <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText primary={item.title} />
           </ListItem>
         ))}
       </List>
       <Divider />
-    </section>
+    </div>
   );
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const renderMenu = (
+    <Menu
+      id="long-menu"
+      MenuListProps={{
+        "aria-labelledby": "long-button",
+      }}
+      anchorEl={anchorEl}
+      open={open}
+      onClose={handleClose}
+    >
+      <MenuItem onClick={handleClose}>
+        <ListItemIcon>
+          <User width="18px" strokeWidth={1.5} />
+        </ListItemIcon>
+        <Typography variant="inherit">Profile</Typography>
+      </MenuItem>
+      <MenuItem onClick={handleClose}>
+        <ListItemIcon>
+          <LogOut width="18px" strokeWidth={1.5} />
+        </ListItemIcon>
+        <Typography variant="inherit">Logout</Typography>
+      </MenuItem>
+    </Menu>
+  );
+
   return (
-    <CustomBox sx={{ display: "flex" }}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-          backdropFilter: "blur(2.625rem)",
-          borderRadius: "1.25rem",
-        }}
-      >
-        <Toolbar className="w-100">
-          <IconButton
-            color="white"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <CustomFlexbox
-            alignItems="center"
-            sx={{ justifyContent: "space-between" }}
-            className="w-100"
-          >
-            <CustomTypography textGradient={true} component="div" color="light">
-              {title}
-            </CustomTypography>
-            <IconButton color="white" edge="end">
-              <LogoutIcon color="white" />
+    <section className="wrapper">
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          sx={{
+            // width: { sm: `calc(100% - ${drawerWidth}px)` },
+            // ml: { sm: `${drawerWidth}px` },
+            backgroundColor: "#1e1e2f",
+            backgroundImage: "none",
+            boxShadow: "none",
+            borderTop: "2px solid #1d8cf8",
+          }}
+        >
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              edge="start"
+              onClick={handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: "none" } }}
+            >
+              <MenuIcon />
             </IconButton>
-          </CustomFlexbox>
-        </Toolbar>
-      </AppBar>
-      <CustomBox
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-      >
-        <Drawer
-          container={container}
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          sx={{
-            display: { xs: "block", sm: "none" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
-          }}
+            <Typography variant="h6" noWrap component="div">
+              Easy CRM
+            </Typography>
+            <Box sx={{ flexGrow: 1 }} />
+            <IconButton
+              color="inherit"
+              aria-label="more"
+              id="long-button"
+              aria-controls={open ? "long-menu" : undefined}
+              aria-expanded={open ? "true" : undefined}
+              aria-haspopup="true"
+              onClick={handleClick}
+            >
+              <MoreVertical />
+            </IconButton>
+            {renderMenu}
+          </Toolbar>
+        </AppBar>
+        <Box
+          component="nav"
+          sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+          aria-label="sidebar"
+          className="sidebar"
         >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
+          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+          <Drawer
+            container={container}
+            variant="temporary"
+            open={mobileOpen}
+            onClose={handleDrawerToggle}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+            sx={{
+              display: { xs: "block", sm: "none" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: 230,
+                border: "none",
+                // backgroundColor: "transparent",
+                background: "linear-gradient(0deg, #3358f4, #1d8cf8)",
+                position: "relative",
+              },
+            }}
+          >
+            {drawer}
+          </Drawer>
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: { xs: "none", sm: "block" },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: 230,
+                border: "none",
+                backgroundColor: "transparent",
+                position: "relative",
+              },
+            }}
+            open
+          >
+            {drawer}
+          </Drawer>
+        </Box>
+        <Box
+          component="main"
           sx={{
-            display: { xs: "none", sm: "block" },
-            "& .MuiDrawer-paper": {
-              boxSizing: "border-box",
-              width: drawerWidth,
-            },
+            flexGrow: 1,
+            p: 3,
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            overflowY: "scroll",
+            // height: "100vh - 64px",
           }}
-          open
+          className="main-panel"
         >
-          {drawer}
-        </Drawer>
-      </CustomBox>
-      {children}
-      <Outlet />
-    </CustomBox>
+          <Toolbar />
+          <Outlet />
+        </Box>
+      </Box>
+    </section>
   );
 };
 
-export default AdminLayout;
+export default Layout;

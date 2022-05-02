@@ -1,35 +1,79 @@
-.MuiTablePagination-toolbar .MuiInputBase-root {
-  width: 90px !important;
-}
-
-td,
-th {
-  color: #f8f9fa !important;
-}
-
-thead th {
-  color: #a0aec0 !important;
-  text-transform: uppercase;
-}
-
-.css-1qgma8u-MuiButtonBase-root-MuiTableSortLabel-root.Mui-active {
-  color: #a0aec0 !important;
-}
-
-.MuiTableSortLabel-icon {
-  color: #f8f9fa !important;
-}
-
-.MuiTablePagination-root {
-  color: #f8f9fa !important;
-}
-
 * {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   font-family: "Poppins", "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
   scroll-behavior: smooth;
+}
+
+body {
+  background-color: #1e1e2f !important;
+}
+
+.wrapper {
+  position: relative;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar {
+  -webkit-transition-property: top, bottom, width;
+  transition-property: top, bottom, width;
+  -webkit-transition-duration: 0.2s, 0.2s, 0.35s;
+          transition-duration: 0.2s, 0.2s, 0.35s;
+  -webkit-transition-timing-function: linear, linear, ease;
+          transition-timing-function: linear, linear, ease;
+  height: calc(100vh - 90px);
+  width: 230px;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-size: cover;
+  background-position: 50%;
+  display: block;
+  -webkit-box-shadow: 0 0 45px 0 black;
+          box-shadow: 0 0 45px 0 black;
+  margin-top: 80px;
+  margin-left: 20px;
+  border-radius: 5px;
+  -webkit-transition: 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
+  transition: 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
+  background: -webkit-gradient(linear, left bottom, left top, from(#3358f4), to(#1d8cf8));
+  background: linear-gradient(0deg, #3358f4, #1d8cf8);
+}
+
+@media only screen and (max-width: 600px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+.main-panel {
+  height: 97vh;
+}
+
+.react-kanban-column,
+.react-kanban-card {
+  background-color: #27293d !important;
+}
+
+.react-kanban-card {
+  border: 1px solid #e44cc4;
+}
+
+.react-kanban-card-adder-button {
+  background: #e14eca;
+  background-image: -webkit-gradient(linear, right top, left bottom, from(#e14eca), color-stop(#ba54f5), to(#e14eca));
+  background-image: linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca);
+  background-size: 210% 210%;
+  background-position: top right;
+  background-color: #e14eca !important;
+  -webkit-transition: all 0.15s ease;
+  transition: all 0.15s ease;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  color: #ffffff;
+  border: none !important;
 }
 /*# sourceMappingURL=style.css.map */

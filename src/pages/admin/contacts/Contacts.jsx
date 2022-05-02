@@ -1,9 +1,9 @@
-// import { Card } from "@mui/material";
 import React, { useState } from "react";
+// import { Card } from "@mui/material";
 import CustomTable from "../../../components/CustomTable";
 
-const Tickets = () => {
-  const [tickets] = useState([
+const Contacts = () => {
+  const [contacts] = useState([
     {
       createdAt: "2022-02-28T13:59:06.873Z",
       name: "Miss Dennis Hauck",
@@ -118,13 +118,20 @@ const Tickets = () => {
     { title: "Lead Status", field: "leadStatus" },
     { title: "Created At", field: "createdAt" },
   ];
+
+  // {
+  //   field: 'url',
+  //   title: 'Avatar',
+  //   render: rowData => <img src={rowData.url} style={{width: 50, borderRadius: '50%'}}/>
+  // }
+
   return (
     <React.Fragment>
-      {/* <Card sx={{ backgroundColor: "#27293d" }} className="card-table p-4"> */}
-      <CustomTable columns={columns} data={tickets} title="Tickets" />
+      {/* <Card sx={{backgroundColor: "#27293d" }} className="card-table p-4"> */}
+      <CustomTable columns={columns} data={contacts} title="Contacts" />
       {/* </Card> */}
     </React.Fragment>
   );
 };
 
-export default Tickets;
+export default Contacts;

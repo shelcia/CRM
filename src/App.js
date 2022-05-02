@@ -4,12 +4,14 @@ import "./styles/bootstrap-grid.css";
 import "./styles/bootstrap-utils.css";
 import "./styles/style.css";
 
+// import "./styles/black.css";
+
 import routes from "./routes";
 import { useRoutes } from "react-router-dom";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { StyledEngineProvider } from "@mui/material/styles";
 
-import theme from "./theme";
+// import theme from "./theme";
 
 import { Toaster } from "react-hot-toast";
 
@@ -47,10 +49,41 @@ const App = () => {
     anchorPlacement: "top-bottom", // defines which position of the element regarding to window should trigger the animation
   });
 
+  // "Poppins", "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+  //   "Lucida Sans", Arial, sans-serif;
+
+  const darkTheme = createTheme({
+    palette: {
+      mode: "dark",
+    },
+    typography: {
+      fontFamily: [
+        "Poppins",
+        "Trebuchet MS",
+        "Lucida Sans Unicode",
+        "Lucida Grande",
+        "Lucida Sans",
+        "-apple-system",
+        "BlinkMacSystemFont",
+        '"Segoe UI"',
+        "Roboto",
+        '"Helvetica Neue"',
+        "Arial",
+        "sans-serif",
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(","),
+      fontSize: 12,
+      color: "#525f7f",
+      fontWeight: 400,
+    },
+  });
+
   return (
     <React.Fragment>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={darkTheme}>
           <CssBaseline />
           <Toaster toastOptions={toasterOptions} />
           {allPages}
