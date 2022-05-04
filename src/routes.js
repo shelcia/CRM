@@ -32,10 +32,10 @@ const Todos = Loadable(lazy(() => import("./pages/admin/todos/Todos")));
 const ErrorPage = Loadable(lazy(() => import("./pages/others/ErrorPage")));
 
 const routes = [
-  {
-    path: "",
-    element: <Contacts />,
-  },
+  // {
+  //   path: "",
+  //   element: <Contacts />,
+  // },
   // {
   //   path: "",
   //   element: <Home />,

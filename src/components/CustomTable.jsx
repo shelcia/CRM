@@ -67,6 +67,16 @@ const CustomTable = ({ columns, data, title }) => {
           filtering: true,
           sorting: true,
           exportButton: true,
+          headerStyle: {
+            backgroundColor: "#3358f4",
+            background: "linear-gradient(90deg, #3358f4, #1d8cf8)",
+            color: "#FFF",
+            backgroundRepeat: "no-repeat",
+            textTransform: "uppercase",
+          },
+          rowStyle: (rowData) => ({
+            backgroundColor: "rgb(0,0,0,0)",
+          }),
         }}
       />
     </React.Fragment>

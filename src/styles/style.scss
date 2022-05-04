@@ -1,4 +1,5 @@
-// @import "./components/overrides";
+@import "./components/typography";
+@import "./components/kanban";
 
 * {
   box-sizing: border-box;
@@ -8,8 +9,13 @@
     "Lucida Sans", Arial, sans-serif;
   scroll-behavior: smooth;
 }
+
+$bgColor: #1e1e2f;
+$bgColor2: #27293d;
+$primaryGradient: linear-gradient(0deg, #3358f4, #1d8cf8);
+
 body {
-  background-color: #1e1e2f !important;
+  background-color: $bgColor !important;
 }
 
 .wrapper {
@@ -35,7 +41,7 @@ body {
   margin-left: 20px;
   border-radius: 5px;
   transition: 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
-  background: linear-gradient(0deg, #3358f4, #1d8cf8);
+  background: $primaryGradient;
   // position: absolute;
 }
 
@@ -49,31 +55,10 @@ body {
   height: 97vh;
 }
 
-// .card-table {
-//   background-color: #27293d;
-//   .css-120lfr4-MuiPaper-root,
-//   .MTableHeader-header-13,
-//   thead {
-//     background-color: #27293d;
-//   }
-// }
-
-.react-kanban-column,
-.react-kanban-card {
-  background-color: #27293d !important;
-}
-
-.react-kanban-card {
-  border: 1px solid #e44cc4;
-}
-.react-kanban-card-adder-button {
-  background: #e14eca;
-  background-image: linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca);
-  background-size: 210% 210%;
-  background-position: top right;
-  background-color: #e14eca !important;
-  transition: all 0.15s ease;
-  box-shadow: none;
-  color: #ffffff;
-  border: none !important;
+.main-panel {
+  .css-120lfr4-MuiPaper-root {
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+  }
 }
