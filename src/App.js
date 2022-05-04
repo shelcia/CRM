@@ -8,7 +8,7 @@ import "./styles/style.css";
 
 import routes from "./routes";
 import { useRoutes } from "react-router-dom";
-import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { StyledEngineProvider } from "@mui/material/styles";
 
 // import theme from "./theme";
@@ -17,6 +17,7 @@ import { Toaster } from "react-hot-toast";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { darkTheme } from "./theme";
 
 const App = () => {
   const allPages = useRoutes(routes);
@@ -47,37 +48,6 @@ const App = () => {
     once: false, // whether animation should happen only once - while scrolling down
     mirror: false, // whether elements should animate out while scrolling past them
     anchorPlacement: "top-bottom", // defines which position of the element regarding to window should trigger the animation
-  });
-
-  // "Poppins", "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-  //   "Lucida Sans", Arial, sans-serif;
-
-  const darkTheme = createTheme({
-    palette: {
-      mode: "dark",
-    },
-    typography: {
-      fontFamily: [
-        "Poppins",
-        "Trebuchet MS",
-        "Lucida Sans Unicode",
-        "Lucida Grande",
-        "Lucida Sans",
-        "-apple-system",
-        "BlinkMacSystemFont",
-        '"Segoe UI"',
-        "Roboto",
-        '"Helvetica Neue"',
-        "Arial",
-        "sans-serif",
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-      ].join(","),
-      fontSize: 12,
-      color: "#525f7f",
-      fontWeight: 400,
-    },
   });
 
   return (
