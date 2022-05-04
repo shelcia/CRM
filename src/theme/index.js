@@ -31,6 +31,7 @@ export const darkTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: "none",
+          backgroundColor: "transparent",
         },
       },
     },
@@ -46,8 +47,7 @@ export const darkTheme = createTheme({
           fontSize: "0.875rem",
         },
         outlinedPrimary: {
-          borderColor:
-            "linear-gradient(to bottom left,#e14eca,#ba54f5,#e14eca)",
+          borderColor: "#e14eca",
           color: "#e14eca",
         },
         containedPrimary: {
@@ -64,9 +64,18 @@ export const darkTheme = createTheme({
           },
         },
         outlinedSecondary: {
-          borderColor:
-            "linear-gradient(to bottom left,#1d8cf8,#3358f4,#1d8cf8)",
+          //   borderColor: "#3358f4",
+          //   color: "#3358f4",
+          borderColor: "#1d8cf8",
           color: "#1d8cf8",
+          transition: "all .6s ease",
+          "&:hover": {
+            borderColor: "#3358f4",
+            color: "#fff",
+            backgroundImage:
+              "linear-gradient(to bottom left,#1d8cf8,#3358f4,#1d8cf8)",
+            boxShadow: "2px 2px 6px rgba(0 0 0 ,0.4)",
+          },
         },
         containedSecondary: {
           color: "white",
@@ -81,6 +90,35 @@ export const darkTheme = createTheme({
             boxShadow: "2px 2px 6px rgba(0 0 0 ,0.4)",
           },
         },
+      },
+    },
+    MuiTableBody: {
+      styleOverrides: {
+        root: {
+          "& .MuiTableRow-root:last-of-type": {
+            "& .MuiTableCell-root": {
+              borderBottom: 0,
+            },
+          },
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& input::placeholder": {
+            color: "#222a42",
+            opacity: 0.6,
+          },
+          "& label": {
+            color: "#222a42",
+            opacity: 1,
+            fontWeight: 500,
+          },
+        },
+      },
+      "& label.Mui-focused": {
+        color: "green",
       },
     },
   },

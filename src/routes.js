@@ -9,10 +9,10 @@ const Loadable = (Component) => (props) =>
   );
 
 // LANDING PAGE
-// const Home = Loadable(lazy(() => import("./pages/landing/Home")));
+const Home = Loadable(lazy(() => import("./pages/home/Homepage")));
 
-// const Signup = Loadable(lazy(() => import("./pages/auth/Signup")));
-// const Login = Loadable(lazy(() => import("./pages/auth/Login")));
+const Signup = Loadable(lazy(() => import("./pages/home/Signup")));
+const Login = Loadable(lazy(() => import("./pages/home/Login")));
 
 // const PrivacyPolicy = Loadable(
 //   lazy(() => import("./pages/others/PrivacyPolicy"))
@@ -32,22 +32,18 @@ const Todos = Loadable(lazy(() => import("./pages/admin/todos/Todos")));
 const ErrorPage = Loadable(lazy(() => import("./pages/others/ErrorPage")));
 
 const routes = [
-  // {
-  //   path: "",
-  //   element: <Contacts />,
-  // },
-  // {
-  //   path: "",
-  //   element: <Home />,
-  // },
-  // {
-  //   path: "signup",
-  //   element: <Signup />,
-  // },
-  // {
-  //   path: "login",
-  //   element: <Login />,
-  // },
+  {
+    path: "",
+    element: <Home />,
+  },
+  {
+    path: "signup",
+    element: <Signup />,
+  },
+  {
+    path: "login",
+    element: <Login />,
+  },
   // {
   //   path: "privacy-policy",
   //   element: <PrivacyPolicy />,

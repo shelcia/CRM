@@ -346,4 +346,42 @@ body {
   -webkit-box-shadow: none !important;
           box-shadow: none !important;
 }
+
+.auth-card {
+  border: 0;
+  position: relative;
+  -webkit-box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.1);
+          box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.1);
+  background: #fff !important;
+  border-radius: 0.4285rem;
+  max-width: 450px;
+}
+
+.auth-card .auth-title {
+  position: relative;
+  font-size: 5em;
+  font-weight: 900;
+  color: #fff !important;
+  text-transform: lowercase;
+  margin-left: -5px;
+  z-index: 1;
+  padding: 0 0 100px;
+}
+
+.auth-card img {
+  position: absolute;
+  top: 0;
+  width: 80%;
+}
+
+.auth-card .css-myb2s4-MuiInputBase-input-MuiOutlinedInput-input:-webkit-autofill {
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  -webkit-text-fill-color: #222a42;
+  caret-color: #222a42;
+}
+
+.auth-card .css-myb2s4-MuiInputBase-input-MuiOutlinedInput-input {
+  color: #222a42;
+}
 /*# sourceMappingURL=style.css.map */

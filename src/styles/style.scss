@@ -13,6 +13,8 @@
 $bgColor: #1e1e2f;
 $bgColor2: #27293d;
 $primaryGradient: linear-gradient(0deg, #3358f4, #1d8cf8);
+$darkColor1: #222a42;
+$lightColor1: #fff;
 
 body {
   background-color: $bgColor !important;
@@ -60,5 +62,41 @@ body {
     background-color: transparent !important;
     background-image: none !important;
     box-shadow: none !important;
+  }
+}
+
+// auth card styles
+
+.auth-card {
+  border: 0;
+  position: relative;
+  // width: 100%;
+  box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.1);
+  background: $lightColor1 !important;
+  border-radius: 0.4285rem;
+  max-width: 450px;
+  // z-index: 0;
+  .auth-title {
+    position: relative;
+    font-size: 5em;
+    font-weight: 900;
+    color: $lightColor1 !important;
+    text-transform: lowercase;
+    margin-left: -5px;
+    z-index: 1;
+    padding: 0 0 100px;
+  }
+  img {
+    position: absolute;
+    top: 0;
+    width: 80%;
+  }
+  .css-myb2s4-MuiInputBase-input-MuiOutlinedInput-input:-webkit-autofill {
+    box-shadow: none;
+    -webkit-text-fill-color: $darkColor1;
+    caret-color: $darkColor1;
+  }
+  .css-myb2s4-MuiInputBase-input-MuiOutlinedInput-input {
+    color: $darkColor1;
   }
 }
