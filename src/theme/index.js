@@ -63,6 +63,10 @@ export const darkTheme = createTheme({
             boxShadow: "2px 2px 6px rgba(0 0 0 ,0.4)",
           },
         },
+        containedSizeSmall: {
+          borderRadius: "0.2857rem",
+          padding: "5px 15px",
+        },
         outlinedSecondary: {
           //   borderColor: "#3358f4",
           //   color: "#3358f4",

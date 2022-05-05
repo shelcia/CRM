@@ -100,3 +100,14 @@ body {
     color: $darkColor1;
   }
 }
+
+.se-submenu.se-list-layer.se-list-font-size,
+.se-submenu.se-list-layer.se-list-format {
+  top: 0px !important;
+  max-height: 130px !important;
+}
+.se-submenu.se-list-layer {
+  top: 0px !important;
+  overflow: scroll;
+  height: max-content;
+}

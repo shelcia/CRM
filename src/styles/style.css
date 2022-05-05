@@ -384,4 +384,18 @@ body {
 .auth-card .css-myb2s4-MuiInputBase-input-MuiOutlinedInput-input {
   color: #222a42;
 }
+
+.se-submenu.se-list-layer.se-list-font-size,
+.se-submenu.se-list-layer.se-list-format {
+  top: 0px !important;
+  max-height: 130px !important;
+}
+
+.se-submenu.se-list-layer {
+  top: 0px !important;
+  overflow: scroll;
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
+}
 /*# sourceMappingURL=style.css.map */

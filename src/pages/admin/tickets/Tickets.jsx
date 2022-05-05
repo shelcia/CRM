@@ -120,9 +120,7 @@ const Tickets = () => {
   ];
   return (
     <React.Fragment>
-      {/* <Card sx={{ backgroundColor: "#27293d" }} className="card-table p-4"> */}
       <CustomTable columns={columns} data={tickets} title="Tickets" />
-      {/* </Card> */}
     </React.Fragment>
   );
 };

@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import React, { useState } from "react";
 // import { Card } from "@mui/material";
 import CustomTable from "../../../components/CustomTable";
@@ -117,6 +118,11 @@ const Contacts = () => {
     { title: "Last Activity", field: "lastActivity" },
     { title: "Lead Status", field: "leadStatus" },
     { title: "Created At", field: "createdAt" },
+    {
+      field: "url",
+      title: "Avatar",
+      render: (rowData) => <Button>View</Button>,
+    },
   ];
 
   // {

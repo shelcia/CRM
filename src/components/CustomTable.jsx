@@ -1,6 +1,5 @@
 import React, { forwardRef } from "react";
 import MaterialTable from "material-table";
-
 import {
   Plus,
   Check,
@@ -66,6 +65,7 @@ const CustomTable = ({ columns, data, title }) => {
         options={{
           filtering: true,
           sorting: true,
+          grouping: true,
           exportButton: true,
           headerStyle: {
             backgroundColor: "#3358f4",
