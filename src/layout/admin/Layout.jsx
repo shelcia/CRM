@@ -56,12 +56,12 @@ const Layout = (props) => {
     },
     {
       title: "Email",
-      link: "/",
+      link: "/admin_dashboard/emails",
       icon: <Inbox strokeWidth={1} />,
     },
     {
-      title: "CMS",
-      link: "/",
+      title: "CDA",
+      link: "/admin_dashboard/cda",
       icon: <Book strokeWidth={1} />,
     },
   ];

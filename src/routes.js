@@ -26,8 +26,8 @@ const Contacts = Loadable(
 // const Contact = Loadable(lazy(() => import("./pages/admin/contact/Contact")));
 const Tickets = Loadable(lazy(() => import("./pages/admin/tickets/Tickets")));
 const Todos = Loadable(lazy(() => import("./pages/admin/todos/Todos")));
-// const Emails = Loadable(lazy(() => import("./pages/admin/emails/Emails")));
-// const CMS = Loadable(lazy(() => import("./pages/admin/cms/CMS")));
+const Emails = Loadable(lazy(() => import("./pages/admin/emails/Emails")));
+const CDA = Loadable(lazy(() => import("./pages/admin/cda/CDA")));
 
 const ErrorPage = Loadable(lazy(() => import("./pages/others/ErrorPage")));
 
@@ -68,14 +68,14 @@ const routes = [
         path: "todos",
         element: <Todos />,
       },
-      // {
-      //   path: "emails",
-      //   element: <Emails />,
-      // },
-      // {
-      //   path: "cms",
-      //   element: <CMS />,
-      // },
+      {
+        path: "emails",
+        element: <Emails />,
+      },
+      {
+        path: "cda",
+        element: <CDA />,
+      },
     ],
   },
   {

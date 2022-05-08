@@ -1,0 +1,50 @@
+$bgColor: #1e1e2f;
+$bgColor2: #27293d;
+$primaryGradient: linear-gradient(0deg, #3358f4, #1d8cf8);
+$darkColor1: #222a42;
+$lightColor1: #fff;
+
+.wrapper {
+  position: relative;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar {
+  transition-property: top, bottom, width;
+  transition-duration: 0.2s, 0.2s, 0.35s;
+  transition-timing-function: linear, linear, ease;
+  height: calc(100vh - 90px);
+  width: 230px;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-size: cover;
+  background-position: 50%;
+  display: block;
+  box-shadow: 0 0 45px 0 rgba(0, 0, 0, 60%);
+  margin-top: 80px;
+  margin-left: 20px;
+  border-radius: 5px;
+  transition: 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
+  background: $primaryGradient;
+  // position: absolute;
+}
+
+@media only screen and (max-width: 600px) {
+  .sidebar {
+    display: none;
+  }
+}
+
+.main-panel {
+  height: 97vh;
+}
+
+.main-panel {
+  .css-120lfr4-MuiPaper-root {
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+}

@@ -1,40 +1,79 @@
-// .css-1w51o4b-MuiButtonBase-root-MuiTab-root.Mui-selected {
-//   background-color: red;
-// }
+$bgColor: #1e1e2f;
+$bgColor2: #27293d;
+$primaryGradient: linear-gradient(0deg, #3358f4, #1d8cf8);
+$secondaryGradient: linear-gradient(to bottom left, #e14eca, #ba54f5, #e14eca);
+$darkColor1: #222a42;
+$lightColor1: #fff;
+$secondaryColor1: #e14eca;
 
-.MuiTablePagination-toolbar .MuiInputBase-root {
-  width: 90px !important;
+// auth card styles and overrides
+
+.auth-card {
+  border: 0;
+  position: relative;
+  // width: 100%;
+  box-shadow: 0 1px 20px 0 rgba(0, 0, 0, 0.1);
+  background: $lightColor1 !important;
+  border-radius: 0.4285rem;
+  max-width: 450px;
+  // z-index: 0;
+  .auth-title {
+    position: relative;
+    font-size: 5em;
+    font-weight: 900;
+    color: $lightColor1 !important;
+    text-transform: lowercase;
+    margin-left: -5px;
+    z-index: 1;
+    padding: 0 0 100px;
+  }
+  img {
+    position: absolute;
+    top: 0;
+    width: 80%;
+  }
+  .css-myb2s4-MuiInputBase-input-MuiOutlinedInput-input:-webkit-autofill {
+    box-shadow: none;
+    -webkit-text-fill-color: $darkColor1;
+    caret-color: $darkColor1;
+  }
+  .css-myb2s4-MuiInputBase-input-MuiOutlinedInput-input {
+    color: $darkColor1;
+  }
 }
 
-td,
-th {
-  color: #f8f9fa !important;
+// sun editor ovverides
+.se-submenu.se-list-layer.se-list-font-size,
+.se-submenu.se-list-layer.se-list-format {
+  top: 0px !important;
+  max-height: 130px !important;
+}
+.se-submenu.se-list-layer {
+  top: 0px !important;
+  overflow: scroll;
+  height: max-content;
 }
 
-thead th {
-  color: #a0aec0 !important;
-  text-transform: uppercase;
+// react-kanban
+.react-kanban-column,
+.react-kanban-card {
+  background-color: #27293d !important;
 }
 
-.css-1qgma8u-MuiButtonBase-root-MuiTableSortLabel-root.Mui-active {
-  color: #a0aec0 !important;
+.react-kanban-card {
+  border: 1px solid $secondaryColor1;
 }
-
-.MuiTableSortLabel-icon {
-  color: #f8f9fa !important;
+.react-kanban-card-adder-button {
+  background: $secondaryColor1;
+  background-image: $secondaryGradient;
+  background-size: 210% 210%;
+  background-position: top right;
+  background-color: $secondaryColor1 !important;
+  transition: all 0.15s ease;
+  box-shadow: none;
+  color: $lightColor1;
+  border: none !important;
 }
-
-.MuiTablePagination-root {
-  color: #f8f9fa !important;
+.react-kanban-card__title {
+  border-bottom: 1px solid rgba(238, 238, 238, 0.4) !important;
 }
-
-// table,
-// td,
-// th {
-//   font-size: 14px;
-// }
-
-// .css-hicy8g-MuiTableCell-root {
-//   border-bottom: 0.004rem solid #e9ecef51 !important;
-//   // border: none !important;
-// }
