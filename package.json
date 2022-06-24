@@ -22,7 +22,7 @@
     "react-hot-toast": "^2.2.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
-    "suneditor": "^2.43.2",
+    "suneditor": "^2.43.12",
     "suneditor-react": "^3.4.0"
   },
   "scripts": {
