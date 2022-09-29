@@ -8,9 +8,9 @@
     "@emotion/styled": "^11.8.1",
     "@mui/icons-material": "^5.6.2",
     "@mui/material": "^5.6.4",
-    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
-    "@testing-library/user-event": "^13.5.0",
+    "@testing-library/user-event": "^14.4.3",
     "aos": "^2.3.4",
     "axios": "^0.27.2",
     "material-table": "^2.0.3",
@@ -18,13 +18,13 @@
     "react": "^17.0.2",
     "react-csv-importer": "^0.7.1",
     "react-dom": "^17.0.2",
-    "react-feather": "^2.0.9",
+    "react-feather": "^2.0.10",
     "react-hot-toast": "^2.2.0",
     "react-icons": "^4.3.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
-    "suneditor": "^2.43.2",
-    "suneditor-react": "^3.4.0"
+    "suneditor": "^2.44.2",
+    "suneditor-react": "^3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",
