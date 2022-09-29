@@ -20,6 +20,7 @@
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.9",
     "react-hot-toast": "^2.2.0",
+    "react-icons": "^4.3.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
     "suneditor": "^2.43.2",

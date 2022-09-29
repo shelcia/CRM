@@ -1,58 +1,46 @@
 import React, { forwardRef } from "react";
 import MaterialTable from "material-table";
 import {
-  Plus,
-  Check,
-  X,
-  Trash,
-  ChevronRight,
-  ChevronLeft,
-  ChevronsDown,
-  Edit2,
-  Save,
-  Filter,
-  Search,
-  XCircle,
-  Eye,
-  ChevronsLeft,
-  ChevronsRight,
-} from "react-feather";
+  RiAddLine,
+  RiCheckLine,
+  RiFilter3Line,
+  RiDownloadLine,
+  RiArrowRightSLine,
+  RiArrowLeftSLine,
+  RiCloseLine,
+  RiDeleteBin5Line,
+  RiEyeLine,
+  RiSearch2Line,
+  RiPencilLine,
+  RiSpeedMiniLine,
+  RiRewindMiniLine,
+  RiCheckboxCircleLine,
+  RiArrowDownLine,
+} from "react-icons/ri";
 
 const CustomTable = ({ columns, data, title }) => {
   const tableIcons = {
-    Add: forwardRef((props, ref) => <Plus {...props} ref={ref} />),
-    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-    Clear: forwardRef((props, ref) => <X {...props} ref={ref} />),
-    Delete: forwardRef((props, ref) => <Trash {...props} ref={ref} />),
-    DetailPanel: forwardRef((props, ref) => (
-      <ChevronRight {...props} ref={ref} />
-    )),
-    Edit: forwardRef((props, ref) => <Edit2 {...props} ref={ref} />),
-    Export: forwardRef((props, ref) => <Save {...props} ref={ref} />),
+    Add: forwardRef((props, ref) => <RiAddLine />),
+    Check: forwardRef((props, ref) => <RiCheckLine />),
+    Clear: forwardRef((props, ref) => <RiCloseLine />),
+    Delete: forwardRef((props, ref) => <RiDeleteBin5Line />),
+    DetailPanel: forwardRef((props, ref) => <RiArrowRightSLine />),
+    Edit: forwardRef((props, ref) => <RiPencilLine />),
+    Export: forwardRef((props, ref) => <RiDownloadLine />),
     Filter: forwardRef((props, ref) => (
-      <Filter {...props} ref={ref} strokeWidth={1.5} width={15} />
+      <RiFilter3Line strokeWidth={1.5} width={15} />
     )),
-    FirstPage: forwardRef((props, ref) => (
-      <ChevronsLeft {...props} ref={ref} />
-    )),
-    LastPage: forwardRef((props, ref) => (
-      <ChevronsRight {...props} ref={ref} />
-    )),
-    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-    PreviousPage: forwardRef((props, ref) => (
-      <ChevronLeft {...props} ref={ref} />
-    )),
-    ResetSearch: forwardRef((props, ref) => <X {...props} ref={ref} />),
+    FirstPage: forwardRef((props, ref) => <RiRewindMiniLine />),
+    LastPage: forwardRef((props, ref) => <RiSpeedMiniLine />),
+    NextPage: forwardRef((props, ref) => <RiArrowRightSLine />),
+    PreviousPage: forwardRef((props, ref) => <RiArrowLeftSLine />),
+    ResetSearch: forwardRef((props, ref) => <RiCloseLine />),
     Search: forwardRef((props, ref) => (
-      <Search {...props} ref={ref} strokeWidth={1.5} width={18} />
+      <RiSearch2Line strokeWidth={1.5} width={18} />
     )),
-    SortArrow: forwardRef((props, ref) => (
-      <ChevronsDown {...props} ref={ref} />
-    )),
-    ThirdStateCheck: forwardRef((props, ref) => (
-      <XCircle {...props} ref={ref} />
-    )),
-    ViewColumn: forwardRef((props, ref) => <Eye {...props} ref={ref} />),
+    SortArrow: forwardRef((props, ref) => <RiArrowDownLine />),
+    ThirdStateCheck: forwardRef((props, ref) => <RiCheckboxCircleLine />),
+    ViewColumn: forwardRef((props, ref) => <RiEyeLine />),
   };
 
   return (
