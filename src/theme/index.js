@@ -27,6 +27,13 @@ export const darkTheme = createTheme({
     fontWeight: 400,
   },
   components: {
+    MuiAlert: {
+      styleOverrides: {
+        filledInfo: {
+          backgroundColor: "#419ef9",
+        },
+      },
+    },
     MuiPaper: {
       styleOverrides: {
         root: {
@@ -109,10 +116,10 @@ export const darkTheme = createTheme({
     },
     MuiTextField: {
       styleOverrides: {
-        root: {
+        outlinedPrimary: {
           "& input::placeholder": {
             color: "#222a42",
-            opacity: 0.6,
+            opacity: 1,
           },
           "& label": {
             color: "#222a42",
@@ -121,9 +128,22 @@ export const darkTheme = createTheme({
           },
         },
       },
-      "& label.Mui-focused": {
-        color: "green",
-      },
+      // styleOverrides: {
+      //   root: {
+      //     "& input::placeholder": {
+      //       color: "#222a42",
+      //       opacity: 0.6,
+      //     },
+      //     "& label": {
+      //       color: "#222a42",
+      //       opacity: 1,
+      //       fontWeight: 500,
+      //     },
+      //   },
+      // },
+      // "& label.Mui-focused": {
+      //   color: "green",
+      // },
     },
   },
 });
