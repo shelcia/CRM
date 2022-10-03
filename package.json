@@ -21,7 +21,7 @@
     "react-feather": "^2.0.10",
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.4.0",
-    "react-router-dom": "^6.3.0",
+    "react-router-dom": "^6.4.1",
     "react-scripts": "^5.0.1",
     "suneditor": "^2.44.2",
     "suneditor-react": "^3.4.1"
