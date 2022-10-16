@@ -4,6 +4,7 @@ $primaryGradient: linear-gradient(0deg, #3358f4, #1d8cf8);
 $darkColor1: #222a42;
 $lightColor1: #fff;
 
+@import "./components/scrollbar";
 @import "./components/layout";
 @import "./components/overrides";
 @import "./components/typography";

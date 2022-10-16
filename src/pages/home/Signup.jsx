@@ -1,7 +1,7 @@
 import React from "react";
 import { Alert, Button, Card, CardContent, TextField } from "@mui/material";
 import TopImg from "../../assets/card-primary.webp";
-import { CustomAuthInput } from "../../components/CustomInputs";
+// import { CustomAuthInput } from "../../components/CustomInputs";
 import { Link, useNavigate } from "react-router-dom";
 import { apiAuth } from "../../services/models/authModel";
 import { useState } from "react";

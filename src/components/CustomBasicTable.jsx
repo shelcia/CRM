@@ -3,23 +3,25 @@ import {
   TableContainer,
   Table,
   Paper,
-  TableHead,
+  // TableHead,
   TableRow,
   TableCell,
+  TableBody,
 } from "@mui/material";
 
-const CustomBasicTable = () => {
+export const CustomBasicHorizontalTable = ({ columns, data }) => {
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-          </TableRow>
-        </TableHead>
+      <Table aria-label="simple table">
+        <TableBody>
+          {columns.map((col, idx) => (
+            <TableRow key={idx}>
+              <TableCell>{col.title}</TableCell>
+              <TableCell>{data[col.field]}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
       </Table>
     </TableContainer>
   );
 };
-
-export default CustomBasicTable;

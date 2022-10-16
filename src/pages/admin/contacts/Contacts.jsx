@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import React, { useState } from "react";
-import CustomBasicTable from "../../../components/CustomBasicTable";
+import { CustomBasicHorizontalTable } from "../../../components/CustomBasicTable";
 import CustomModal from "../../../components/CustomModal";
 import CustomTable from "../../../components/CustomTable";
 
@@ -123,13 +123,13 @@ const Contacts = () => {
     {
       field: "url",
       title: "Actions",
-      render: (index, rowData) => (
+      render: (rowData) => (
         <Button
           variant="outlined"
           color="warning"
           size="small"
           onClick={() => {
-            setIndex(index);
+            setIndex(rowData?.tableData?.id);
             setOpen(true);
           }}
         >
@@ -155,7 +155,6 @@ const Contacts = () => {
         onClose={() => setOpen(false)}
         title="More Contact Details"
       >
-        {/* <p> More Contact Details</p> */}
         <ModalContent contact={contacts[index]} />
       </CustomModal>
     </React.Fragment>
@@ -164,9 +163,23 @@ const Contacts = () => {
 
 export default Contacts;
 
-const ModalContent = ({ contact }) => (
-  <React.Fragment>
-    <CustomBasicTable />
-    <p> {contact?.name}</p>
-  </React.Fragment>
-);
+const ModalContent = ({ contact }) => {
+  const columns = [
+    { title: "Name", field: "name" },
+    { title: "Email", field: "email" },
+    { title: "Phone No.", field: "phoneNo" },
+    {
+      title: "Company",
+      field: "company",
+    },
+    { title: "Last Activity", field: "lastActivity" },
+    { title: "Lead Status", field: "leadStatus" },
+    { title: "Created At", field: "createdAt" },
+  ];
+
+  return (
+    <React.Fragment>
+      <CustomBasicHorizontalTable columns={columns} data={contact} />
+    </React.Fragment>
+  );
+};
