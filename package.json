@@ -25,7 +25,7 @@
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "^5.0.1",
-    "suneditor": "^2.44.2",
+    "suneditor": "^2.44.3",
     "suneditor-react": "^3.4.1"
   },
   "scripts": {
