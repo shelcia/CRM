@@ -1,9 +1,11 @@
 import { Button } from "@mui/material";
 import React, { useState } from "react";
+import CustomBasicTable from "../../../components/CustomBasicTable";
 import CustomModal from "../../../components/CustomModal";
 import CustomTable from "../../../components/CustomTable";
 
 const Contacts = () => {
+  const [index, setIndex] = useState(0);
   const [contacts] = useState([
     {
       createdAt: "2022-02-28T13:59:06.873Z",
@@ -121,12 +123,13 @@ const Contacts = () => {
     {
       field: "url",
       title: "Actions",
-      render: (rowData) => (
+      render: (index, rowData) => (
         <Button
           variant="outlined"
           color="warning"
           size="small"
           onClick={() => {
+            setIndex(index);
             setOpen(true);
           }}
         >
@@ -147,11 +150,23 @@ const Contacts = () => {
   return (
     <React.Fragment>
       <CustomTable columns={columns} data={contacts} title="Contacts" />
-      <CustomModal open={open} onClose={() => setOpen(false)} title="ffm,fm">
-        <p> More Contact Details</p>
+      <CustomModal
+        open={open}
+        onClose={() => setOpen(false)}
+        title="More Contact Details"
+      >
+        {/* <p> More Contact Details</p> */}
+        <ModalContent contact={contacts[index]} />
       </CustomModal>
     </React.Fragment>
   );
 };
 
 export default Contacts;
+
+const ModalContent = ({ contact }) => (
+  <React.Fragment>
+    <CustomBasicTable />
+    <p> {contact?.name}</p>
+  </React.Fragment>
+);

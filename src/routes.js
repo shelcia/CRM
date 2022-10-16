@@ -1,3 +1,4 @@
+import React from "react";
 import { lazy, Suspense } from "react";
 import Layout from "./layout/admin/Layout";
 
