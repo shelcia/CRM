@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import React, { useState } from "react";
-// import { Card } from "@mui/material";
+import CustomModal from "../../../components/CustomModal";
 import CustomTable from "../../../components/CustomTable";
 
 const Contacts = () => {
@@ -120,8 +120,19 @@ const Contacts = () => {
     { title: "Created At", field: "createdAt" },
     {
       field: "url",
-      title: "Avatar",
-      render: (rowData) => <Button>View</Button>,
+      title: "Actions",
+      render: (rowData) => (
+        <Button
+          variant="outlined"
+          color="warning"
+          size="small"
+          onClick={() => {
+            setOpen(true);
+          }}
+        >
+          View
+        </Button>
+      ),
     },
   ];
 
@@ -131,11 +142,14 @@ const Contacts = () => {
   //   render: rowData => <img src={rowData.url} style={{width: 50, borderRadius: '50%'}}/>
   // }
 
+  const [open, setOpen] = useState(false);
+
   return (
     <React.Fragment>
-      {/* <Card sx={{backgroundColor: "#27293d" }} className="card-table p-4"> */}
       <CustomTable columns={columns} data={contacts} title="Contacts" />
-      {/* </Card> */}
+      <CustomModal open={open} onClose={() => setOpen(false)} title="ffm,fm">
+        <p> More Contact Details</p>
+      </CustomModal>
     </React.Fragment>
   );
 };
