@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { CustomBasicHorizontalTable } from "../../../components/CustomBasicTable";
 import CustomModal from "../../../components/CustomModal";
 import CustomTable from "../../../components/CustomTable";
+import { convertDateToDateWithoutTime } from "../../../utils/calendarHelpers";
 
 const Contacts = () => {
   const [index, setIndex] = useState(0);
@@ -117,9 +118,21 @@ const Contacts = () => {
       title: "Company",
       field: "company",
     },
-    { title: "Last Activity", field: "lastActivity" },
+    {
+      title: "Last Activity",
+      field: "lastActivity",
+      render: (rowDate) => (
+        <span>{convertDateToDateWithoutTime(rowDate.lastActivity)}</span>
+      ),
+    },
     { title: "Lead Status", field: "leadStatus" },
-    { title: "Created At", field: "createdAt" },
+    {
+      title: "Created At",
+      field: "createdAt",
+      render: (rowDate) => (
+        <span>{convertDateToDateWithoutTime(rowDate.createdAt)}</span>
+      ),
+    },
     {
       field: "url",
       title: "Actions",

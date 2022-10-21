@@ -145,6 +145,13 @@ export const darkTheme = createTheme({
       //   color: "green",
       // },
     },
+    MuiMenu: {
+      styleOverrides: {
+        root: {
+          background: "#222a42",
+        },
+      },
+    },
   },
 });
 
