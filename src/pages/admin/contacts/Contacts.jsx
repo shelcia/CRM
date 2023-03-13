@@ -111,58 +111,62 @@ const Contacts = () => {
   ]);
 
   const columns = [
-    { title: "Name", field: "name" },
-    { title: "Email", field: "email" },
-    { title: "Phone No.", field: "phoneNo" },
+    { label: "Name", name: "name" },
+    { label: "Email", name: "email" },
+    { label: "Phone No.", name: "phoneNo" },
     {
-      title: "Company",
-      field: "company",
+      label: "Company",
+      name: "company",
     },
     {
-      title: "Last Activity",
-      field: "lastActivity",
-      render: (rowDate) => (
-        <span>{convertDateToDateWithoutTime(rowDate.lastActivity)}</span>
-      ),
+      label: "Last Activity",
+      name: "lastActivity",
+      options: {
+        customBodyRender: (data) => (
+          <span>{convertDateToDateWithoutTime(data)}</span>
+        ),
+      },
     },
-    { title: "Lead Status", field: "leadStatus" },
+    { label: "Lead Status", name: "leadStatus" },
     {
-      title: "Created At",
-      field: "createdAt",
-      render: (rowDate) => (
-        <span>{convertDateToDateWithoutTime(rowDate.createdAt)}</span>
-      ),
+      label: "Created At",
+      name: "createdAt",
+      options: {
+        customBodyRender: (data) => (
+          <span>{convertDateToDateWithoutTime(data)}</span>
+        ),
+      },
     },
     {
-      field: "url",
-      title: "Actions",
-      render: (rowData) => (
-        <Button
-          variant="outlined"
-          color="warning"
-          size="small"
-          onClick={() => {
-            setIndex(rowData?.tableData?.id);
-            setOpen(true);
-          }}
-        >
-          View
-        </Button>
-      ),
+      name: "url",
+      label: "Actions",
+      options: {
+        customBodyRender: (tableMeta) => (
+          <Button
+            variant="contained"
+            size="small"
+            onClick={() => {
+              setIndex(tableMeta?.rowIndex);
+              setOpen(true);
+            }}
+          >
+            View
+          </Button>
+        ),
+      },
     },
   ];
-
-  // {
-  //   field: 'url',
-  //   title: 'Avatar',
-  //   render: rowData => <img src={rowData.url} style={{width: 50, borderRadius: '50%'}}/>
-  // }
 
   const [open, setOpen] = useState(false);
 
   return (
     <React.Fragment>
-      <CustomTable columns={columns} data={contacts} title="Contacts" />
+      <CustomTable
+        columns={columns}
+        data={contacts}
+        title="Contacts"
+        downloadName="contacts"
+      />
       <CustomModal
         open={open}
         onClose={() => setOpen(false)}

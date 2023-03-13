@@ -1,4 +1,3 @@
-// import { Card } from "@mui/material";
 import React, { useState } from "react";
 import CustomTable from "../../../components/CustomTable";
 
@@ -107,16 +106,16 @@ const Tickets = () => {
   ]);
 
   const columns = [
-    { title: "Name", field: "name" },
-    { title: "Email", field: "email" },
-    { title: "Phone No.", field: "phoneNo" },
+    { label: "Name", name: "name" },
+    { label: "Email", name: "email" },
+    { label: "Phone No.", name: "phoneNo" },
     {
-      title: "Company",
-      field: "company",
+      label: "Company",
+      name: "company",
     },
-    { title: "Last Activity", field: "lastActivity" },
-    { title: "Lead Status", field: "leadStatus" },
-    { title: "Created At", field: "createdAt" },
+    { label: "Last Activity", name: "lastActivity" },
+    { label: "Lead Status", name: "leadStatus" },
+    { label: "Created At", name: "createdAt" },
   ];
   return (
     <React.Fragment>

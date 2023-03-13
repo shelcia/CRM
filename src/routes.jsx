@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React from "react";
 import { lazy, Suspense } from "react";
 import Layout from "./layout/admin/Layout";
@@ -26,7 +27,7 @@ const Contacts = Loadable(
 );
 // const Contact = Loadable(lazy(() => import("./pages/admin/contact/Contact")));
 const Tickets = Loadable(lazy(() => import("./pages/admin/tickets/Tickets")));
-const Todos = Loadable(lazy(() => import("./pages/admin/todos/Todos")));
+// const Todos = Loadable(lazy(() => import("./pages/admin/todos/Todos")));
 const Emails = Loadable(lazy(() => import("./pages/admin/emails/Emails")));
 const CDA = Loadable(lazy(() => import("./pages/admin/cda/CDA")));
 
@@ -65,10 +66,10 @@ const routes = [
         path: "tickets",
         element: <Tickets />,
       },
-      {
-        path: "todos",
-        element: <Todos />,
-      },
+      // {
+      //   path: "todos",
+      //   element: <Todos />,
+      // },
       {
         path: "emails",
         element: <Emails />,

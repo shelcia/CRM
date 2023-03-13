@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 
-import "./styles/bootstrap/bootstrap-grid.css";
-import "./styles/bootstrap/bootstrap-utils.css";
-import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS File
-import "./styles/style.css";
+// import "./styles/bootstrap/bootstrap-grid.css";
+// import "./styles/bootstrap/bootstrap-utils.css";
+// import "suneditor/dist/css/suneditor.min.css";
+// import "./styles/style.css";
 
 // import "./styles/black.css";
 
@@ -18,7 +18,9 @@ import { Toaster } from "react-hot-toast";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { darkTheme } from "./theme";
+
+import { ThemeContext } from "./context/themeContext";
+import { customTheme } from "./theme";
 
 const App = () => {
   const allPages = useRoutes(routes);
@@ -51,10 +53,18 @@ const App = () => {
     anchorPlacement: "top-bottom", // defines which position of the element regarding to window should trigger the animation
   });
 
+  const [darkTheme] = useContext(ThemeContext);
+
+  const appTheme = customTheme({
+    theme: darkTheme ? "dark" : "light",
+    // theme: "dark",
+    direction: "ltr",
+  });
+
   return (
     <React.Fragment>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={darkTheme}>
+        <ThemeProvider theme={appTheme}>
           <CssBaseline />
           <Toaster toastOptions={toasterOptions} />
           {allPages}

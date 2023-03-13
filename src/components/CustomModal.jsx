@@ -14,7 +14,7 @@ export const StyledModalCard = styled(Card)(({ theme }) => ({
   transform: "translate(-50%, -50%)",
   width: "100%",
   outline: "none",
-  backgroundColor: "#27293d",
+  // backgroundColor: "#27293d",
   //   backgroundColor: "#f3f4f9",
 }));
 
