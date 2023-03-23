@@ -2,6 +2,7 @@
 import React from "react";
 import { lazy, Suspense } from "react";
 import Layout from "./layout/admin/Layout";
+// import Todos from "./pages/admin/todos/Projects";
 
 const Loadable = (Component) => (props) =>
   (
@@ -10,7 +11,7 @@ const Loadable = (Component) => (props) =>
     </Suspense>
   );
 
-// LANDING PAGE
+// LANDING PAGEll
 const Home = Loadable(lazy(() => import("./pages/home/Homepage")));
 
 const Signup = Loadable(lazy(() => import("./pages/home/Signup")));
@@ -27,7 +28,10 @@ const Contacts = Loadable(
 );
 // const Contact = Loadable(lazy(() => import("./pages/admin/contact/Contact")));
 const Tickets = Loadable(lazy(() => import("./pages/admin/tickets/Tickets")));
-// const Todos = Loadable(lazy(() => import("./pages/admin/todos/Todos")));
+
+const Projects = Loadable(lazy(() => import("./pages/admin/todos/Projects")));
+const Todos = Loadable(lazy(() => import("./pages/admin/todos/Todos")));
+
 const Emails = Loadable(lazy(() => import("./pages/admin/emails/Emails")));
 const CDA = Loadable(lazy(() => import("./pages/admin/cda/CDA")));
 
@@ -66,10 +70,14 @@ const routes = [
         path: "tickets",
         element: <Tickets />,
       },
-      // {
-      //   path: "todos",
-      //   element: <Todos />,
-      // },
+      {
+        path: "todos",
+        element: <Projects />,
+      },
+      {
+        path: "todos/:id",
+        element: <Todos />,
+      },
       {
         path: "emails",
         element: <Emails />,

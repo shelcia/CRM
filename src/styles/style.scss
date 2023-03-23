@@ -1,24 +1,84 @@
-$bgColor: #1e1e2f;
-$bgColor2: #27293d;
-$primaryGradient: linear-gradient(0deg, #3358f4, #1d8cf8);
-$darkColor1: #222a42;
-$lightColor1: #fff;
+// $bgColor: #1e1e2f;
+// $bgColor2: #27293d;
+// $primaryGradient: linear-gradient(0deg, #3358f4, #1d8cf8);
+// $darkColor1: #222a42;
+// $lightColor1: #fff;
 
-@import "./components/scrollbar";
-@import "./components/layout";
-@import "./components/overrides";
-@import "./components/typography";
-@import "./components/helpers";
+// @import "./components/scrollbar";
+// @import "./components/layout";
+// @import "./components/overrides";
+// @import "./components/typography";
+// @import "./components/helpers";
 
-* {
-  box-sizing: border-box;
+// * {
+//   box-sizing: border-box;
+//   margin: 0;
+//   padding: 0;
+//   font-family: "Poppins", "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+//     "Lucida Sans", Arial, sans-serif;
+//   scroll-behavior: smooth;
+// }
+
+// body {
+//   background-color: $bgColor !important;
+// }
+
+.App {
   margin: 0;
   padding: 0;
-  font-family: "Poppins", "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
-  scroll-behavior: smooth;
+  font-family: sans-serif;
+  height: 100%;
 }
 
-body {
-  background-color: $bgColor !important;
+.App-header {
+  background-color: #026aa7;
+  color: #fff;
+  font-size: 2rem;
+  text-align: center;
+  padding: 1rem;
+}
+
+.App-main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+  height: 100%;
+  padding: 1rem;
+}
+
+.List {
+  background-color: #f4f5f7;
+  padding: 0.5rem;
+  width: 300px;
+  margin-right: 1rem;
+  height: fit-content;
+  border-radius: 4px;
+}
+
+.List-header {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.List-cards {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.Card {
+  background-color: #fff;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.Card:hover {
+  background-color: #e6ecf0;
 }

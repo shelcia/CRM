@@ -1,17 +1,13 @@
-import { Card, CardContent } from "@mui/material";
 import React from "react";
+import { Box, Typography } from "@mui/material";
 
 const CDA = () => {
   return (
-    // <section className="wrapper">
-    <div className="row">
-      <div className="col-md-3">
-        <Card elevation={15}>
-          <CardContent>Project</CardContent>
-        </Card>
-      </div>
-    </div>
-    // </section>
+    <Box component="section">
+      <Typography component="h1" variant="h1">
+        CDA
+      </Typography>
+    </Box>
   );
 };
 
