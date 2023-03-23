@@ -19,7 +19,7 @@ import { Toaster } from "react-hot-toast";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-import { ThemeContext } from "./context/themeContext";
+import { ThemeContext } from "./context/ThemeContext";
 import { customTheme } from "./theme";
 
 const App = () => {
