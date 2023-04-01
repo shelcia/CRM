@@ -2,6 +2,8 @@
 import React from "react";
 import { lazy, Suspense } from "react";
 import Layout from "./layout/admin/Layout";
+import HomeLayout from "./layout/home/Layout";
+import AuthLayout from "./layout/auth/Layout";
 // import Todos from "./pages/admin/todos/Projects";
 
 const Loadable = (Component) => (props) =>
@@ -40,15 +42,27 @@ const ErrorPage = Loadable(lazy(() => import("./pages/others/ErrorPage")));
 const routes = [
   {
     path: "",
-    element: <Home />,
+    element: (
+      <HomeLayout>
+        <Home />
+      </HomeLayout>
+    ),
   },
   {
     path: "signup",
-    element: <Signup />,
+    element: (
+      <AuthLayout>
+        <Signup />
+      </AuthLayout>
+    ),
   },
   {
     path: "login",
-    element: <Login />,
+    element: (
+      <AuthLayout>
+        <Login />
+      </AuthLayout>
+    ),
   },
   // {
   //   path: "privacy-policy",
