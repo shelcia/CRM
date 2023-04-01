@@ -52,7 +52,14 @@ const ProjectsDisp = () => {
       {projects.map((project) => (
         <Grid item xs={12} sm={6} lg={4} key={project.id}>
           <Card>
-            <CardContent>
+            <CardContent
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+                gap: 1,
+              }}
+            >
               <Typography component="h1" variant="h5">
                 {project.name}
               </Typography>

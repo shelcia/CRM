@@ -49,7 +49,7 @@ const AuthLayout = ({ children }) => {
           height: "90vh",
         }}
       >
-        <Card sx={{ width: matches ? 425 : 275 }}>
+        <Card sx={{ width: matches ? 425 : "90%" }}>
           <img src={TopImg} alt="" style={{ height: 200 }} />
           <CardContent
             sx={{ display: "flex", flexDirection: "column", gap: 1, pt: 0 }}
