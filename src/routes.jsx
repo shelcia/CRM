@@ -4,7 +4,6 @@ import { lazy, Suspense } from "react";
 import Layout from "./layout/admin/Layout";
 import HomeLayout from "./layout/home/Layout";
 import AuthLayout from "./layout/auth/Layout";
-// import Todos from "./pages/admin/todos/Projects";
 
 const Loadable = (Component) => (props) =>
   (

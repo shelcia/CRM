@@ -24,6 +24,8 @@ import {
   Typography,
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import CustomToggle from "../../../components/CustomToggle";
+import { primary } from "../../../theme/themeColors";
 
 const Topbar = ({ handleDrawerToggle }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -46,6 +48,9 @@ const Topbar = ({ handleDrawerToggle }) => {
       onClose={handleClose}
     >
       <MenuItem onClick={handleClose}>
+        <CustomToggle />
+      </MenuItem>
+      <MenuItem onClick={handleClose}>
         <ListItemIcon>
           <PersonOutlineOutlined />
         </ListItemIcon>
@@ -61,17 +66,7 @@ const Topbar = ({ handleDrawerToggle }) => {
   );
 
   return (
-    <AppBar
-      position="fixed"
-      //   sx={{
-      //     // width: { sm: `calc(100% - ${drawerWidth}px)` },
-      //     // ml: { sm: `${drawerWidth}px` },
-      //     backgroundColor: "#1e1e2f",
-      //     backgroundImage: "none",
-      //     boxShadow: "none",
-      //     borderTop: "2px solid #1d8cf8",
-      //   }}
-    >
+    <AppBar position="fixed">
       <Toolbar>
         <IconButton
           color="inherit"
@@ -88,7 +83,19 @@ const Topbar = ({ handleDrawerToggle }) => {
         <Box sx={{ flexGrow: 1 }} />
         <List sx={{ display: { xs: "none", sm: "flex" } }}>
           {menuContents.map((item, index) => (
-            <ListItemButton key={index} component={NavLink} to={item.link}>
+            <ListItemButton
+              key={index}
+              component={NavLink}
+              to={item.link}
+              style={({ isActive, isPending }) => {
+                return {
+                  // color: isActive ? primary[500] : "inherit",
+                  backgroundColor: isActive ? primary[500] : "inherit",
+                  color: isActive ? "#fff" : "inherit",
+                  // color: isPending ? "red" : "black",
+                };
+              }}
+            >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.title} />
             </ListItemButton>
