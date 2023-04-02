@@ -399,12 +399,22 @@ const themesOptions = {
       MuiCard: {
         styleOverrides: {
           root: {
-            backgroundColor: "rgba(10, 20, 2, 0)",
-            backdropFilter: "saturate(100%) blur(10px)",
-            boxShadow: "inset 1px -1px 2px 2px hsla(0,0%,100%,.1)",
+            backgroundColor: "rgb(34, 43, 54, 0.6)",
+            boxShadow:
+              "rgba(0, 0, 0, 0.03) 0px 2px 1px -1px, rgba(0, 0, 0, 0.04) 0px 1px 1px 0px, rgba(0, 0, 0, 0.08) 0px 1px 3px 0px",
+            transition: "box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms",
           },
         },
       },
+      // MuiCard: {
+      //   styleOverrides: {
+      //     root: {
+      //       backgroundColor: "rgba(10, 20, 2, 0)",
+      //       backdropFilter: "saturate(100%) blur(10px)",
+      //       boxShadow: "inset 1px -1px 2px 2px hsla(0,0%,100%,.1)",
+      //     },
+      //   },
+      // },
     },
   },
 };

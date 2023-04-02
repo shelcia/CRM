@@ -4,20 +4,20 @@ import {
   Box,
   Button,
   Card,
-  FormLabel,
   Grid,
   IconButton,
   LinearProgress,
-  Radio,
-  RadioGroup,
-  TextField,
   Typography,
   styled,
 } from "@mui/material";
-import { MoreHoriz } from "@mui/icons-material";
+import { MoreHoriz, Add as AddIcon } from "@mui/icons-material";
 import { useFormik } from "formik";
 import * as Yup from "yup"; // component props interface
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import {
+  CustomTextAreaField,
+  CustomTextField,
+} from "../../../components/CustomTextField";
 
 const todoList = [
   {
@@ -46,7 +46,7 @@ const todoList = [
   },
   {
     id: "03",
-    title: "Create Minimal Logo",
+    title: "Create CDA",
     date: "9/17/2021",
     description:
       "Hey, Pixy can we get on a quick call? i need to show you something. You need to do some work for me ASAP. And you need to do it before Aug 25. Thanks get back to me.",
@@ -68,6 +68,30 @@ const todoList = [
     },
     statusColor: "primary.yellow",
   },
+  {
+    id: "05",
+    title: "Deployment",
+    date: "9/17/2021",
+    description:
+      "Hey, Pixy can we get on a quick call? i need to show you something. You need to do some work for me ASAP. And you need to do it before Aug 25. Thanks get back to me.",
+    author: {
+      name: "Tom Cruise",
+      image: "/static/avatar/011-man-2.svg",
+    },
+    statusColor: "primary.yellow",
+  },
+  {
+    id: "06",
+    title: "Deployment",
+    date: "9/17/2021",
+    description:
+      "Hey, Pixy can we get on a quick call? i need to show you something. You need to do some work for me ASAP. And you need to do it before Aug 25. Thanks get back to me.",
+    author: {
+      name: "Tom Cruise",
+      image: "/static/avatar/011-man-2.svg",
+    },
+    statusColor: "primary.yellow",
+  },
 ];
 const viewColumns = {
   todo: {
@@ -80,11 +104,15 @@ const viewColumns = {
   },
   production: {
     name: "Production",
-    todos: [todoList[2]],
+    todos: [todoList[3]],
   },
   done: {
     name: "Done",
-    todos: [todoList[3]],
+    todos: [todoList[4]],
+  },
+  last: {
+    name: "Done",
+    todos: [todoList[4]],
   },
 };
 
@@ -142,8 +170,10 @@ const Projects = () => {
                 }}
               >
                 {columnId === "todo" ? (
-                  <Box padding="1rem">
-                    <h5>{column.name}</h5>
+                  <Box sx={{ padding: 1 }}>
+                    <Typography component="h5" variant="h6">
+                      {column.name}
+                    </Typography>
                     <Button
                       fullWidth
                       variant="contained"
@@ -153,7 +183,7 @@ const Projects = () => {
                         display: showAddTodoForm ? "none" : "auto",
                       }}
                     >
-                      +{/* <Add /> */}
+                      <AddIcon />
                     </Button>
                     <AddTodoForm
                       showAddTodoForm={showAddTodoForm}
@@ -180,96 +210,7 @@ const Projects = () => {
                             >
                               {(provided) => {
                                 return (
-                                  <Card
-                                    key={todo.id}
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    style={{ ...provided.draggableProps.style }}
-                                    sx={{
-                                      boxShadow: 2,
-                                      padding: "1rem",
-                                      marginBottom: "1.5rem",
-                                    }}
-                                  >
-                                    <Box
-                                      alignItems="center"
-                                      justifyContent="space-between"
-                                    >
-                                      <p>July 2, 2020</p>
-                                      <IconButton
-                                        sx={{
-                                          padding: 0,
-                                        }} // onClick={handleMoreClick}
-                                      >
-                                        <MoreHoriz />
-                                      </IconButton>
-                                    </Box>
-
-                                    <Box
-                                      sx={{
-                                        textAlign: "center",
-                                        pt: 6,
-                                        pb: 4,
-                                      }}
-                                    >
-                                      <h3>Web Designing</h3>
-                                      <h6
-                                      // color="text.disabled"
-                                      // fontWeight={500}
-                                      // mt={0.5}
-                                      >
-                                        Prototyping
-                                      </h6>
-                                    </Box>
-
-                                    <Box justifyContent="space-between" py={1}>
-                                      <p fontWeight={600}>Project Progress</p>
-                                      <p fontWeight={600}>32%</p>
-                                    </Box>
-
-                                    <LinearProgress
-                                      value={32}
-                                      variant="determinate"
-                                      sx={{
-                                        "& .MuiLinearProgress-bar": {
-                                          backgroundColor: todo.statusColor,
-                                        },
-                                      }}
-                                    />
-
-                                    <Box
-                                      alignItems="center"
-                                      justifyContent="space-between"
-                                      pt="1.5rem"
-                                    >
-                                      <Box alignItems="center">
-                                        <AvatarGroup>
-                                          {/* <UkoAvatar alt="Remy Sharp" src="/static/avatar/001-man.svg" /> */}
-                                          {/* <UkoAvatar alt="Travis Howard" src="/static/avatar/002-girl.svg" /> */}
-                                        </AvatarGroup>
-                                        +
-                                        {/* <AddIconButton
-                                          sx={{
-                                            marginLeft: 0,
-                                          }}
-                                        /> */}
-                                      </Box>
-
-                                      <Typography
-                                        sx={{
-                                          backgroundColor: "divider",
-                                          padding: "5px 15px",
-                                          borderRadius: "20px",
-                                          marginLeft: 1,
-                                          color: "text.disabled",
-                                          fontWeight: 600,
-                                        }}
-                                      >
-                                        3 Weeks Left
-                                      </Typography>
-                                    </Box>
-                                  </Card>
+                                  <TodoCard todo={todo} provided={provided} />
                                 );
                               }}
                             </Draggable>
@@ -346,93 +287,35 @@ const AddTodoForm = (props) => {
       <Box
         sx={{
           marginTop: 2,
-          display: showAddTodoForm ? "auto" : "none",
+          display: showAddTodoForm ? "flex" : "none",
+          flexDirection: "column",
+          gap: 1,
         }}
       >
-        <TextField
-          fullWidth
+        <CustomTextField
           name="title"
           placeholder="Title"
-          value={values.title}
-          onChange={handleChange}
-          helperText={touched.title && errors.title}
-          error={Boolean(touched.title && errors.title)}
-          sx={{
-            mb: 1,
-          }}
+          values={values}
+          handleChange={handleChange}
+          touched={touched}
+          errors={errors}
         />
-
-        {/* <DatePicker
-          value={values.date}
-          onChange={(newDate) => setFieldValue("date", newDate)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              name="date"
-              fullWidth
-              error={Boolean(touched.date && errors.date)}
-              helperText={touched.date && errors.date}
-              sx={{
-                mb: 1,
-                "& .MuiSvgIcon-root": {
-                  color: "text.disabled",
-                },
-              }}
-            />
-          )}
-        /> */}
-        <TextField
-          fullWidth
+        <CustomTextField
           name="mentionClient"
           placeholder="@mention Client"
-          onChange={handleChange}
-          value={values.mentionClient}
-          sx={{
-            mb: 1,
-          }}
+          values={values}
+          handleChange={handleChange}
+          touched={touched}
+          errors={errors}
         />
-        <TextField
-          fullWidth
-          rows={5}
-          multiline
+        <CustomTextAreaField
           name="description"
           placeholder="Description"
-          value={values.description}
-          onChange={handleChange}
-          error={Boolean(touched.description && errors.description)}
-          helperText={touched.description && errors.description}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              padding: 0,
-              "& textarea": {
-                paddingY: 1,
-              },
-            },
-          }}
+          values={values}
+          handleChange={handleChange}
+          touched={touched}
+          errors={errors}
         />
-
-        <Box alignItems="center" mb="1rem">
-          <FormLabel
-            component="small"
-            sx={{
-              color: "text.disabled",
-            }}
-          >
-            Select Color
-          </FormLabel>
-          <RadioGroup
-            row
-            name="statusColor"
-            value={values.statusColor}
-            onChange={handleChange}
-          >
-            <Radio value="#61A9FF" size="small" color="primary" />
-            <Radio value="#2CC5BD" size="small" color="success" />
-            <Radio value="#FD396D" size="small" color="error" />
-            <Radio value="#A798FF" size="small" color="info" />
-          </RadioGroup>
-        </Box>
-
         <Box>
           <Button variant="contained" fullWidth type="submit">
             Save
@@ -454,5 +337,98 @@ const AddTodoForm = (props) => {
         </Box>
       </Box>
     </form>
+  );
+};
+
+const TodoCard = ({ todo, provided }) => {
+  return (
+    <Card
+      key={todo.id}
+      ref={provided.innerRef}
+      {...provided.draggableProps}
+      {...provided.dragHandleProps}
+      style={{ ...provided.draggableProps.style }}
+      sx={{
+        boxShadow: 2,
+        padding: "1rem",
+        marginBottom: "1.5rem",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: " center",
+        }}
+      >
+        <p>{todo.date}</p>
+        <IconButton
+          sx={{
+            padding: 0,
+          }} // onClick={handleMoreClick}
+        >
+          <MoreHoriz />
+        </IconButton>
+      </Box>
+
+      <Box
+        sx={{
+          textAlign: "center",
+          pt: 6,
+          pb: 4,
+        }}
+      >
+        <h3>{todo.title}</h3>
+        <h6
+        // color="text.disabled"
+        // fontWeight={500}
+        // mt={0.5}
+        >
+          {todo.description}
+        </h6>
+      </Box>
+
+      <Box justifyContent="space-between" py={1}>
+        <p fontWeight={600}>Project Progress</p>
+        <p fontWeight={600}>32%</p>
+      </Box>
+
+      <LinearProgress
+        value={32}
+        variant="determinate"
+        sx={{
+          "& .MuiLinearProgress-bar": {
+            backgroundColor: todo.statusColor,
+          },
+        }}
+      />
+
+      <Box alignItems="center" justifyContent="space-between" pt="1.5rem">
+        <Box alignItems="center">
+          <AvatarGroup>
+            {/* <UkoAvatar alt="Remy Sharp" src="/static/avatar/001-man.svg" /> */}
+            {/* <UkoAvatar alt="Travis Howard" src="/static/avatar/002-girl.svg" /> */}
+          </AvatarGroup>
+          <AddIcon
+            sx={{
+              marginLeft: 0,
+            }}
+          />
+        </Box>
+
+        <Typography
+          sx={{
+            backgroundColor: "divider",
+            padding: "5px 15px",
+            borderRadius: "20px",
+            marginLeft: 1,
+            color: "text.disabled",
+            fontWeight: 600,
+          }}
+        >
+          3 Weeks Left
+        </Typography>
+      </Box>
+    </Card>
   );
 };
