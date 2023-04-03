@@ -1,9 +1,11 @@
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import React, { useState } from "react";
 import { CustomBasicHorizontalTable } from "../../../components/CustomBasicTable";
 import CustomModal from "../../../components/CustomModal";
 import CustomTable from "../../../components/CustomTable";
 import { convertDateToDateWithoutTime } from "../../../utils/calendarHelpers";
+import AddContact from "./AddContact";
+import { Add as AddIcon } from "@mui/icons-material";
 
 const Contacts = () => {
   const [index, setIndex] = useState(0);
@@ -158,9 +160,20 @@ const Contacts = () => {
   ];
 
   const [open, setOpen] = useState(false);
+  const [openAddContactModal, setOpenAddContactModal] = useState(false);
 
   return (
     <React.Fragment>
+      <Box align="end" mb={1}>
+        <Button
+          onClick={() => setOpenAddContactModal(true)}
+          variant="contained"
+        >
+          <AddIcon /> Add Contact
+        </Button>
+      </Box>
+
+      <AddContact open={openAddContactModal} setOpen={setOpenAddContactModal} />
       <CustomTable
         columns={columns}
         data={contacts}

@@ -1,6 +1,7 @@
 import React from "react";
 import {
   ConfirmationNumberOutlined,
+  // Dashboard,
   EmailOutlined,
   FactCheckOutlined,
   LocalPhoneOutlined,
@@ -26,6 +27,8 @@ import {
 import { NavLink } from "react-router-dom";
 import CustomToggle from "../../../components/CustomToggle";
 import { primary } from "../../../theme/themeColors";
+
+// import DashboardIcon from '@mui/icons-material/Dashboard';
 
 const Topbar = ({ handleDrawerToggle }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -122,6 +125,11 @@ const Topbar = ({ handleDrawerToggle }) => {
 export default Topbar;
 
 export const menuContents = [
+  // {
+  //   title: "Dashboard",
+  //   link: "/admin_dashboard/dashboard",
+  //   icon: <Dashboard />,
+  // },
   {
     title: "Contacts",
     link: "/admin_dashboard/contacts",

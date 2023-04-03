@@ -1,5 +1,12 @@
 import React from "react";
-import { styled, TextField } from "@mui/material";
+import {
+  FormControl,
+  FormHelperText,
+  MenuItem,
+  Select,
+  styled,
+  TextField,
+} from "@mui/material";
 
 export const CustomAuthInput = (props) => {
   const CssTextField = styled(TextField)({
@@ -49,4 +56,88 @@ export const CustomDarkInput = (props) => {
     },
   });
   return <CssTextField {...props} className="mb-2" />;
+};
+
+export const CustomTextField = ({
+  name,
+  placeholder,
+  values,
+  handleChange,
+  touched,
+  errors,
+  props,
+}) => {
+  return (
+    <TextField
+      fullWidth
+      name={name}
+      size="small"
+      placeholder={placeholder}
+      value={values[name]}
+      onChange={handleChange}
+      helperText={touched[name] && errors[name]}
+      error={Boolean(touched[name] && errors[name])}
+      {...props}
+    />
+  );
+};
+
+export const CustomTextAreaField = ({
+  name,
+  placeholder,
+  values,
+  handleChange,
+  touched,
+  errors,
+  rows = 5,
+}) => {
+  return (
+    <TextField
+      fullWidth
+      rows={rows}
+      multiline
+      name={name}
+      size="small"
+      placeholder={placeholder}
+      value={values[name]}
+      onChange={handleChange}
+      helperText={touched[name] && errors[name]}
+      error={Boolean(touched[name] && errors[name])}
+    />
+  );
+};
+
+export const CustomSelectField = ({
+  name,
+  placeholder,
+  values,
+  handleChange,
+  touched,
+  errors,
+  labelItms,
+}) => {
+  return (
+    <FormControl error={Boolean(touched[name] && errors[name])}>
+      <Select
+        labelId={`select-${name}`}
+        id={`select-${name}-id`}
+        placeholder={placeholder}
+        value={values[name]}
+        onChange={handleChange}
+        // renderValue={(value) => `⚠️  - ${value}`}
+        size="small"
+        name={name}
+      >
+        {/* <MenuItem value="">
+          <em>None</em>
+        </MenuItem> */}
+        {labelItms.map((itm) => (
+          <MenuItem value={itm.val} key={itm.val}>
+            {itm.label}
+          </MenuItem>
+        ))}
+      </Select>
+      <FormHelperText>{touched[name] && errors[name]}</FormHelperText>
+    </FormControl>
+  );
 };
