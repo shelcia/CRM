@@ -41,7 +41,6 @@ const baseOptions = {
         root: {
           textTransform: "none",
           borderRadius: "4px",
-          // color: "inherit",
           boxShadow: "none",
           // padding: "0.6rem 1.5rem",
         },

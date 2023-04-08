@@ -16,9 +16,14 @@ const Loadable = (Component) => (props) =>
 // LANDING PAGEll
 const Home = Loadable(lazy(() => import("./pages/home/Homepage")));
 
-const Signup = Loadable(lazy(() => import("./pages/home/Signup")));
-const Login = Loadable(lazy(() => import("./pages/home/Login")));
-const Verification = Loadable(lazy(() => import("./pages/home/Verification")));
+const Signup = Loadable(lazy(() => import("./pages/auth/Signup")));
+const Login = Loadable(lazy(() => import("./pages/auth/Login")));
+const Verification = Loadable(lazy(() => import("./pages/auth/Verification")));
+const EmailVerify = Loadable(lazy(() => import("./pages/auth/EmailVerify")));
+const ForgetPassword = Loadable(
+  lazy(() => import("./pages/auth/ForgetPassword"))
+);
+const ResetPwd = Loadable(lazy(() => import("./pages/auth/ResetPwd")));
 
 // const PrivacyPolicy = Loadable(
 //   lazy(() => import("./pages/others/PrivacyPolicy"))
@@ -68,6 +73,18 @@ const routes = [
       {
         path: "verification",
         element: <Verification />,
+      },
+      {
+        path: "forget-password",
+        element: <ForgetPassword />,
+      },
+      {
+        path: "/email-verification/:id",
+        element: <EmailVerify />,
+      },
+      {
+        path: "/reset-password/:id",
+        element: <ResetPwd />,
       },
     ],
   },

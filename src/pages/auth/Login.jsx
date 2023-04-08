@@ -1,24 +1,34 @@
-import React, { useState } from "react";
+import React from "react";
 import { Box, Button, Typography } from "@mui/material";
-import { CustomAuthInput } from "../../components/CustomInputs";
 import { Link, useNavigate } from "react-router-dom";
-import { apiAuth } from "../../services/models/authModel";
 import { toast } from "react-hot-toast";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { CustomAuthInput } from "../../components/CustomInputs";
+import { apiAuth } from "../../services/models/authModel";
 
 const Login = () => {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email("Enter valid email!")
+      .required("Email is required !"),
+    password: Yup.string().required("Password is required !"),
   });
 
-  const handleInputs = (e, name) => {
-    // e.preventDefault();
-    setUser({ ...user, [`${name}`]: e.target.value });
+  const initialValues = {
+    email: "",
+    password: "",
   };
-
-  const loginUser = () => {
+  const { errors, values, handleChange, handleSubmit, touched } = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: (values) => {
+      loginUser(values);
+    },
+  });
+  const loginUser = (user) => {
     apiAuth.post(user, "login").then((res) => {
       if (res.status === "200") {
         // navigate("/verification");
@@ -44,26 +54,31 @@ const Login = () => {
         Log In
       </Typography>
       <CustomAuthInput
-        label="Email"
-        size="small"
+        name="email"
         placeholder="ex: james@company.com"
-        value={user.email}
-        onChange={(e) => handleInputs(e, "email")}
+        values={values}
+        handleChange={handleChange}
+        touched={touched}
+        errors={errors}
       />
       <CustomAuthInput
-        label="Password"
-        size="small"
-        type="password"
+        name="password"
         placeholder="enter password"
-        value={user.password}
-        onChange={(e) => handleInputs(e, "password")}
+        values={values}
+        handleChange={handleChange}
+        touched={touched}
+        errors={errors}
+        type="password"
       />
-      <Button variant="contained" fullWidth onClick={loginUser}>
+      <Button variant="contained" fullWidth onClick={handleSubmit}>
         Login
       </Button>
-      <Box>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
         <Link to="/signup" style={{ textDecoration: "underline" }}>
           No account created? then Signup
+        </Link>
+        <Link to="/forget-password" style={{ textDecoration: "underline" }}>
+          Forgot Password?
         </Link>
       </Box>
     </>

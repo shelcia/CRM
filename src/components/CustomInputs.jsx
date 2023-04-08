@@ -8,54 +8,56 @@ import {
   TextField,
 } from "@mui/material";
 
-export const CustomAuthInput = (props) => {
-  const CssTextField = styled(TextField)({
-    "& label.Mui-focused": {
-      color: "#e14eca",
+const AuthTextField = styled(TextField)(({ theme }) => ({
+  "& label": {
+    color:
+      theme.palette.mode === "light" ? "inherit" : "rgba(255, 255, 255, 0.6)",
+  },
+  "& label.Mui-focused": {
+    color: "#e14eca",
+  },
+  "& .MuiInput-underline:after": {
+    borderBottomColor: "#e14eca",
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor:
+        theme.palette.mode === "light" ? "rgba(34,42,66,.2)" : "#2b3553",
     },
-    "& .MuiInput-underline:after": {
-      borderBottomColor: "#e14eca",
+    "&:hover fieldset": {
+      borderColor:
+        theme.palette.mode === "light" ? "rgba(34,42,66,.2)" : "#2b3553",
     },
-    "& .MuiOutlinedInput-root": {
-      "& fieldset": {
-        borderColor: "rgba(34,42,66,.2)",
-      },
-      "&:hover fieldset": {
-        borderColor: "rgba(34,42,66,.5)",
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: "#e14eca",
-      },
+    "&.Mui-focused fieldset": {
+      borderColor: "#e14eca",
     },
-  });
-  return <CssTextField {...props} fullWidth className="mb-2" />;
-};
+  },
+}));
 
-export const CustomDarkInput = (props) => {
-  const CssTextField = styled(TextField)({
-    "& label": {
-      color: "rgba(255, 255, 255, 0.6)",
-      fontSize: "0.85rem",
-    },
-    "& label.Mui-focused": {
-      color: "#e14eca",
-    },
-    "& .MuiInput-underline:after": {
-      borderBottomColor: "#e14eca",
-    },
-    "& .MuiOutlinedInput-root": {
-      "& fieldset": {
-        borderColor: "#2b3553",
-      },
-      "&:hover fieldset": {
-        borderColor: "#2b3553",
-      },
-      "&.Mui-focused fieldset": {
-        borderColor: "#e14eca",
-      },
-    },
-  });
-  return <CssTextField {...props} className="mb-2" />;
+export const CustomAuthInput = ({
+  name,
+  placeholder,
+  values,
+  handleChange,
+  touched,
+  errors,
+  type = "text",
+  props,
+}) => {
+  return (
+    <AuthTextField
+      fullWidth
+      name={name}
+      size="small"
+      placeholder={placeholder}
+      value={values[name]}
+      onChange={handleChange}
+      helperText={touched[name] && errors[name]}
+      error={Boolean(touched[name] && errors[name])}
+      type={type}
+      {...props}
+    />
+  );
 };
 
 export const CustomTextField = ({
@@ -65,6 +67,8 @@ export const CustomTextField = ({
   handleChange,
   touched,
   errors,
+  color = "primary",
+  type = "text",
   props,
 }) => {
   return (
@@ -77,6 +81,8 @@ export const CustomTextField = ({
       onChange={handleChange}
       helperText={touched[name] && errors[name]}
       error={Boolean(touched[name] && errors[name])}
+      color={color}
+      type={type}
       {...props}
     />
   );
