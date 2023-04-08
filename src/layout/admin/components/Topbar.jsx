@@ -24,7 +24,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import CustomToggle from "../../../components/CustomToggle";
 import { primary } from "../../../theme/themeColors";
 
@@ -38,6 +38,13 @@ const Topbar = ({ handleDrawerToggle }) => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const navigate = useNavigate();
+
+  const logout = () => {
+    localStorage.clear();
+    navigate("/");
   };
 
   const renderMenu = (
@@ -59,7 +66,7 @@ const Topbar = ({ handleDrawerToggle }) => {
         </ListItemIcon>
         <Typography variant="inherit">Profile</Typography>
       </MenuItem>
-      <MenuItem onClick={handleClose}>
+      <MenuItem onClick={logout}>
         <ListItemIcon>
           <LogoutOutlined />
         </ListItemIcon>
