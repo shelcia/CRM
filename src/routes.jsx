@@ -31,6 +31,7 @@ const ResetPwd = Loadable(lazy(() => import("./pages/auth/ResetPwd")));
 
 // ADMIN PAGE
 // const Dashboard = Loadable(lazy(() => import("./pages/admin/dashboard/Dashboard")));
+const Users = Loadable(lazy(() => import("./pages/admin/users/Users")));
 const Contacts = Loadable(
   lazy(() => import("./pages/admin/contacts/Contacts"))
 );
@@ -96,6 +97,10 @@ const routes = [
     path: "admin_dashboard",
     element: <Layout />,
     children: [
+      {
+        path: "users",
+        element: <Users />,
+      },
       {
         path: "contacts",
         element: <Contacts />,

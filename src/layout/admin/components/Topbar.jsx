@@ -8,6 +8,7 @@ import {
   LogoutOutlined,
   MenuOutlined,
   MoreVert,
+  PeopleAlt,
   PersonOutlineOutlined,
   SourceOutlined,
 } from "@mui/icons-material";
@@ -137,6 +138,11 @@ export const menuContents = [
   //   link: "/admin_dashboard/dashboard",
   //   icon: <Dashboard />,
   // },
+  {
+    title: "Users",
+    link: "/admin_dashboard/users",
+    icon: <PeopleAlt />,
+  },
   {
     title: "Contacts",
     link: "/admin_dashboard/contacts",
