@@ -20,15 +20,9 @@ const Signup = () => {
   };
 
   const registerUser = () => {
-    apiAuth.post({ ...user, type: "admin" }).then((res) => {
+    apiAuth.post({ ...user, role: "admin" }, "register").then((res) => {
       if (res.status === "200") {
-        localStorage.setItem("CRM-id", res.message.id);
-        localStorage.setItem("CRM-name", res.message.name);
-        localStorage.setItem("CRM-email", res.message.email);
-        localStorage.setItem("CRM-type", res.message.type);
-        localStorage.setItem("CRM-token", res.message.token);
-
-        navigate("/admin_dashboard/contacts");
+        navigate("/verification?status=success");
       } else {
         toast.error("User not created");
       }

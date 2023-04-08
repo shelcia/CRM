@@ -4,6 +4,7 @@ import { lazy, Suspense } from "react";
 import Layout from "./layout/admin/Layout";
 import HomeLayout from "./layout/home/Layout";
 import AuthLayout from "./layout/auth/Layout";
+import { Outlet } from "react-router-dom";
 
 const Loadable = (Component) => (props) =>
   (
@@ -17,6 +18,7 @@ const Home = Loadable(lazy(() => import("./pages/home/Homepage")));
 
 const Signup = Loadable(lazy(() => import("./pages/home/Signup")));
 const Login = Loadable(lazy(() => import("./pages/home/Login")));
+const Verification = Loadable(lazy(() => import("./pages/home/Verification")));
 
 // const PrivacyPolicy = Loadable(
 //   lazy(() => import("./pages/others/PrivacyPolicy"))
@@ -48,20 +50,26 @@ const routes = [
     ),
   },
   {
-    path: "signup",
+    path: "",
     element: (
       <AuthLayout>
-        <Signup />
+        <Outlet />
       </AuthLayout>
     ),
-  },
-  {
-    path: "login",
-    element: (
-      <AuthLayout>
-        <Login />
-      </AuthLayout>
-    ),
+    children: [
+      {
+        path: "signup",
+        element: <Signup />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "verification",
+        element: <Verification />,
+      },
+    ],
   },
   // {
   //   path: "privacy-policy",
