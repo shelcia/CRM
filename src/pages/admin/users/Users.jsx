@@ -2,6 +2,8 @@ import React from "react";
 import CustomTable from "../../../components/CustomTable";
 import { convertDateToDateWithoutTime } from "../../../utils/calendarHelpers";
 import { Button } from "@mui/material";
+import { Link } from "react-router-dom";
+import { Add as AddIcon } from "@mui/icons-material";
 
 const Users = () => {
   const data = [
@@ -81,12 +83,20 @@ const Users = () => {
   ];
 
   return (
-    <CustomTable
-      columns={columns}
-      data={data}
-      title="Contacts"
-      downloadName="contacts"
-    />
+    <>
+      <Link to="add-user">
+        <Button variant="contained" sx={{ marginLeft: "auto" }}>
+          <AddIcon /> Add User
+        </Button>
+      </Link>
+
+      <CustomTable
+        columns={columns}
+        data={data}
+        title="Contacts"
+        downloadName="contacts"
+      />
+    </>
   );
 };
 

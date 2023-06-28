@@ -1,12 +1,15 @@
 import React from "react";
 import {
+  Chip,
   FormControl,
   FormHelperText,
+  InputLabel,
   MenuItem,
   Select,
   styled,
   TextField,
 } from "@mui/material";
+import { Cancel as CancelIcon } from "@mui/icons-material";
 
 const AuthTextField = styled(TextField)(({ theme }) => ({
   "& label": {
@@ -62,6 +65,7 @@ export const CustomAuthInput = ({
 
 export const CustomTextField = ({
   name,
+  label = "",
   placeholder,
   values,
   handleChange,
@@ -74,6 +78,7 @@ export const CustomTextField = ({
   return (
     <TextField
       fullWidth
+      label={label === "" ? label : `Enter ${label}`}
       name={name}
       size="small"
       placeholder={placeholder}
@@ -115,6 +120,7 @@ export const CustomTextAreaField = ({
 
 export const CustomSelectField = ({
   name,
+  label = "",
   placeholder,
   values,
   handleChange,
@@ -123,20 +129,79 @@ export const CustomSelectField = ({
   labelItms,
 }) => {
   return (
+    <TextField
+      id={`select-${name}-id`}
+      placeholder={placeholder}
+      value={values[name]}
+      onChange={handleChange}
+      // renderValue={(value) => `⚠️  - ${value}`}
+      select
+      size="small"
+      name={name}
+      label={label === "" ? label : `Enter ${label}`}
+      helperText={touched[name] && errors[name]}
+      error={Boolean(touched[name] && errors[name])}
+    >
+      {/* <MenuItem value="">
+          <em>None</em>
+        </MenuItem> */}
+      {labelItms.map((itm) => (
+        <MenuItem value={itm.val} key={itm.val}>
+          {itm.label}
+        </MenuItem>
+      ))}
+    </TextField>
+  );
+};
+
+export const CustomSelectChipField = ({
+  name,
+  label = "",
+  placeholder,
+  values,
+  handleChange,
+  touched,
+  errors,
+  labelItms,
+}) => {
+  const handleDelete = (e, value) => {
+    e.preventDefault();
+    console.log("clicked delete");
+  };
+
+  return (
     <FormControl error={Boolean(touched[name] && errors[name])}>
+      <InputLabel htmlFor="component-outlined">{label}</InputLabel>
       <Select
-        labelId={`select-${name}`}
         id={`select-${name}-id`}
         placeholder={placeholder}
         value={values[name]}
         onChange={handleChange}
         // renderValue={(value) => `⚠️  - ${value}`}
+        select
         size="small"
         name={name}
+        helperText={touched[name] && errors[name]}
+        error={Boolean(touched[name] && errors[name])}
+        renderValue={(selected) => (
+          <div>
+            {selected.map((value) => (
+              <Chip
+                key={value}
+                label={value}
+                clickable
+                deleteIcon={
+                  <CancelIcon
+                    onMouseDown={(event) => event.stopPropagation()}
+                  />
+                }
+                onDelete={(e) => handleDelete(e, value)}
+                onClick={() => console.log("clicked chip")}
+              />
+            ))}
+          </div>
+        )}
       >
-        {/* <MenuItem value="">
-          <em>None</em>
-        </MenuItem> */}
         {labelItms.map((itm) => (
           <MenuItem value={itm.val} key={itm.val}>
             {itm.label}
