@@ -90,23 +90,19 @@ const AddUser = () => {
             label="Permissions"
             name="permissions"
             placeholder="permissions"
-            values={values}
-            handleChange={handleChange}
-            touched={touched}
-            errors={errors}
             labelItms={[
-              { val: "users-view", label: "users-view" },
-              { val: "users-edit", label: "users-edit" },
-              { val: "users-delete", label: "users-delete" },
-              { val: "contact-view", label: "contact-view" },
-              { val: "contact-edit", label: "contact-edit" },
-              { val: "contact-delete", label: "contact-delete" },
-              { val: "ticket-view", label: "ticket-view" },
-              { val: "ticket-edit", label: "ticket-edit" },
-              { val: "ticket-delete", label: "ticket-delete" },
-              { val: "todo-view", label: "todo-view" },
-              { val: "todo-edit", label: "todo-edit" },
-              { val: "todo-delete", label: "todo-delete" },
+              { val: "users-view", label: "Users view" },
+              { val: "users-edit", label: "Users-edit" },
+              { val: "users-delete", label: "Users-delete" },
+              { val: "contact-view", label: "Contact-view" },
+              { val: "contact-edit", label: "Contact-edit" },
+              { val: "contact-delete", label: "Contact-delete" },
+              { val: "ticket-view", label: "Ticket-view" },
+              { val: "ticket-edit", label: "Ticket-edit" },
+              { val: "ticket-delete", label: "Ticket-delete" },
+              { val: "todo-view", label: "Todo-View" },
+              { val: "todo-edit", label: "Todo-edit" },
+              { val: "todo-delete", label: "Todo-delete" },
             ]}
           />
           <CustomTextField
