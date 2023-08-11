@@ -3,9 +3,7 @@ import React, { useContext } from "react";
 // import "./styles/bootstrap/bootstrap-grid.css";
 // import "./styles/bootstrap/bootstrap-utils.css";
 // import "suneditor/dist/css/suneditor.min.css";
-import "./styles/style.css";
-
-// import "./styles/black.css";
+// import "./styles/style.css";
 
 import routes from "./routes";
 import { useRoutes } from "react-router-dom";

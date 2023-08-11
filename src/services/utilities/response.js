@@ -24,14 +24,9 @@ export function handleResponse(response) {
 }
 
 export function handleError(error) {
-  if (error.data) {
-    // toast.error(error.data);
-    return error.data;
+  console.log(error);
+  if (error?.response?.data) {
+    return error?.response?.data;
   }
-  if (error.message) {
-    // toast.error(error.message);
-    return error.message;
-  }
-  // toast.error(error);
   return error;
 }

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import {
+  Box,
+  Checkbox,
   Chip,
   FormControl,
-  FormHelperText,
+  FormControlLabel,
+  // FormHelperText,
   InputLabel,
   MenuItem,
   OutlinedInput,
@@ -214,18 +217,18 @@ export const CustomSelectField = ({
 //   );
 // };
 
-const names = [
-  "Humaira Sims",
-  "Santiago Solis",
-  "Dawid Floyd",
-  "Mateo Barlow",
-  "Samia Navarro",
-  "Kaden Fields",
-  "Genevieve Watkins",
-  "Mariah Hickman",
-  "Rocco Richardson",
-  "Harris Glenn",
-];
+// const names = [
+//   "Humaira Sims",
+//   "Santiago Solis",
+//   "Dawid Floyd",
+//   "Mateo Barlow",
+//   "Samia Navarro",
+//   "Kaden Fields",
+//   "Genevieve Watkins",
+//   "Mariah Hickman",
+//   "Rocco Richardson",
+//   "Harris Glenn",
+// ];
 
 export const CustomSelectChipField = ({
   name,
@@ -242,6 +245,7 @@ export const CustomSelectChipField = ({
     <FormControl>
       <InputLabel>{label}</InputLabel>
       <Select
+        size="small"
         multiple
         value={selectedNames}
         onChange={(e) => setSelectedNames(e.target.value)}
@@ -261,7 +265,55 @@ export const CustomSelectChipField = ({
         ))}
       </Select>
       {/* <FormHelperText>{touched[name] && errors[name]}</FormHelperText> */}
-      <FormHelperText error={true}>Error</FormHelperText>
+      {/* <FormHelperText error={true}>Error</FormHelperText> */}
     </FormControl>
+  );
+};
+
+export const CustomMultipleCheckBoxField = ({
+  label = "",
+  labelItms = [],
+  checked,
+  setChecked,
+}) => {
+  return (
+    <>
+      <FormControlLabel
+        label={label}
+        control={
+          <Checkbox
+            checked={checked[0] && checked[1]}
+            indeterminate={checked[0] !== checked[1]}
+            onChange={(event) => {
+              const reqArray = Array.from(
+                { length: labelItms.length },
+                () => event.target.checked
+              );
+              setChecked(reqArray);
+            }}
+          />
+        }
+      />
+      <Box sx={{ display: "flex", flexDirection: "column", ml: 3 }}>
+        {labelItms.map((itm, idx) => (
+          <FormControlLabel
+            key={idx}
+            label={itm}
+            control={
+              <Checkbox
+                checked={checked[idx]}
+                onChange={(event) => {
+                  let checkedArr = [...checked];
+                  checkedArr[idx] = event.target.checked;
+                  console.log(checkedArr, event.target);
+                  setChecked(checkedArr);
+                  console.log(checked);
+                }}
+              />
+            }
+          />
+        ))}
+      </Box>
+    </>
   );
 };

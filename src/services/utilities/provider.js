@@ -11,10 +11,10 @@ const BASE_URL = LOCALHOST_URL;
 
 // const BASE_URL = CYCLIC_BASE_URL;
 
+const token = localStorage.getItem("CRM-token");
+
 /** @param {string} resource */
 const getAll = async (resource, signal, isAuthorized = false) => {
-  const token = localStorage.getItem("BlogGram-Token");
-
   const headers = isAuthorized ? { "auth-token": token } : {};
 
   try {
@@ -38,8 +38,6 @@ const getSingle = async (
   additionalParam = "",
   isAuthorized = false
 ) => {
-  const token = localStorage.getItem("BlogGram-Token");
-
   const headers = isAuthorized ? { "auth-token": token } : {};
 
   try {
@@ -74,8 +72,6 @@ const getByParams = async (
   additionalParam = "",
   isAuthorized = false
 ) => {
-  const token = localStorage.getItem("BlogGram-Token");
-
   const headers = isAuthorized ? { "auth-token": token } : {};
 
   try {
@@ -108,7 +104,6 @@ const post = async (
   isAuthorized = false
 ) => {
   // console.log({ model });
-  const token = localStorage.getItem("BlogGram-Token");
   const headers = isAuthorized ? { "auth-token": token } : {};
 
   try {
@@ -141,7 +136,6 @@ const postFormData = async (
   additionalParam = "",
   isAuthorized = false
 ) => {
-  const token = localStorage.getItem("BlogGram-Token");
   // console.log("invoked");
   const headers = isAuthorized
     ? {
@@ -175,7 +169,6 @@ const postFormData = async (
 /** @param {string} resource */
 /** @param {object} model */
 const put = async (resource, model, additionalParams, isAuthorized = false) => {
-  const token = localStorage.getItem("BlogGram-Token");
   const headers = isAuthorized ? { "auth-token": token } : {};
 
   try {
@@ -222,8 +215,6 @@ const putFormData = async (
   additionalParam = "",
   isAuthorized = false
 ) => {
-  const token = localStorage.getItem("BlogGram-Token");
-  // console.log("invoked");
   const headers = isAuthorized
     ? {
         "Content-Type": "multipart/form-data",
@@ -256,7 +247,6 @@ const putFormData = async (
 /** @param {string} resource */
 /** @param {object} model */
 const patch = async (resource, model, signal, isAuthorized = false) => {
-  const token = localStorage.getItem("BlogGram-Token");
   try {
     const response = await axios.patch(`${BASE_URL}/${resource}`, model, {
       signal: signal,
@@ -278,7 +268,6 @@ const patchByParams = async (
   queryParams,
   isAuthorized = false
 ) => {
-  const token = localStorage.getItem("BlogGram-Token");
   const headers = isAuthorized ? { "auth-token": token } : {};
 
   try {
@@ -297,7 +286,6 @@ const patchByParams = async (
 /** @param {string} resource */
 /** @param {string} id */
 const remove = async (resource, id, additionalParams, isAuthorized = false) => {
-  const token = localStorage.getItem("BlogGram-Token");
   const headers = isAuthorized ? { "auth-token": token } : {};
 
   // console.log(`${BASE_URL}/${resource}/${id}`);
