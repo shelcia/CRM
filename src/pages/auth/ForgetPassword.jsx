@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { CustomAuthInput } from "../../components/CustomInputs";
 import { apiAuth } from "../../services/models/authModel";
-import { Button, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { toast } from "react-hot-toast";
+import { LoadingButton } from "@mui/lab";
 
 const ForgetPassword = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .email("Enter valid email!")
@@ -20,6 +23,7 @@ const ForgetPassword = () => {
     initialValues,
     validationSchema,
     onSubmit: (values) => {
+      setIsLoading(true);
       sendRestPwdMail(values);
     },
   });
@@ -28,8 +32,10 @@ const ForgetPassword = () => {
     apiAuth.post(body, "reset-password").then((res) => {
       if (res.status === "200") {
         toast.success(res.message);
+        setIsLoading(false);
       } else {
         toast.error(res.message);
+        setIsLoading(false);
       }
     });
   };
@@ -46,14 +52,15 @@ const ForgetPassword = () => {
         touched={touched}
         errors={errors}
       />
-      <Button
+      <LoadingButton
         onClick={handleSubmit}
         variant="contained"
         fullWidth
         sx={{ mt: 1 }}
+        loading={isLoading}
       >
         Reset Password
-      </Button>
+      </LoadingButton>
     </>
   );
 };

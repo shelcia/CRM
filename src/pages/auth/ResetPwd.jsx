@@ -1,13 +1,15 @@
-import React from "react";
-import { Button, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Typography } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { CustomAuthInput } from "../../components/CustomInputs";
 import { apiAuth } from "../../services/models/authModel";
 import { useNavigate, useParams } from "react-router-dom";
+import { LoadingButton } from "@mui/lab";
 
 const ResetPwd = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -28,6 +30,7 @@ const ResetPwd = () => {
     initialValues,
     validationSchema,
     onSubmit: (values) => {
+      setIsLoading(true);
       resetPassword({ password: values.password });
     },
   });
@@ -37,16 +40,14 @@ const ResetPwd = () => {
       if (res.status === "200") {
         toast.success("Successfully reset");
         navigate("/login");
-        // setStatus(true);
+        setIsLoading(false);
       } else if (res.status === "400") {
         toast.error(res.message);
-        // setStatus(false);
+        setIsLoading(false);
       } else {
         toast.error("Error");
-        // setStatus(false);
+        setIsLoading(false);
       }
-      //   setLoading(false);
-      //   setIsResponse(true);
     });
   };
   return (
@@ -56,7 +57,7 @@ const ResetPwd = () => {
       </Typography>
       <CustomAuthInput
         name="password"
-        placeholder="enter password"
+        placeholder="enter new password"
         values={values}
         handleChange={handleChange}
         touched={touched}
@@ -65,21 +66,22 @@ const ResetPwd = () => {
       />
       <CustomAuthInput
         name="confirmPassword"
-        placeholder="enter password"
+        placeholder="confirm password"
         values={values}
         handleChange={handleChange}
         touched={touched}
         errors={errors}
         type="password"
       />
-      <Button
+      <LoadingButton
         onClick={handleSubmit}
         variant="contained"
         fullWidth
         sx={{ mt: 1 }}
+        loading={isLoading}
       >
         Reset Password
-      </Button>
+      </LoadingButton>
     </>
   );
 };

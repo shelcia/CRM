@@ -35,7 +35,7 @@ const Signup = () => {
       if (res.status === "200") {
         navigate("/verification?status=success");
       } else {
-        toast.error("User not created");
+        toast.error(res.message);
       }
     });
   };
