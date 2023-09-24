@@ -1,14 +1,16 @@
-import React from "react";
-import { Alert, Box, Button, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Alert, Box, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { apiAuth } from "../../services/models/authModel";
 import { CustomAuthInput } from "../../components/CustomInputs";
+import { LoadingButton } from "@mui/lab";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -34,8 +36,10 @@ const Signup = () => {
     apiAuth.post({ ...user, role: "admin" }, "register").then((res) => {
       if (res.status === "200") {
         navigate("/verification?status=success");
+        setIsLoading(false);
       } else {
         toast.error(res.message);
+        setIsLoading(false);
       }
     });
   };
@@ -74,14 +78,24 @@ const Signup = () => {
         errors={errors}
         type="password"
       />
-      <Button
+      <LoadingButton
+        loading={isLoading}
+        loadingIndicator="Loading…"
+        variant="contained"
+        onClick={handleSubmit}
+        fullWidth
+        className="mt-3"
+      >
+        Fetch data
+      </LoadingButton>
+      {/* <Button
         variant="contained"
         fullWidth
         className="mt-3"
         onClick={handleSubmit}
       >
         Register as Admin
-      </Button>
+      </Button> */}
       <Box>
         <Link to="/login" style={{ textDecoration: "underline" }}>
           Have account already? then Signin

@@ -38,7 +38,13 @@ const Login = () => {
         localStorage.setItem("CRM-type", res.message.type);
         localStorage.setItem("CRM-token", res.message.token);
 
-        navigate("/admin_dashboard/contacts");
+        if (res.message.companyId) {
+          navigate("/admin_dashboard/contacts");
+        } else {
+          navigate("/admin_dashboard/add-company");
+          localStorage.setItem("CRM-companyId", res.message.companyId);
+          localStorage.setItem("CRM-company", res.message.company);
+        }
       } else if (res.status === "401") {
         localStorage.setItem("CRM-email", user.email);
         navigate("/verification?status=not-verified");

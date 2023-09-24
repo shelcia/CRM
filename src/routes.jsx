@@ -5,6 +5,7 @@ import Layout from "./layout/admin/Layout";
 import HomeLayout from "./layout/home/Layout";
 import AuthLayout from "./layout/auth/Layout";
 import { Outlet } from "react-router-dom";
+// import AddCompany from "./pages/admin/company/AddCompany";
 
 const Loadable = (Component) => (props) =>
   (
@@ -31,6 +32,9 @@ const ResetPwd = Loadable(lazy(() => import("./pages/auth/ResetPwd")));
 
 // ADMIN PAGE
 // const Dashboard = Loadable(lazy(() => import("./pages/admin/dashboard/Dashboard")));
+const AddCompany = Loadable(
+  lazy(() => import("./pages/admin/company/AddCompany"))
+);
 const Users = Loadable(lazy(() => import("./pages/admin/users/Users")));
 const AddUser = Loadable(lazy(() => import("./pages/admin/users/AddUser")));
 
@@ -99,6 +103,10 @@ const routes = [
     path: "admin_dashboard",
     element: <Layout />,
     children: [
+      {
+        path: "add-company",
+        element: <AddCompany />,
+      },
       {
         path: "users",
         element: <Users />,
