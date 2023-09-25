@@ -1,29 +1,24 @@
-import React, { useContext } from "react";
+import React from "react";
 import {
-  AppBar,
-  Box,
-  Card,
-  CardContent,
-  Container,
+  // AppBar,
   Grid,
-  IconButton,
   Link,
-  Toolbar,
-  Typography,
-  useMediaQuery,
 } from "@mui/material";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import { ThemeContext } from "../../context/ThemeContext";
-import CustomToggle from "../../components/CustomToggle";
-import TopImg from "../../assets/card-primary copy.png";
+// import GitHubIcon from "@mui/icons-material/GitHub";
+// import { ThemeContext } from "../../context/ThemeContext";
+// import CustomToggle from "../../components/CustomToggle";
+// import Img from "../../assets/illustrations/illustration-lock.jpg";
+// import IllustrationLayout from "./AuthContainer";
+import MDTypography from "../../components/MDTypography";
 
 const AuthLayout = ({ children }) => {
-  const [darkTheme] = useContext(ThemeContext);
-  const matches = useMediaQuery("(min-width:500px)");
+  // const [darkTheme] = useContext(ThemeContext);
+  // const matches = useMediaQuery("(min-width:500px)");
 
   return (
     <React.Fragment>
-      <AppBar component="nav">
+      {children}
+      {/* <AppBar component="nav">
         <Toolbar>
           <Typography
             variant="h6"
@@ -40,8 +35,8 @@ const AuthLayout = ({ children }) => {
             <CustomToggle />
           </Box>
         </Toolbar>
-      </AppBar>
-      <Container
+      </AppBar> */}
+      {/* <Container
         sx={{
           display: "flex",
           justifyContent: "center",
@@ -57,7 +52,7 @@ const AuthLayout = ({ children }) => {
             {children}
           </CardContent>
         </Card>
-      </Container>
+      </Container> */}
       <Grid
         container
         component="footer"
@@ -68,10 +63,12 @@ const AuthLayout = ({ children }) => {
           height: "10vh",
         }}
       >
-        Developed by
-        <Link href="https://shelcia-dev.me/" target="_blank" ml={1}>
-          Shelcia
-        </Link>
+        <MDTypography>
+          Developed by
+          <Link href="https://shelcia-dev.me/" target="_blank" ml={1}>
+            Shelcia
+          </Link>
+        </MDTypography>
       </Grid>
     </React.Fragment>
   );

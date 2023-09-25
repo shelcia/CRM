@@ -1,10 +1,10 @@
 import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { red } from "@mui/material/colors";
+import MDButton from "../../components/MDButton";
 
 const Homepage = () => {
-  // const matches = useMediaQuery("(min-width:600px)");
   const navigate = useNavigate();
 
   return (
@@ -22,16 +22,21 @@ const Homepage = () => {
           * Under development
         </Typography>
         <Box align="center">
-          <Button variant="contained" onClick={() => navigate("/login")}>
+          <MDButton
+            variant="gradient"
+            color="info"
+            onClick={() => navigate("/login")}
+          >
             Login
-          </Button>
-          <Button
-            variant="outlined"
+          </MDButton>
+          <MDButton
+            variant="gradient"
+            color="light"
             onClick={() => navigate("/signup")}
             sx={{ ml: 1 }}
           >
             Get started
-          </Button>
+          </MDButton>
         </Box>
       </Box>
     </Box>

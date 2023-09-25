@@ -11,35 +11,9 @@ import {
   OutlinedInput,
   Select,
   Stack,
-  styled,
   TextField,
 } from "@mui/material";
-
-const AuthTextField = styled(TextField)(({ theme }) => ({
-  "& label": {
-    color:
-      theme.palette.mode === "light" ? "inherit" : "rgba(255, 255, 255, 0.6)",
-  },
-  "& label.Mui-focused": {
-    color: "#e14eca",
-  },
-  "& .MuiInput-underline:after": {
-    borderBottomColor: "#e14eca",
-  },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor:
-        theme.palette.mode === "light" ? "rgba(34,42,66,.2)" : "#2b3553",
-    },
-    "&:hover fieldset": {
-      borderColor:
-        theme.palette.mode === "light" ? "rgba(34,42,66,.2)" : "#2b3553",
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "#e14eca",
-    },
-  },
-}));
+import MDInput from "../components/MDInput";
 
 export const CustomAuthInput = ({
   name,
@@ -49,12 +23,14 @@ export const CustomAuthInput = ({
   touched,
   errors,
   type = "text",
+  label = "",
   props,
 }) => {
   return (
-    <AuthTextField
+    <MDInput
       fullWidth
       name={name}
+      label={label}
       size="small"
       placeholder={placeholder}
       value={values[name]}

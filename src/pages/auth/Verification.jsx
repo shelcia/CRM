@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Alert, AlertTitle, Button } from "@mui/material";
 import { apiAuth } from "../../services/models/authModel";
 import { toast } from "react-hot-toast";
-import { LoadingButton } from "@mui/lab";
+import AuthContainer from "../../layout/auth/AuthContainer";
+import Img from "../../assets/illustrations/illustration-verification.jpg";
+import MDButton from "../../components/MDButton";
+import MDButtonLoading from "../../components/MDButtonLoading";
 
 const Verification = () => {
   const [searchParams] = useSearchParams({});
@@ -23,51 +25,60 @@ const Verification = () => {
     });
   };
 
-  return searchParams.get("status") === "success" ? (
-    <section>
-      <Alert severity="success">
-        <AlertTitle>First Step Towards Using Easy CRM</AlertTitle>
-        {/* eslint-disable-next-line react/no-unescaped-entities */}
-        Thank you for signing up! You can now enjoy full access to our CRM's
-        features after email verification. We will keep your email address safe
-        and secure, using it solely to communicate with you about your account
-        and our services.
-      </Alert>
-      <Link to="/login" style={{ textDecoration: "none" }}>
-        <Button variant="contained" fullWidth sx={{ mt: 1 }}>
-          Go back to Login
-        </Button>
-      </Link>
-    </section>
-  ) : searchParams.get("status") === "not-verified" ? (
-    <section>
-      <Alert severity="error">
-        <AlertTitle>Not Verified</AlertTitle>
-        Please verify the email to access the features.
-      </Alert>
-      <LoadingButton
-        variant="contained"
-        fullWidth
-        sx={{ mt: 1 }}
-        onClick={resendVerification}
-        loading={isLoading}
-      >
-        Resend Verification
-      </LoadingButton>
-      <Link to="/login" style={{ textDecoration: "none" }}>
-        <Button variant="contained" fullWidth sx={{ mt: 1 }}>
-          Go back to Login
-        </Button>
-      </Link>
-    </section>
-  ) : (
-    <section>
-      <Link to="/" style={{ textDecoration: "none" }}>
-        <Button variant="contained" fullWidth sx={{ mt: 1 }}>
-          Go back home
-        </Button>
-      </Link>
-    </section>
+  return (
+    <AuthContainer
+      title={
+        searchParams.get("status") === "success"
+          ? "First Step Towards Using Easy CRM"
+          : searchParams.get("status") === "not-verified"
+          ? "Not Verified"
+          : "Wrong Link"
+      }
+      description={
+        searchParams.get("status") === "success"
+          ? "Thank you for signing up! You can now enjoy full access to our CRM's features after email verification. We will keep your email address safe and secure, using it solely to communicate with you about your account and our services."
+          : searchParams.get("status") === "not-verified"
+          ? "Please verify the email to access the features."
+          : ""
+      }
+      illustration={Img}
+    >
+      {searchParams.get("status") === "success" ? (
+        <section>
+          <Link to="/login" style={{ textDecoration: "none" }}>
+            <MDButton variant="gradient" color="info" fullWidth sx={{ mt: 1 }}>
+              Go back to Login
+            </MDButton>
+          </Link>
+        </section>
+      ) : searchParams.get("status") === "not-verified" ? (
+        <section>
+          <MDButtonLoading
+            variant="gradient"
+            color="info"
+            fullWidth
+            sx={{ mt: 1 }}
+            onClick={resendVerification}
+            loading={isLoading}
+          >
+            Resend Verification
+          </MDButtonLoading>
+          <Link to="/login" style={{ textDecoration: "none" }}>
+            <MDButton variant="gradient" color="light" fullWidth sx={{ mt: 1 }}>
+              Go back to Login
+            </MDButton>
+          </Link>
+        </section>
+      ) : (
+        <section>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <MDButton variant="gradient" color="info" fullWidth sx={{ mt: 1 }}>
+              Go back home
+            </MDButton>
+          </Link>
+        </section>
+      )}
+    </AuthContainer>
   );
 };
 

@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Card, CardContent, Typography } from "@mui/material";
-import { CustomTextField } from "../../../components/CustomInputs";
+import { CustomTextField } from "../../../customcomponents/CustomInputs";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { LoadingButton } from "@mui/lab";

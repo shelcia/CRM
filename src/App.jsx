@@ -10,15 +10,16 @@ import { useRoutes } from "react-router-dom";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { StyledEngineProvider } from "@mui/material/styles";
 
-// import theme from "./theme";
-
 import { Toaster } from "react-hot-toast";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 import { ThemeContext } from "./context/ThemeContext";
-import { customTheme } from "./theme";
+import themeLight from "./theme/theme-light";
+import themeDark from "./theme/theme-dark";
+
+// import { customTheme } from "./theme/index1";
 
 const App = () => {
   const allPages = useRoutes(routes);
@@ -26,7 +27,7 @@ const App = () => {
   const toasterOptions = {
     style: {
       fontWeight: 500,
-      fontFamily: "'Poppins', sans-serif",
+      fontFamily: "'Figtree', sans-serif",
     },
   };
 
@@ -53,16 +54,10 @@ const App = () => {
 
   const [darkTheme] = useContext(ThemeContext);
 
-  const appTheme = customTheme({
-    theme: darkTheme ? "dark" : "light",
-    // theme: "dark",
-    direction: "ltr",
-  });
-
   return (
     <React.Fragment>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={appTheme}>
+        <ThemeProvider theme={darkTheme ? themeDark : themeLight}>
           <CssBaseline />
           <Toaster toastOptions={toasterOptions} />
           {allPages}

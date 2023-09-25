@@ -1,11 +1,15 @@
 import React from "react";
-import { Box, Button, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { CustomAuthInput } from "../../components/CustomInputs";
+import { CustomAuthInput } from "../../customcomponents/CustomInputs";
 import { apiAuth } from "../../services/models/authModel";
+import MDBox from "../../components/MDBox";
+import MDButton from "../../components/MDButton";
+import MDTypography from "../../components/MDTypography";
+import AuthContainer from "../../layout/auth/AuthContainer";
+import Img from "../../assets/illustrations/illustration-lock.jpg";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -56,37 +60,77 @@ const Login = () => {
 
   return (
     <>
-      <Typography component="h1" variant="h4">
-        Log In
-      </Typography>
-      <CustomAuthInput
-        name="email"
-        placeholder="ex: james@company.com"
-        values={values}
-        handleChange={handleChange}
-        touched={touched}
-        errors={errors}
-      />
-      <CustomAuthInput
-        name="password"
-        placeholder="enter password"
-        values={values}
-        handleChange={handleChange}
-        touched={touched}
-        errors={errors}
-        type="password"
-      />
-      <Button variant="contained" fullWidth onClick={handleSubmit}>
-        Login
-      </Button>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-        <Link to="/signup" style={{ textDecoration: "underline" }}>
-          No account created? then Signup
-        </Link>
-        <Link to="/forget-password" style={{ textDecoration: "underline" }}>
-          Forgot Password?
-        </Link>
-      </Box>
+      <AuthContainer
+        title="Sign In"
+        description="Enter your email and password to sign in"
+        illustration={Img}
+      >
+        <MDBox component="form" role="form">
+          <MDBox mb={2}>
+            <CustomAuthInput
+              label="Email"
+              name="email"
+              placeholder="ex: james@company.com"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+            />
+          </MDBox>
+          <MDBox mb={2}>
+            <CustomAuthInput
+              label="Password"
+              name="password"
+              placeholder="enter password"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+              type="password"
+            />
+          </MDBox>
+          <MDBox mb={0} textAlign="right">
+            <MDTypography variant="button" color="text">
+              <MDTypography
+                component={Link}
+                to="/forget-password"
+                variant="button"
+                color="info"
+                fontWeight="medium"
+                textGradient
+              >
+                Forgot Password?
+              </MDTypography>
+            </MDTypography>
+          </MDBox>
+          <MDBox mt={3} mb={1}>
+            <MDButton
+              variant="gradient"
+              color="info"
+              size="large"
+              fullWidth
+              onClick={handleSubmit}
+            >
+              sign in
+            </MDButton>
+          </MDBox>
+          <MDBox mt={3} textAlign="center">
+            <MDTypography variant="button" color="text">
+              Don&apos;t have an account?{" "}
+              <MDTypography
+                component={Link}
+                to="/signup"
+                variant="button"
+                color="info"
+                fontWeight="medium"
+                textGradient
+              >
+                Sign up
+              </MDTypography>
+            </MDTypography>
+          </MDBox>
+        </MDBox>
+      </AuthContainer>
     </>
   );
 };

@@ -235,7 +235,7 @@ const baseOptions = {
     MuiButtonBase: {
       styleOverrides: {
         root: {
-          fontFamily: "'Poppins', sans-serif",
+          fontFamily: "'Figtree', sans-serif",
         },
       },
     },
@@ -259,7 +259,7 @@ const baseOptions = {
     button: {
       fontWeight: 600,
     },
-    fontFamily: "'Poppins', sans-serif",
+    fontFamily: "'Figtree', sans-serif",
     h1: {
       fontWeight: 800,
       fontSize: "4.25rem",

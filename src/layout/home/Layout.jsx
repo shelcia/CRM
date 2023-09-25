@@ -9,7 +9,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import CustomToggle from "../../components/CustomToggle";
+import CustomToggle from "../../customcomponents/CustomToggle";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { ThemeContext } from "../../context/ThemeContext";
 

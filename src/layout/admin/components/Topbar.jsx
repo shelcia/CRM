@@ -26,7 +26,7 @@ import {
   Typography,
 } from "@mui/material";
 import { NavLink, useNavigate } from "react-router-dom";
-import CustomToggle from "../../../components/CustomToggle";
+import CustomToggle from "../../../customcomponents/CustomToggle";
 import { primary } from "../../../theme/themeColors";
 
 // import DashboardIcon from '@mui/icons-material/Dashboard';
