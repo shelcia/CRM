@@ -1,8 +1,8 @@
 import { Box, Button } from "@mui/material";
 import React, { useState } from "react";
-import { CustomBasicHorizontalTable } from "../../../components/CustomBasicTable";
-import CustomModal from "../../../components/CustomModal";
-import CustomTable from "../../../components/CustomTable";
+import { CustomBasicHorizontalTable } from "../../../customcomponents/CustomBasicTable";
+import CustomModal from "../../../customcomponents/CustomModal";
+import CustomTable from "../../../customcomponents/CustomTable";
 import { convertDateToDateWithoutTime } from "../../../utils/calendarHelpers";
 import AddContact from "./AddContact";
 import { Add as AddIcon } from "@mui/icons-material";

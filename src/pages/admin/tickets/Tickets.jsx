@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CustomTable from "../../../components/CustomTable";
+import CustomTable from "../../../customcomponents/CustomTable";
 
 const Tickets = () => {
   const [tickets] = useState([

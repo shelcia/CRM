@@ -43,9 +43,9 @@ const Login = () => {
         localStorage.setItem("CRM-token", res.message.token);
 
         if (res.message.companyId) {
-          navigate("/admin_dashboard/contacts");
+          navigate("/dashboard/contacts");
         } else {
-          navigate("/admin_dashboard/add-company");
+          navigate("/dashboard/add-company");
           localStorage.setItem("CRM-companyId", res.message.companyId);
           localStorage.setItem("CRM-company", res.message.company);
         }

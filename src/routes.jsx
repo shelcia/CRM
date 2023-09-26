@@ -5,7 +5,6 @@ import Layout from "./layout/admin/Layout";
 import HomeLayout from "./layout/home/Layout";
 import AuthLayout from "./layout/auth/Layout";
 import { Outlet } from "react-router-dom";
-// import AddCompany from "./pages/admin/company/AddCompany";
 
 const Loadable = (Component) => (props) =>
   (
@@ -95,12 +94,8 @@ const routes = [
       },
     ],
   },
-  // {
-  //   path: "privacy-policy",
-  //   element: <PrivacyPolicy />,
-  // },
   {
-    path: "admin_dashboard",
+    path: "dashboard",
     element: <Layout />,
     children: [
       {

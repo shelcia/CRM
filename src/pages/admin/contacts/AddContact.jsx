@@ -2,11 +2,11 @@ import React from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { Box, Button } from "@mui/material";
-import CustomModal from "../../../components/CustomModal";
+import CustomModal from "../../../customcomponents/CustomModal";
 import {
   CustomSelectField,
   CustomTextField,
-} from "../../../components/CustomInputs";
+} from "../../../customcomponents/CustomInputs";
 
 const AddContact = ({ open, setOpen }) => {
   const validationSchema = Yup.object().shape({

@@ -1,5 +1,5 @@
 import React from "react";
-import CustomTable from "../../../components/CustomTable";
+import CustomTable from "../../../customcomponents/CustomTable";
 import { convertDateToDateWithoutTime } from "../../../utils/calendarHelpers";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";

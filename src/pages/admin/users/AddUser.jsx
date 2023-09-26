@@ -5,7 +5,7 @@ import {
   CustomMultipleCheckBoxField,
   CustomSelectField,
   CustomTextField,
-} from "../../../components/CustomInputs";
+} from "../../../customcomponents/CustomInputs";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { apiUsers } from "../../../services/models/usersModel";

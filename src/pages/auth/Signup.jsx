@@ -23,18 +23,19 @@ const Signup = () => {
       .email("Enter valid email!")
       .required("Email is required !"),
     password: Yup.string().required("Password is required !"),
+    cname: Yup.string().required("Company name is required !"),
   });
 
   const initialValues = {
     name: "",
     email: "",
     password: "",
+    cname: "",
   };
   const { errors, values, handleChange, handleSubmit, touched } = useFormik({
     initialValues,
     validationSchema,
     onSubmit: (values) => {
-      console.log(errors);
       registerUser(values);
     },
   });
@@ -59,6 +60,17 @@ const Signup = () => {
         illustration={Img}
       >
         <MDBox component="form" role="form">
+          <MDBox mb={2}>
+            <CustomAuthInput
+              label="Company Name"
+              name="cname"
+              placeholder="enter company name"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+            />
+          </MDBox>
           <MDBox mb={2}>
             <CustomAuthInput
               label="Name"
@@ -94,6 +106,7 @@ const Signup = () => {
               type="password"
             />
           </MDBox>
+
           <MDBox mt={3} mb={1}>
             <MDButtonLoading
               loading={isLoading}
@@ -124,61 +137,6 @@ const Signup = () => {
           </MDBox>
         </MDBox>
       </AuthContainer>
-      {/* <Typography component="h1" variant="h4">
-        Register
-      </Typography>
-      <Alert severity="info" variant="filled" style={{ margin: "0 3px" }}>
-        If you want to register as employee or co admin you should ask your
-        existing admin to send an invitation email
-      </Alert>
-      <CustomAuthInput
-        name="name"
-        placeholder="enter name"
-        values={values}
-        handleChange={handleChange}
-        touched={touched}
-        errors={errors}
-      />
-      <CustomAuthInput
-        placeholder="enter email"
-        name="email"
-        values={values}
-        handleChange={handleChange}
-        touched={touched}
-        errors={errors}
-      />
-      <CustomAuthInput
-        placeholder="enter password"
-        name="password"
-        values={values}
-        handleChange={handleChange}
-        touched={touched}
-        errors={errors}
-        type="password"
-      />
-      <LoadingButton
-        loading={isLoading}
-        loadingIndicator="Loading…"
-        variant="contained"
-        onClick={handleSubmit}
-        fullWidth
-        className="mt-3"
-      >
-        Fetch data
-      </LoadingButton>
-      <Button
-        variant="contained"
-        fullWidth
-        className="mt-3"
-        onClick={handleSubmit}
-      >
-        Register as Admin
-      </Button>
-      <Box>
-        <Link to="/login" style={{ textDecoration: "underline" }}>
-          Have account already? then Signin
-        </Link>
-      </Box> */}
     </>
   );
 };

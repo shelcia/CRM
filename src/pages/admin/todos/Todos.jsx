@@ -17,7 +17,7 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import {
   CustomTextAreaField,
   CustomTextField,
-} from "../../../components/CustomInputs";
+} from "../../../customcomponents/CustomInputs";
 
 const todoList = [
   {

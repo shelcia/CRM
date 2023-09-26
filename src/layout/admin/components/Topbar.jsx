@@ -135,37 +135,37 @@ export default Topbar;
 export const menuContents = [
   // {
   //   title: "Dashboard",
-  //   link: "/admin_dashboard/dashboard",
+  //   link: "/dashboard/dashboard",
   //   icon: <Dashboard />,
   // },
   {
     title: "Users",
-    link: "/admin_dashboard/users",
+    link: "/dashboard/users",
     icon: <PeopleAlt />,
   },
   {
     title: "Contacts",
-    link: "/admin_dashboard/contacts",
+    link: "/dashboard/contacts",
     icon: <LocalPhoneOutlined />,
   },
   {
     title: "Tickets",
-    link: "/admin_dashboard/tickets",
+    link: "/dashboard/tickets",
     icon: <ConfirmationNumberOutlined />,
   },
   {
     title: "Todos",
-    link: "/admin_dashboard/todos",
+    link: "/dashboard/todos",
     icon: <FactCheckOutlined />,
   },
   {
     title: "Email",
-    link: "/admin_dashboard/emails",
+    link: "/dashboard/emails",
     icon: <EmailOutlined />,
   },
   {
     title: "CDA",
-    link: "/admin_dashboard/cda",
+    link: "/dashboard/cda",
     icon: <SourceOutlined />,
   },
 ];

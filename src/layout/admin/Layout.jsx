@@ -2,53 +2,51 @@ import React from "react";
 import {
   Box,
   CssBaseline,
-  Divider,
-  Drawer,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
+  // Divider,
+  // Drawer,
+  // List,
+  // ListItemButton,
+  // ListItemIcon,
+  // ListItemText,
   Toolbar,
 } from "@mui/material";
-import { NavLink, Outlet } from "react-router-dom";
-import Topbar, { menuContents } from "./components/Topbar";
+import { Outlet } from "react-router-dom";
+// import Topbar, { menuContents } from "./components/Topbar";
+import DashboardSidenav from "./components/Sidenav";
 
 const Layout = (props) => {
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  // const { window } = props;
+  // const [mobileOpen, setMobileOpen] = React.useState(false);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  // const handleDrawerToggle = () => {
+  //   setMobileOpen(!mobileOpen);
+  // };
 
-  const drawer = (
-    <div>
-      <Toolbar />
-      <Divider />
-      <List>
-        {menuContents.map((item, index) => (
-          <ListItemButton key={index} component={NavLink} to={item.link}>
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.title} />
-          </ListItemButton>
-        ))}
-      </List>
-    </div>
-  );
+  // const drawer = (
+  //   <div>
+  //     <Toolbar />
+  //     <Divider />
+  //     <List>
+  //       {menuContents.map((item, index) => (
+  //         <ListItemButton key={index} component={NavLink} to={item.link}>
+  //           <ListItemIcon>{item.icon}</ListItemIcon>
+  //           <ListItemText primary={item.title} />
+  //         </ListItemButton>
+  //       ))}
+  //     </List>
+  //   </div>
+  // );
 
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
+  // const container =
+  //   window !== undefined ? () => window().document.body : undefined;
 
   return (
     <section className="wrapper">
       <Box sx={{ display: "flex" }}>
         <CssBaseline />
-
-        <Topbar handleDrawerToggle={handleDrawerToggle} />
-
-        {/* Sidebar */}
-        <Box component="nav" aria-label="sidebar" className="sidebar">
-          {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
+        {/* <Topbar handleDrawerToggle={handleDrawerToggle} /> */}
+        <DashboardSidenav />
+        {/* <Box component="nav" aria-label="sidebar" className="sidebar">
           <Drawer
             container={container}
             variant="temporary"
@@ -70,7 +68,7 @@ const Layout = (props) => {
           >
             {drawer}
           </Drawer>
-        </Box>
+        </Box> */}
         <Box
           component="main"
           sx={{
