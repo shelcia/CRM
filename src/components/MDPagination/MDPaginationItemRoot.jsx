@@ -17,7 +17,7 @@ Coded by www.creative-tim.com
 import { styled } from "@mui/material/styles";
 
 // Material Dashboard 2 PRO React components
-import MDButton from "components/MDButton";
+import MDButton from "../MDButton";
 
 export default styled(MDButton)(({ theme, ownerState }) => {
   const { borders, functions, typography, palette } = theme;
@@ -50,7 +50,9 @@ export default styled(MDButton)(({ theme, ownerState }) => {
 
     "&:hover, &:focus, &:active": {
       transform: "none",
-      boxShadow: (variant !== "gradient" || variant !== "contained") && "none !important",
+      boxShadow:
+        (variant !== "gradient" || variant !== "contained") &&
+        "none !important",
       opacity: "1 !important",
     },
 

@@ -1,11 +1,15 @@
-import { Box, Button } from "@mui/material";
+import { Button, Card, Checkbox, Icon } from "@mui/material";
 import React, { useState } from "react";
 import { CustomBasicHorizontalTable } from "../../../customcomponents/CustomBasicTable";
 import CustomModal from "../../../customcomponents/CustomModal";
-import CustomTable from "../../../customcomponents/CustomTable";
-import { convertDateToDateWithoutTime } from "../../../utils/calendarHelpers";
-import AddContact from "./AddContact";
-import { Add as AddIcon } from "@mui/icons-material";
+// import CustomTable from "../../../customcomponents/CustomTable";
+// import { convertDateToDateWithoutTime } from "../../../utils/calendarHelpers";
+// import AddContact from "./AddContact";
+import MDBox from "../../../components/MDBox";
+import MDTypography from "../../../components/MDTypography";
+import DataTable from "../../../customcomponents/Tables/DataTable";
+import MDButton from "../../../components/MDButton";
+import MDAvatar from "../../../components/MDAvatar";
 
 const Contacts = () => {
   const [index, setIndex] = useState(0);
@@ -112,81 +116,258 @@ const Contacts = () => {
     },
   ]);
 
-  const columns = [
-    { label: "Name", name: "name" },
-    { label: "Email", name: "email" },
-    { label: "Phone No.", name: "phoneNo" },
-    {
-      label: "Company",
-      name: "company",
-    },
-    {
-      label: "Last Activity",
-      name: "lastActivity",
-      options: {
-        customBodyRender: (data) => (
-          <span>{convertDateToDateWithoutTime(data)}</span>
-        ),
-      },
-    },
-    { label: "Lead Status", name: "leadStatus" },
-    {
-      label: "Created At",
-      name: "createdAt",
-      options: {
-        customBodyRender: (data) => (
-          <span>{convertDateToDateWithoutTime(data)}</span>
-        ),
-      },
-    },
-    {
-      name: "url",
-      label: "Actions",
-      options: {
-        customBodyRender: (tableMeta) => (
-          <Button
-            variant="contained"
-            size="small"
-            onClick={() => {
-              setIndex(tableMeta?.rowIndex);
-              setOpen(true);
-            }}
-          >
-            View
-          </Button>
-        ),
-      },
-    },
-  ];
+  // const columns = [
+  //   { label: "Name", name: "name" },
+  //   { label: "Email", name: "email" },
+  //   { label: "Phone No.", name: "phoneNo" },
+  //   {
+  //     label: "Company",
+  //     name: "company",
+  //   },
+  //   {
+  //     label: "Last Activity",
+  //     name: "lastActivity",
+  //     options: {
+  //       customBodyRender: (data) => (
+  //         <span>{convertDateToDateWithoutTime(data)}</span>
+  //       ),
+  //     },
+  //   },
+  //   { label: "Lead Status", name: "leadStatus" },
+  //   {
+  //     label: "Created At",
+  //     name: "createdAt",
+  //     options: {
+  //       customBodyRender: (data) => (
+  //         <span>{convertDateToDateWithoutTime(data)}</span>
+  //       ),
+  //     },
+  //   },
+  //   {
+  //     name: "url",
+  //     label: "Actions",
+  //     options: {
+  //       customBodyRender: (tableMeta) => (
+  //         <Button
+  //           variant="contained"
+  //           size="small"
+  //           onClick={() => {
+  //             setIndex(tableMeta?.rowIndex);
+  //             setOpen(true);
+  //           }}
+  //         >
+  //           View
+  //         </Button>
+  //       ),
+  //     },
+  //   },
+  // ];
 
   const [open, setOpen] = useState(false);
-  const [openAddContactModal, setOpenAddContactModal] = useState(false);
+  // const [openAddContactModal, setOpenAddContactModal] = useState(false);
+
+  const dataTableData = {
+    columns: [
+      {
+        Header: "id",
+        accessor: "id",
+        Cell: ({ value }) => <IdCell id={value} />,
+      },
+      {
+        Header: "date",
+        accessor: "date",
+        Cell: ({ value }) => <DefaultCell value={value} />,
+      },
+      {
+        Header: "status",
+        accessor: "status",
+        Cell: ({ value }) => {
+          let status;
+
+          if (value === "paid") {
+            status = <StatusCell icon="done" color="success" status="Paid" />;
+          } else if (value === "refunded") {
+            status = (
+              <StatusCell icon="replay" color="dark" status="Refunded" />
+            );
+          } else {
+            status = (
+              <StatusCell icon="close" color="error" status="Canceled" />
+            );
+          }
+
+          return status;
+        },
+      },
+      {
+        Header: "customer",
+        accessor: "customer",
+        Cell: ({ value: [name, data] }) => (
+          <CustomerCell
+            image={data.image}
+            color={data.color || "dark"}
+            name={name}
+          />
+        ),
+      },
+      {
+        Header: "product",
+        accessor: "product",
+        Cell: ({ value }) => {
+          const [name, data] = value;
+
+          return (
+            <DefaultCell
+              value={typeof value === "string" ? value : name}
+              suffix={data.suffix || false}
+            />
+          );
+        },
+      },
+      {
+        Header: "revenue",
+        accessor: "revenue",
+        Cell: ({ value }) => <DefaultCell value={value} />,
+      },
+    ],
+
+    rows: [
+      {
+        id: "#10421",
+        date: "1 Nov, 10:20 AM",
+        status: "paid",
+        customer: ["Orlando Imieto"],
+        product: "Nike Sport V2",
+        revenue: "$140,20",
+      },
+      {
+        id: "#10422",
+        date: "1 Nov, 10:53 AM",
+        status: "paid",
+        customer: ["Alice Murinho"],
+        product: "Valvet T-shirt",
+        revenue: "$42,00",
+      },
+      {
+        id: "#10423",
+        date: "1 Nov, 11:13 AM",
+        status: "refunded",
+        customer: ["Michael Mirra", { image: "M" }],
+        product: ["Leather Wallet", { suffix: "+1 more" }],
+        revenue: "$25,50",
+      },
+      {
+        id: "#10424",
+        date: "1 Nov, 12:20 PM",
+        status: "paid",
+        customer: ["Andrew Nichel"],
+        product: "Bracelet Onu-Lino",
+        revenue: "$19,40",
+      },
+      {
+        id: "#10425",
+        date: "1 Nov, 1:40 PM",
+        status: "canceled",
+        customer: ["Sebastian Koga"],
+        product: ["Phone Case Pink", { suffix: "x 2" }],
+        revenue: "$44,90",
+      },
+      {
+        id: "#10426",
+        date: "1 Nov, 2:19 PM",
+        status: "paid",
+        customer: ["Laur Gilbert", { image: "L" }],
+        product: "Backpack Niver",
+        revenue: "$112,50",
+      },
+      {
+        id: "#10427",
+        date: "1 Nov, 3:42 AM",
+        status: "paid",
+        customer: ["Iryna Innda", { image: "I" }],
+        product: "Adidas Vio",
+        revenue: "$200,00",
+      },
+      {
+        id: "#10428",
+        date: "2 Nov, 9:32 AM",
+        status: "paid",
+        customer: ["Arrias Liunda", { image: "A" }],
+        product: "Airpods 2 Gen",
+        revenue: "$350,00",
+      },
+      {
+        id: "#10429",
+        date: "2 Nov, 10:14 AM",
+        status: "paid",
+        customer: ["Rugna Ilpio"],
+        product: "Bracelet Warret",
+        revenue: "$15,00",
+      },
+      {
+        id: "#10430",
+        date: "2 Nov, 10:14 AM",
+        status: "refunded",
+        customer: ["Anna Landa"],
+        product: ["Watter Bottle India", { suffix: "x 3" }],
+        revenue: "$25,00",
+      },
+      {
+        id: "#10431",
+        date: "2 Nov, 3:12 PM",
+        status: "paid",
+        customer: ["Karl Innas", { image: "K" }],
+        product: "Kitchen Gadgets",
+        revenue: "$164,90",
+      },
+      {
+        id: "#10432",
+        date: "2 Nov, 5:12 PM",
+        status: "paid",
+        customer: ["Oana Kilas", { image: "O", color: "info" }],
+        product: "Office Papers",
+        revenue: "$23,90",
+      },
+    ],
+  };
 
   return (
     <React.Fragment>
-      <Box align="end" mb={1}>
+      {/* <Box align="end" mb={1}>
         <Button
           onClick={() => setOpenAddContactModal(true)}
           variant="contained"
         >
           <AddIcon /> Add Contact
         </Button>
-      </Box>
+      </Box> */}
 
-      <AddContact open={openAddContactModal} setOpen={setOpenAddContactModal} />
-      <CustomTable
+      {/* <AddContact open={openAddContactModal} setOpen={setOpenAddContactModal} /> */}
+      {/* <Card>
+        <MDBox p={3} lineHeight={1}>
+          <MDTypography variant="h5" fontWeight="medium">
+            Datatable Search
+          </MDTypography>
+          <MDTypography variant="button" color="text">
+            A lightweight, extendable, dependency-free javascript HTML table
+            plugin.
+          </MDTypography>
+        </MDBox>
+        <DataTable table={dataTableData} canSearch />
+      </Card> */}
+      {/* <CustomTable
         columns={columns}
         data={contacts}
         title="Contacts"
         downloadName="contacts"
-      />
-      <CustomModal
+      /> */}
+      {/* <CustomModal
         open={open}
         onClose={() => setOpen(false)}
         title="More Contact Details"
       >
         <ModalContent contact={contacts[index]} />
-      </CustomModal>
+      </CustomModal> */}
     </React.Fragment>
   );
 };
@@ -213,3 +394,68 @@ const ModalContent = ({ contact }) => {
     </React.Fragment>
   );
 };
+
+function DefaultCell({ children }) {
+  return (
+    <MDTypography variant="button" fontWeight="regular" color="text">
+      {children}
+    </MDTypography>
+  );
+}
+
+function IdCell({ id, checked }) {
+  return (
+    <MDBox display="flex" alignItems="center">
+      <Checkbox defaultChecked={checked} />
+      <MDBox ml={1}>
+        <MDTypography variant="caption" fontWeight="medium" color="text">
+          {id}
+        </MDTypography>
+      </MDBox>
+    </MDBox>
+  );
+}
+
+function StatusCell({ icon, color, status }) {
+  return (
+    <MDBox display="flex" alignItems="center">
+      <MDBox mr={1}>
+        <MDButton
+          variant="outlined"
+          color={color}
+          size="small"
+          iconOnly
+          circular
+        >
+          <Icon sx={{ fontWeight: "bold" }}>{icon}</Icon>
+        </MDButton>
+      </MDBox>
+      <MDTypography
+        variant="caption"
+        fontWeight="medium"
+        color="text"
+        sx={{ lineHeight: 0 }}
+      >
+        {status}
+      </MDTypography>
+    </MDBox>
+  );
+}
+
+function CustomerCell({ image, name, color }) {
+  return (
+    <MDBox display="flex" alignItems="center">
+      <MDBox mr={1}>
+        <MDAvatar bgColor={color} src={image} alt={name} size="xs" />
+      </MDBox>
+      <MDTypography
+        variant="caption"
+        fontWeight="medium"
+        color="text"
+        sx={{ lineHeight: 0 }}
+      >
+        {name}
+      </MDTypography>
+    </MDBox>
+  );
+}

@@ -8,6 +8,7 @@
     "@mui/icons-material": "^5.14.3",
     "@mui/lab": "^5.0.0-alpha.139",
     "@mui/material": "^5.14.4",
+    "@tanstack/react-table": "^8.10.3",
     "aos": "^2.3.4",
     "axios": "^1.4.0",
     "chroma-js": "^2.4.2",
@@ -20,6 +21,7 @@
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.15.0",
     "react-scripts": "^5.0.1",
+    "react-table": "^7.8.0",
     "suneditor": "^2.45.1",
     "suneditor-react": "^3.6.1",
     "yup": "^1.2.0"

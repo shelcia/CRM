@@ -45,7 +45,7 @@ import breakpoints from "../../../theme/theme-light/base/breakpoints";
 
 // Material Dashboard 2 PRO React context
 import { useMaterialUIController } from "../../../context";
-import { Close, GitHub, Menu } from "@mui/icons-material";
+import { ArrowDropUp, Close, GitHub, Menu } from "@mui/icons-material";
 
 const routes = [
   {
@@ -394,9 +394,10 @@ function DefaultNavbar({ /*routes,*/ brand, transparent, light, action }) {
                   darkMode ? background.sidenav : white.main,
               }}
             >
-              <Icon ref={setArrowRef} sx={{ mt: -3 }}>
+              <ArrowDropUp ref={setArrowRef} sx={{ mt: -3 }} />
+              {/* <Icon ref={setArrowRef} sx={{ mt: -3 }}>
                 arrow_drop_up
-              </Icon>
+              </Icon> */}
             </MDTypography>
             <MDBox shadow="lg" borderRadius="lg" p={1.625} mt={1}>
               {renderRoutes}

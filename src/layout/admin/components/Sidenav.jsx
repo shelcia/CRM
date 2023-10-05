@@ -45,8 +45,8 @@ const DashboardSidenav = () => {
   const routes = [
     {
       type: "collapse",
-      name: "Brooklyn Alice",
-      key: "brooklyn-alice",
+      name: "Alex Nadia",
+      key: "alex-nadia",
       icon: (
         <MDAvatar
           //   src={profilePicture}
@@ -102,9 +102,15 @@ const DashboardSidenav = () => {
       icon: <Call />,
       collapse: [
         {
+          name: "All Contacts",
+          key: "all-contacts",
+          route: "/dashboard/contacts",
+          icon: <Call />,
+        },
+        {
           name: "New Contact",
           key: "new-contact",
-          route: "/add-user",
+          route: "/dashboard/add-contact",
           icon: <Call />,
         },
       ],
