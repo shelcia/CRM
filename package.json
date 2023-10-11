@@ -7,7 +7,7 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.3",
     "@mui/lab": "^5.0.0-alpha.139",
-    "@mui/material": "^5.14.4",
+    "@mui/material": "^5.14.13",
     "aos": "^2.3.4",
     "axios": "^1.4.0",
     "formik": "^2.4.3",
