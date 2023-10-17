@@ -16,7 +16,7 @@
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
-    "react-router-dom": "^6.15.0",
+    "react-router-dom": "^6.17.0",
     "react-scripts": "^5.0.1",
     "suneditor": "^2.45.1",
     "suneditor-react": "^3.6.1",
