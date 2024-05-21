@@ -1,12 +1,13 @@
 import React from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { Box, Button } from "@mui/material";
-import CustomModal from "../../../customcomponents/CustomModal";
+import { Box } from "@mui/material";
+// import CustomModal from "../../../customcomponents/CustomModal";
 import {
   CustomSelectField,
   CustomTextField,
 } from "../../../customcomponents/CustomInputs";
+import MDButton from "../../../components/MDButton";
 
 const AddContact = ({ open, setOpen }) => {
   const validationSchema = Yup.object().shape({
@@ -57,117 +58,122 @@ const AddContact = ({ open, setOpen }) => {
   const onClose = () => setOpen(false);
 
   return (
-    <CustomModal open={open} onClose={onClose} title="Add Contact">
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{ display: "flex", flexDirection: "column", gap: 1 }}
-      >
-        <CustomTextField
-          name="name"
-          placeholder="name"
-          values={values}
-          handleChange={handleChange}
-          touched={touched}
-          errors={errors}
-        />
-        <CustomTextField
-          name="email"
-          placeholder="enter email ex: romeo@gmail.com"
-          values={values}
-          handleChange={handleChange}
-          touched={touched}
-          errors={errors}
-        />
-        <CustomTextField
-          name="number"
-          placeholder="number"
-          values={values}
-          handleChange={handleChange}
-          touched={touched}
-          errors={errors}
-          type="number"
-        />
-        <CustomTextField
-          name="company"
-          placeholder="company"
-          values={values}
-          handleChange={handleChange}
-          touched={touched}
-          errors={errors}
-        />
-        <CustomSelectField
-          name="priority"
-          placeholder="priority"
-          values={values}
-          handleChange={handleChange}
-          touched={touched}
-          errors={errors}
-          labelItms={[
-            { val: "low", label: "Low" },
-            { val: "medium", label: "Medium" },
-            { val: "high", label: "High" },
-            { val: "veryHigh", label: "Very High" },
-          ]}
-        />
-        <CustomTextField
-          name="companySize"
-          placeholder="companySize"
-          values={values}
-          handleChange={handleChange}
-          touched={touched}
-          errors={errors}
-        />
-        <CustomTextField
-          name="jobTitle"
-          placeholder="jobTitle"
-          values={values}
-          handleChange={handleChange}
-          touched={touched}
-          errors={errors}
-        />
-        <CustomTextField
-          name="probability"
-          placeholder="probability"
-          values={values}
-          handleChange={handleChange}
-          touched={touched}
-          errors={errors}
-        />
-        <CustomSelectField
-          name="status"
-          placeholder="status"
-          values={values}
-          handleChange={handleChange}
-          touched={touched}
-          errors={errors}
-          labelItms={[
-            { val: "new", label: "New" },
-            { val: "open", label: "Open" },
-            { val: "inProgress", label: "In Progress" },
-            { val: "openDeal", label: "Open Deal" },
-            { val: "unqualified", label: "Unqualified" },
-            { val: "badTiming", label: "Bad Timing" },
-            { val: "attempted", label: "Attempted to Connect" },
-            { val: "connected", label: "Connected" },
-            { val: "closed", label: "Closed" },
-          ]}
-        />
-        <Box align="end" mt={1}>
-          <Button variant="contained" onClick={handleSubmit} type="submit">
-            Add
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={onClose}
-            sx={{ ml: 2 }}
-          >
-            Cancel
-          </Button>
-        </Box>
+    // <CustomModal open={open} onClose={onClose} title="Add Contact">
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+    >
+      <CustomTextField
+        name="name"
+        placeholder="name"
+        values={values}
+        handleChange={handleChange}
+        touched={touched}
+        errors={errors}
+      />
+      <CustomTextField
+        name="email"
+        placeholder="enter email ex: romeo@gmail.com"
+        values={values}
+        handleChange={handleChange}
+        touched={touched}
+        errors={errors}
+      />
+      <CustomTextField
+        name="number"
+        placeholder="number"
+        values={values}
+        handleChange={handleChange}
+        touched={touched}
+        errors={errors}
+        type="number"
+      />
+      <CustomTextField
+        name="company"
+        placeholder="company"
+        values={values}
+        handleChange={handleChange}
+        touched={touched}
+        errors={errors}
+      />
+      <CustomSelectField
+        name="priority"
+        placeholder="priority"
+        values={values}
+        handleChange={handleChange}
+        touched={touched}
+        errors={errors}
+        labelItms={[
+          { val: "low", label: "Low" },
+          { val: "medium", label: "Medium" },
+          { val: "high", label: "High" },
+          { val: "veryHigh", label: "Very High" },
+        ]}
+      />
+      <CustomTextField
+        name="companySize"
+        placeholder="companySize"
+        values={values}
+        handleChange={handleChange}
+        touched={touched}
+        errors={errors}
+      />
+      <CustomTextField
+        name="jobTitle"
+        placeholder="jobTitle"
+        values={values}
+        handleChange={handleChange}
+        touched={touched}
+        errors={errors}
+      />
+      <CustomTextField
+        name="probability"
+        placeholder="probability"
+        values={values}
+        handleChange={handleChange}
+        touched={touched}
+        errors={errors}
+      />
+      <CustomSelectField
+        name="status"
+        placeholder="status"
+        values={values}
+        handleChange={handleChange}
+        touched={touched}
+        errors={errors}
+        labelItms={[
+          { val: "new", label: "New" },
+          { val: "open", label: "Open" },
+          { val: "inProgress", label: "In Progress" },
+          { val: "openDeal", label: "Open Deal" },
+          { val: "unqualified", label: "Unqualified" },
+          { val: "badTiming", label: "Bad Timing" },
+          { val: "attempted", label: "Attempted to Connect" },
+          { val: "connected", label: "Connected" },
+          { val: "closed", label: "Closed" },
+        ]}
+      />
+      <Box align="end" mt={1}>
+        <MDButton
+          variant="gradient"
+          color="info"
+          onClick={handleSubmit}
+          type="submit"
+        >
+          Add
+        </MDButton>
+        <MDButton
+          variant="gradient"
+          // color="secondary"
+          onClick={onClose}
+          sx={{ ml: 2 }}
+        >
+          Cancel
+        </MDButton>
       </Box>
-    </CustomModal>
+    </Box>
+    // </CustomModal>
   );
 };
 

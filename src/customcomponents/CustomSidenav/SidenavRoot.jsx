@@ -44,6 +44,7 @@ export default styled(Drawer)(({ theme, ownerState }) => {
       easing: transitions.easing.sharp,
       duration: transitions.duration.shorter,
     }),
+    display: "none",
 
     [breakpoints.up("xl")]: {
       boxShadow: transparentSidenav ? "none" : xxl,
@@ -51,6 +52,7 @@ export default styled(Drawer)(({ theme, ownerState }) => {
       left: "0",
       width: sidebarWidth,
       transform: "translateX(0)",
+      display: "flex",
       transition: transitions.create(["width", "background-color"], {
         easing: transitions.easing.sharp,
         duration: transitions.duration.enteringScreen,

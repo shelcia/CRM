@@ -24,6 +24,7 @@ const DashboardSidenav = () => {
     // whiteSidenav,
     // darkMode,
   } = controller;
+  console.log(sidenavColor);
   const [onMouseEnter, setOnMouseEnter] = useState(false);
 
   // Open sidenav when mouse enter on mini sidenav
@@ -110,7 +111,7 @@ const DashboardSidenav = () => {
         {
           name: "New Contact",
           key: "new-contact",
-          route: "/dashboard/add-contact",
+          route: "/dashboard/contacts/add-contact",
           icon: <Call />,
         },
       ],
@@ -177,11 +178,12 @@ const DashboardSidenav = () => {
   return (
     <Sidenav
       color={sidenavColor}
-      //   brand={
-      //     (transparentSidenav && !darkMode) || whiteSidenav
-      //       ? brandDark
-      //       : brandWhite
-      //   }
+      // brand={whiteSidenav}
+      // brand={
+      //   (transparentSidenav && !darkMode) || whiteSidenav
+      //     ? brandDark
+      //     : brandWhite
+      // }
       brandName="Easy CRM"
       routes={routes}
       onMouseEnter={handleOnMouseEnter}

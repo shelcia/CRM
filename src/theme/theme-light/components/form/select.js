@@ -17,7 +17,7 @@ Coded by www.creative-tim.com
 import colors from "../../base/colors";
 
 // Material Dashboard 2 PRO React helper functions
-import pxToRem from "../../functions/pxToRem";
+// import pxToRem from "../../functions/pxToRem";
 
 const { transparent } = colors;
 
@@ -26,7 +26,8 @@ const select = {
     select: {
       display: "grid",
       alignItems: "center",
-      padding: `0 ${pxToRem(12)} !important`,
+      // padding: `0 ${pxToRem(12)} !important`,
+      padding: `10px`,
 
       "& .Mui-selected": {
         backgroundColor: transparent.main,

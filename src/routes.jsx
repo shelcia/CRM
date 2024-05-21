@@ -40,6 +40,9 @@ const AddUser = Loadable(lazy(() => import("./pages/admin/users/AddUser")));
 const Contacts = Loadable(
   lazy(() => import("./pages/admin/contacts/Contacts"))
 );
+const AddContact = Loadable(
+  lazy(() => import("./pages/admin/contacts/AddContact"))
+);
 // const Contact = Loadable(lazy(() => import("./pages/admin/contact/Contact")));
 const Tickets = Loadable(lazy(() => import("./pages/admin/tickets/Tickets")));
 
@@ -113,6 +116,10 @@ const routes = [
       {
         path: "contacts",
         element: <Contacts />,
+      },
+      {
+        path: "contacts/add-contact",
+        element: <AddContact />,
       },
       // {
       //   path: "contacts/:id",

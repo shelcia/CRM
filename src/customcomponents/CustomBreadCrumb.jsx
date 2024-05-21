@@ -41,15 +41,15 @@ function Breadcrumbs({ icon, title, route, light }) {
         }}
       >
         <Link to="/">
-          <MDTypography
+          {/* <MDTypography
             component="span"
             variant="body2"
             color={light ? "white" : "dark"}
             opacity={light ? 0.8 : 0.5}
             sx={{ lineHeight: 0 }}
           >
-            {/* <Icon>{icon}</Icon> */}
-          </MDTypography>
+            <Icon>{icon}</Icon>
+          </MDTypography> */}
         </Link>
         {routes.map((el) => (
           <Link to={`/${el}`} key={el}>

@@ -59,8 +59,11 @@ import {
   MenuOpen,
   Notifications,
   Settings,
+  Menu as MenuIcon,
 } from "@mui/icons-material";
 import Breadcrumbs from "../../CustomBreadCrumb";
+import { Icon } from "@mui/material";
+import NotificationItem from "../../CustomNotification";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -110,6 +113,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const handleOpenMenu = (event) => setOpenMenu(event.currentTarget);
   const handleCloseMenu = () => setOpenMenu(false);
 
+  console.log({ openMenu });
+
   // Render the notifications menu
   const renderMenu = () => (
     <Menu
@@ -123,7 +128,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
       onClose={handleCloseMenu}
       sx={{ mt: 2 }}
     >
-      {/* <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
+      <NotificationItem icon={<Icon>email</Icon>} title="Check new messages" />
       <NotificationItem
         icon={<Icon>podcasts</Icon>}
         title="Manage Podcast sessions"
@@ -131,7 +136,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
       <NotificationItem
         icon={<Icon>shopping_cart</Icon>}
         title="Payment successfully completed"
-      /> */}
+      />
     </Menu>
   );
 
@@ -180,11 +185,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
             {miniSidenav ? (
               <MenuOpen fontSize="medium" sx={iconsStyle} />
             ) : (
-              <Menu fontSize="medium" sx={iconsStyle} />
+              <MenuIcon fontSize="medium" sx={iconsStyle} />
             )}
-            {/* <Icon fontSize="medium" sx={iconsStyle}>
-              {miniSidenav ? "menu_open" : "menu"}
-            </Icon> */}
           </IconButton>
         </MDBox>
         {isMini ? null : (
@@ -195,7 +197,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
             <MDBox color={light ? "white" : "inherit"}>
               <Link to="/authentication/sign-in/basic">
                 <IconButton sx={navbarIconButton} size="small" disableRipple>
-                  {/* <Icon sx={iconsStyle}>account_circle</Icon> */}
                   <AccountCircle sx={iconsStyle} />
                 </IconButton>
               </Link>
@@ -209,11 +210,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 {miniSidenav ? (
                   <MenuOpen fontSize="medium" sx={iconsStyle} />
                 ) : (
-                  <Menu fontSize="medium" sx={iconsStyle} />
+                  <MenuIcon fontSize="medium" sx={iconsStyle} />
                 )}
-                {/* <Icon sx={iconsStyle} fontSize="medium">
-                  {miniSidenav ? "menu_open" : "menu"}
-                </Icon> */}
               </IconButton>
               <IconButton
                 size="small"
@@ -223,7 +221,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 onClick={handleConfiguratorOpen}
               >
                 <Settings sx={iconsStyle} />
-                {/* <Icon sx={iconsStyle}>settings</Icon> */}
               </IconButton>
               <IconButton
                 size="small"
@@ -236,7 +233,6 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 onClick={handleOpenMenu}
               >
                 <MDBadge badgeContent={9} color="error" size="xs" circular>
-                  {/* <Icon sx={iconsStyle}>notifications</Icon> */}
                   <Notifications sx={iconsStyle} />
                 </MDBadge>
               </IconButton>
