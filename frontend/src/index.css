@@ -1,0 +1,107 @@
+@import "@fontsource-variable/dm-sans";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --radius: 0.65rem;
+
+  --background: 0 0% 100%;
+  --foreground: 224 15% 12%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 224 15% 12%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 224 15% 12%;
+
+  --primary: 142 76% 36%;
+  --primary-foreground: 144 80% 96%;
+
+  --secondary: 220 14% 95%;
+  --secondary-foreground: 224 15% 20%;
+
+  --muted: 220 14% 95%;
+  --muted-foreground: 220 10% 46%;
+
+  --accent: 220 14% 95%;
+  --accent-foreground: 224 15% 20%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 220 13% 91%;
+  --input: 220 13% 91%;
+  --ring: 142 76% 36%;
+
+  --chart-1: 142 76% 36%;
+  --chart-2: 160 60% 40%;
+  --chart-3: 180 55% 38%;
+  --chart-4: 200 70% 45%;
+  --chart-5: 120 50% 40%;
+
+  --sidebar: 220 14% 97%;
+  --sidebar-foreground: 224 15% 12%;
+  --sidebar-primary: 142 76% 36%;
+  --sidebar-primary-foreground: 144 80% 96%;
+  --sidebar-accent: 220 14% 93%;
+  --sidebar-accent-foreground: 224 15% 20%;
+  --sidebar-border: 220 13% 91%;
+  --sidebar-ring: 142 76% 36%;
+}
+
+.dark {
+  --background: 224 12% 13%;
+  --foreground: 210 20% 94%;
+
+  --card: 224 12% 17%;
+  --card-foreground: 210 20% 94%;
+
+  --popover: 224 12% 17%;
+  --popover-foreground: 210 20% 94%;
+
+  --primary: 142 71% 45%;
+  --primary-foreground: 144 80% 96%;
+
+  --secondary: 224 12% 20%;
+  --secondary-foreground: 210 20% 90%;
+
+  --muted: 224 12% 20%;
+  --muted-foreground: 218 10% 58%;
+
+  --accent: 224 12% 22%;
+  --accent-foreground: 210 20% 90%;
+
+  --destructive: 0 72% 58%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 224 12% 22%;
+  --input: 224 12% 22%;
+  --ring: 142 71% 45%;
+
+  --chart-1: 142 71% 45%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 180 55% 42%;
+  --chart-4: 200 70% 50%;
+  --chart-5: 120 50% 45%;
+
+  --sidebar: 224 12% 16%;
+  --sidebar-foreground: 210 20% 94%;
+  --sidebar-primary: 142 71% 45%;
+  --sidebar-primary-foreground: 144 80% 96%;
+  --sidebar-accent: 224 12% 20%;
+  --sidebar-accent-foreground: 210 20% 90%;
+  --sidebar-border: 224 12% 22%;
+  --sidebar-ring: 142 71% 45%;
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: "DM Sans Variable", "DM Sans", sans-serif;
+  }
+}
