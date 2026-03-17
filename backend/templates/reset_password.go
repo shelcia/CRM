@@ -17,7 +17,7 @@ func ResetPasswordEmail(name, resetURL string) string {
           <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
             <tr>
               <td style="background:#2499EF;padding:32px 40px;text-align:center;">
-                <h1 style="color:#ffffff;margin:0;font-size:24px;font-weight:600;">Easy CRM</h1>
+                <h1 style="color:#ffffff;margin:0;font-size:24px;font-weight:600;">Tiny CRM</h1>
               </td>
             </tr>
             <tr>
@@ -38,7 +38,7 @@ func ResetPasswordEmail(name, resetURL string) string {
             </tr>
             <tr>
               <td style="background:#f8f9fa;padding:20px 40px;text-align:center;">
-                <p style="color:#aaa;font-size:12px;margin:0;">&copy; 2024 Easy CRM. All rights reserved.</p>
+                <p style="color:#aaa;font-size:12px;margin:0;">&copy; 2024 Tiny CRM. All rights reserved.</p>
               </td>
             </tr>
           </table>

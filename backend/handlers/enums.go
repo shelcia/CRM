@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"easycrm/enums"
+	"tinycrm/enums"
 
 	"github.com/gin-gonic/gin"
 )

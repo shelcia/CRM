@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"easycrm/db"
-	"easycrm/models"
-	"easycrm/utils"
+	"tinycrm/db"
+	"tinycrm/models"
+	"tinycrm/utils"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -25,7 +25,7 @@ func GetTickets(c *gin.Context) {
 	}
 	defer cursor.Close(ctx)
 
-	var tickets []models.Ticket
+	tickets := make([]models.Ticket, 0)
 	if err = cursor.All(ctx, &tickets); err != nil {
 		utils.Err(c, http.StatusInternalServerError, "Failed to decode tickets")
 		return

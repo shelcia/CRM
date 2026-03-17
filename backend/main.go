@@ -4,10 +4,10 @@ import (
 	"log"
 	"os"
 
-	"easycrm/config"
-	"easycrm/db"
-	"easycrm/handlers"
-	"easycrm/middleware"
+	"tinycrm/config"
+	"tinycrm/db"
+	"tinycrm/handlers"
+	"tinycrm/middleware"
 
 	"github.com/gin-gonic/gin"
 )

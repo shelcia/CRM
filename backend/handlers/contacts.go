@@ -9,9 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"easycrm/db"
-	"easycrm/models"
-	"easycrm/utils"
+	"tinycrm/db"
+	"tinycrm/models"
+	"tinycrm/utils"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -29,7 +29,7 @@ func GetContacts(c *gin.Context) {
 	}
 	defer cursor.Close(ctx)
 
-	var contacts []models.Contact
+	contacts := make([]models.Contact, 0)
 	if err = cursor.All(ctx, &contacts); err != nil {
 		utils.Err(c, http.StatusInternalServerError, "Failed to decode contacts")
 		return
@@ -76,7 +76,7 @@ func ExportContacts(c *gin.Context) {
 	}
 	defer cursor.Close(ctx)
 
-	var contacts []models.Contact
+	contacts := make([]models.Contact, 0)
 	if err = cursor.All(ctx, &contacts); err != nil {
 		utils.Err(c, http.StatusInternalServerError, "Failed to decode contacts")
 		return

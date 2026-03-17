@@ -1,4 +1,4 @@
-module easycrm
+module tinycrm
 
 go 1.21
 

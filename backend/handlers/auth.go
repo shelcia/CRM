@@ -6,10 +6,10 @@ import (
 	"os"
 	"time"
 
-	"easycrm/db"
-	"easycrm/models"
-	"easycrm/templates"
-	"easycrm/utils"
+	"tinycrm/db"
+	"tinycrm/models"
+	"tinycrm/templates"
+	"tinycrm/utils"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -110,7 +110,7 @@ func Register(c *gin.Context) {
 		}
 		verificationURL := frontendLink + "verification/" + encryptedEmail
 		emailBody := templates.VerificationEmail(input.Name, verificationURL)
-		go utils.SendEmail(input.Email, "Verify Your Email - Easy CRM", emailBody)
+		go utils.SendEmail(input.Email, "Verify Your Email - Tiny CRM", emailBody)
 	}
 
 	// Frontend checks res.status === "201"
@@ -222,7 +222,7 @@ func ResendVerification(c *gin.Context) {
 	}
 	verificationURL := frontendLink + "verification/" + encryptedEmail
 	emailBody := templates.VerificationEmail(user.Name, verificationURL)
-	go utils.SendEmail(input.Email, "Verify Your Email - Easy CRM", emailBody)
+	go utils.SendEmail(input.Email, "Verify Your Email - Tiny CRM", emailBody)
 
 	utils.Success(c, http.StatusOK, "Verification email sent")
 }
@@ -257,7 +257,7 @@ func ResetPassword(c *gin.Context) {
 	}
 	resetURL := frontendLink + "reset-password/" + encryptedEmail
 	emailBody := templates.ResetPasswordEmail(user.Name, resetURL)
-	go utils.SendEmail(input.Email, "Reset Your Password - Easy CRM", emailBody)
+	go utils.SendEmail(input.Email, "Reset Your Password - Tiny CRM", emailBody)
 
 	utils.Success(c, http.StatusOK, "Password reset email sent")
 }

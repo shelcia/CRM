@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"easycrm/db"
-	"easycrm/models"
-	"easycrm/utils"
+	"tinycrm/db"
+	"tinycrm/models"
+	"tinycrm/utils"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -35,7 +35,7 @@ func GetNotes(c *gin.Context) {
 	}
 	defer cursor.Close(ctx)
 
-	var notes []models.Note
+	notes := make([]models.Note, 0)
 	if err = cursor.All(ctx, &notes); err != nil {
 		utils.Err(c, http.StatusInternalServerError, "Failed to decode notes")
 		return

@@ -8,7 +8,7 @@ const TopNav = () => (
       <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center shrink-0">
         <span className="text-primary-foreground text-xs font-black">C</span>
       </div>
-      <span className="font-bold text-foreground tracking-tight">Easy CRM</span>
+      <span className="font-bold text-foreground tracking-tight">Tiny CRM</span>
     </div>
 
     <a

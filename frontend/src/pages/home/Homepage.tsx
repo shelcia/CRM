@@ -58,7 +58,7 @@ const Homepage = () => {
         </h1>
 
         <p className="text-muted-foreground text-lg mb-10 max-w-xl">
-          Easy CRM gives your team contacts, tickets, todos and email — nothing more, nothing less. Simple, fast, open source.
+          Tiny CRM gives your team contacts, tickets, todos and email — nothing more, nothing less. Simple, fast, open source.
         </p>
 
         <div className="flex items-center gap-3 flex-wrap justify-center">

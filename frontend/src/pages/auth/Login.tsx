@@ -55,7 +55,7 @@ const Login = () => {
       <div className="flex flex-col gap-1 mb-2">
         <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
         <p className="text-sm text-muted-foreground">
-          Sign in to your Easy CRM account
+          Sign in to your Tiny CRM account
         </p>
       </div>
 

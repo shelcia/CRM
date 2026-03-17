@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"time"
 
-	"easycrm/db"
-	"easycrm/models"
-	"easycrm/templates"
-	"easycrm/utils"
+	"tinycrm/db"
+	"tinycrm/models"
+	"tinycrm/templates"
+	"tinycrm/utils"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -34,7 +34,7 @@ func GetUsers(c *gin.Context) {
 	}
 	defer cursor.Close(ctx)
 
-	var users []models.User
+	users := make([]models.User, 0)
 	if err = cursor.All(ctx, &users); err != nil {
 		utils.Err(c, http.StatusInternalServerError, "Failed to decode users")
 		return
@@ -192,7 +192,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	emailBody := templates.InviteUserEmail(input.Name, input.Email, input.Password)
-	go utils.SendEmail(input.Email, "You're Invited to Easy CRM", emailBody)
+	go utils.SendEmail(input.Email, "You're Invited to Tiny CRM", emailBody)
 
 	newUser.Password = ""
 	// Frontend checks res.status === "200" for user creation

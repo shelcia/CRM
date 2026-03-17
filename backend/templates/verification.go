@@ -18,14 +18,14 @@ func VerificationEmail(name, verificationURL string) string {
           <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
             <tr>
               <td style="background:#2499EF;padding:32px 40px;text-align:center;">
-                <h1 style="color:#ffffff;margin:0;font-size:24px;font-weight:600;">Easy CRM</h1>
+                <h1 style="color:#ffffff;margin:0;font-size:24px;font-weight:600;">Tiny CRM</h1>
               </td>
             </tr>
             <tr>
               <td style="padding:40px;">
                 <h2 style="color:#1a1a2e;font-size:20px;margin-bottom:16px;">Hi %s,</h2>
                 <p style="color:#555;line-height:1.6;margin-bottom:24px;">
-                  Thank you for signing up for Easy CRM! Please verify your email address to get started.
+                  Thank you for signing up for Tiny CRM! Please verify your email address to get started.
                 </p>
                 <div style="text-align:center;margin:32px 0;">
                   <a href="%s" style="background:#2499EF;color:#ffffff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:600;font-size:16px;display:inline-block;">
@@ -42,7 +42,7 @@ func VerificationEmail(name, verificationURL string) string {
             </tr>
             <tr>
               <td style="background:#f8f9fa;padding:20px 40px;text-align:center;">
-                <p style="color:#aaa;font-size:12px;margin:0;">&copy; 2024 Easy CRM. All rights reserved.</p>
+                <p style="color:#aaa;font-size:12px;margin:0;">&copy; 2024 Tiny CRM. All rights reserved.</p>
               </td>
             </tr>
           </table>

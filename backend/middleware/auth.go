@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"easycrm/db"
-	"easycrm/models"
+	"tinycrm/db"
+	"tinycrm/models"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"

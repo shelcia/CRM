@@ -48,7 +48,7 @@ const Signup = () => {
     <>
       <div className="flex flex-col gap-1 mb-1">
         <h1 className="text-2xl font-bold tracking-tight">Create an account</h1>
-        <p className="text-sm text-muted-foreground">Set up your Easy CRM workspace</p>
+        <p className="text-sm text-muted-foreground">Set up your Tiny CRM workspace</p>
       </div>
 
       <div className="flex items-start gap-2 rounded-lg border border-primary/20 bg-primary/5 px-3 py-2.5 text-xs text-primary">

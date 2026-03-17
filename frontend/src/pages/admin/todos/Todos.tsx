@@ -21,14 +21,14 @@ const Todos = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    apiProvider.getAll("projects/", controller.signal, true).then((res) => {
+    apiProvider.getAll("projects", controller.signal, true).then((res) => {
       if (Array.isArray(res)) setProjects(res);
     });
     return () => controller.abort();
   }, []);
 
   const handleDelete = (id: string) => {
-    apiProvider.remove("projects/", id, "", true).then((res) => {
+    apiProvider.remove("projects", id, "", true).then((res) => {
       if (res?.message === "Project deleted") {
         setProjects((prev) => prev.filter((p) => p._id !== id));
         toast.success("Project deleted");

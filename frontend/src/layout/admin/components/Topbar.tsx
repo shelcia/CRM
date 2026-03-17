@@ -59,7 +59,7 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
           <span className="text-primary-foreground text-xs font-black">C</span>
         </div>
         <span className="font-bold text-foreground tracking-tight hidden sm:block">
-          Easy CRM
+          Tiny CRM
         </span>
       </div>
 

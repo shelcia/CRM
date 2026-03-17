@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"easycrm/db"
-	"easycrm/models"
-	"easycrm/utils"
+	"tinycrm/db"
+	"tinycrm/models"
+	"tinycrm/utils"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
@@ -26,7 +26,7 @@ func GetProjects(c *gin.Context) {
 	}
 	defer cursor.Close(ctx)
 
-	var projects []models.Project
+	projects := make([]models.Project, 0)
 	if err = cursor.All(ctx, &projects); err != nil {
 		utils.Err(c, http.StatusInternalServerError, "Failed to decode projects")
 		return
@@ -143,7 +143,7 @@ func GetBoard(c *gin.Context) {
 	}
 	defer cursor.Close(ctx)
 
-	var columns []models.Column
+	columns := make([]models.Column, 0)
 	if err = cursor.All(ctx, &columns); err != nil {
 		utils.Err(c, http.StatusInternalServerError, "Failed to decode columns")
 		return
@@ -157,7 +157,7 @@ func GetBoard(c *gin.Context) {
 	}
 	defer todoCursor.Close(ctx)
 
-	var todos []models.Todo
+	todos := make([]models.Todo, 0)
 	if err = todoCursor.All(ctx, &todos); err != nil {
 		utils.Err(c, http.StatusInternalServerError, "Failed to decode todos")
 		return

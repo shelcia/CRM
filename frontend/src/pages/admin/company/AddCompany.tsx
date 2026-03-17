@@ -56,7 +56,7 @@ const AddCompany = () => {
           </div>
           <h1 className="text-2xl font-bold">Set up your workspace</h1>
           <p className="text-sm text-muted-foreground">
-            Tell us about your company to get started with Easy CRM
+            Tell us about your company to get started with Tiny CRM
           </p>
         </div>
 

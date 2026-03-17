@@ -13,9 +13,9 @@ import (
 	"log"
 	"time"
 
-	"easycrm/config"
-	"easycrm/db"
-	"easycrm/models"
+	"tinycrm/config"
+	"tinycrm/db"
+	"tinycrm/models"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"

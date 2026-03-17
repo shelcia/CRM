@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"time"
 
-	"easycrm/db"
-	"easycrm/models"
-	"easycrm/utils"
+	"tinycrm/db"
+	"tinycrm/models"
+	"tinycrm/utils"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"

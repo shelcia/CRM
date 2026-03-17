@@ -28,7 +28,7 @@ const Verification = () => {
     return (
       <section className="flex flex-col gap-3">
         <Alert severity="success">
-          <AlertTitle>First Step Towards Using Easy CRM</AlertTitle>
+          <AlertTitle>First Step Towards Using Tiny CRM</AlertTitle>
           Thank you for signing up! You can now enjoy full access to our CRM&apos;s features
           after email verification.
         </Alert>
