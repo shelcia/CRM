@@ -170,9 +170,11 @@ const put = async (resource: string, model: object, additionalParams: string, is
 };
 
 const putById = async (resource: string, id: string, model: object, signal: AbortSignal, isAuthorized = false) => {
+  const headers = isAuthorized ? { "auth-token": getToken() } : {};
   try {
     const response = await axios.put(`${BASE_URL}/${resource}/${id}`, model, {
       signal: signal,
+      headers: headers,
     });
     return handleResponse(response);
   } catch (error) {
