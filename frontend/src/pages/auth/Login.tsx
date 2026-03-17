@@ -34,12 +34,12 @@ const Login = () => {
         localStorage.setItem("CRM-email", res.message.email);
         localStorage.setItem("CRM-type", res.message.type);
         localStorage.setItem("CRM-token", res.message.token);
+        localStorage.setItem("CRM-companyId", res.message.companyId);
+        localStorage.setItem("CRM-company", res.message.company);
         if (res.message.companyId) {
           navigate("/dashboard/contacts");
         } else {
           navigate("/dashboard/add-company");
-          localStorage.setItem("CRM-companyId", res.message.companyId);
-          localStorage.setItem("CRM-company", res.message.company);
         }
       } else if (res.status === "401") {
         localStorage.setItem("CRM-email", user.email);

@@ -15,6 +15,6 @@ type Company struct {
 	Address     string             `bson:"address,omitempty" json:"address,omitempty"`
 	Website     string             `bson:"website,omitempty" json:"website,omitempty"`
 	CompanySize int                `bson:"companySize,omitempty" json:"companySize,omitempty"`
-	Logo        []byte             `bson:"logo,omitempty" json:"logo,omitempty"`
+	Logo        string             `bson:"logo,omitempty" json:"logo,omitempty"`
 	Date        time.Time          `bson:"date" json:"date"`
 }

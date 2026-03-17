@@ -1,99 +1,193 @@
-import React from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
-import CustomModal from "@/components/CustomModal";
 import { CustomSelectField, CustomTextField } from "@/components/CustomInputs";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { apiContacts } from "@/services/models/contactsModel";
+import { ArrowLeft, UserRound, TrendingUp } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEnums } from "@/hooks/useEnums";
+import { toLabelItems } from "@/utils/enumLabel";
 
-const AddContact = ({
-  open,
-  setOpen,
-  onAdded,
-}: {
-  open: boolean;
-  setOpen: (v: boolean) => void;
-  onAdded?: (contact: object) => void;
-}) => {
+const AddContact = () => {
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const { contactStatuses, contactPriorities } = useEnums();
+
   const { errors, values, handleChange, handleSubmit, touched, resetForm } = useFormik({
     initialValues: {
-      name: "", email: "", number: "", company: "", contactOwner: "",
-      priority: "low", companySize: 50, jobTitle: "", expectedRevenue: 10000,
-      probability: "0.5", status: "new", lastActivity: new Date().toISOString(),
+      name: "",
+      email: "",
+      number: "",
+      company: "",
+      jobTitle: "",
+      priority: "low",
+      companySize: "",
+      probability: "0.5",
+      status: "new",
+      lastActivity: new Date().toISOString(),
     },
     validationSchema: Yup.object().shape({
-      name: Yup.string().required("Contact name is Required!"),
-      email: Yup.string().email("Enter valid email!"),
+      name: Yup.string().required("Contact name is required"),
+      email: Yup.string().email("Enter a valid email"),
       number: Yup.string(),
       company: Yup.string(),
-      priority: Yup.string(),
-      companySize: Yup.number().min(0),
       jobTitle: Yup.string(),
-      expectedRevenue: Yup.number(),
+      priority: Yup.string(),
+      companySize: Yup.number().min(0).nullable(),
       probability: Yup.string(),
-      status: Yup.string().required("enter valid status"),
+      status: Yup.string().required("Status is required"),
     }),
-    onSubmit: (values) => {
-      apiContacts.post!(values, "", true).then((res) => {
+    onSubmit: (vals) => {
+      setIsLoading(true);
+      apiContacts.post!(vals, "", true).then((res) => {
         if (res && res._id) {
           toast.success("Contact added successfully");
-          onAdded?.(res);
           resetForm();
+          navigate("/dashboard/contacts");
         } else {
           toast.error(res?.message ?? "Failed to add contact");
         }
+        setIsLoading(false);
       });
     },
   });
 
-  const onClose = () => setOpen(false);
-
   return (
-    <CustomModal open={open} onClose={onClose} title="Add Contact">
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-        <CustomTextField name="name" placeholder="name" values={values} handleChange={handleChange} touched={touched} errors={errors} />
-        <CustomTextField name="email" placeholder="enter email ex: romeo@gmail.com" values={values} handleChange={handleChange} touched={touched} errors={errors} />
-        <CustomTextField name="number" placeholder="number" values={values} handleChange={handleChange} touched={touched} errors={errors} type="number" />
-        <CustomTextField name="company" placeholder="company" values={values} handleChange={handleChange} touched={touched} errors={errors} />
-        <CustomSelectField
-          name="priority"
-          placeholder="priority"
-          values={values}
-          handleChange={handleChange}
-          touched={touched}
-          errors={errors}
-          labelItms={[
-            { val: "low", label: "Low" },
-            { val: "medium", label: "Medium" },
-            { val: "high", label: "High" },
-            { val: "veryHigh", label: "Very High" },
-          ]}
-        />
-        <CustomTextField name="companySize" placeholder="companySize" values={values} handleChange={handleChange} touched={touched} errors={errors} />
-        <CustomTextField name="jobTitle" placeholder="jobTitle" values={values} handleChange={handleChange} touched={touched} errors={errors} />
-        <CustomTextField name="probability" placeholder="probability" values={values} handleChange={handleChange} touched={touched} errors={errors} />
-        <CustomSelectField
-          name="status"
-          placeholder="status"
-          values={values}
-          handleChange={handleChange}
-          touched={touched}
-          errors={errors}
-          labelItms={[
-            { val: "new", label: "New" }, { val: "open", label: "Open" },
-            { val: "inProgress", label: "In Progress" }, { val: "openDeal", label: "Open Deal" },
-            { val: "unqualified", label: "Unqualified" }, { val: "badTiming", label: "Bad Timing" },
-            { val: "attempted", label: "Attempted to Connect" }, { val: "connected", label: "Connected" },
-            { val: "closed", label: "Closed" },
-          ]}
-        />
-        <div className="flex justify-end gap-3 mt-2">
-          <Button type="submit" onClick={() => handleSubmit()}>Add</Button>
-          <Button variant="secondary" onClick={onClose}>Cancel</Button>
+    <section className="max-w-3xl space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <Link to="/dashboard/contacts">
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+        </Link>
+        <div>
+          <h1 className="text-2xl font-bold">Add Contact</h1>
+          <p className="text-sm text-muted-foreground">Create a new contact in your CRM</p>
         </div>
-      </form>
-    </CustomModal>
+      </div>
+
+      {/* Basic Info Card */}
+      <Card>
+        <div className="flex items-center gap-3 px-6 py-4 border-b">
+          <UserRound className="h-4 w-4 text-primary" />
+          <span className="font-semibold text-sm">Basic Information</span>
+        </div>
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <CustomTextField
+              label="Full Name"
+              name="name"
+              placeholder="ex: Jane Smith"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+            />
+            <CustomTextField
+              label="Email Address"
+              name="email"
+              placeholder="ex: jane@company.com"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+            />
+            <CustomTextField
+              label="Phone Number"
+              name="number"
+              placeholder="ex: +1 555 000 0000"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+            />
+            <CustomTextField
+              label="Company"
+              name="company"
+              placeholder="ex: Acme Corp"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+            />
+            <CustomTextField
+              label="Job Title"
+              name="jobTitle"
+              placeholder="ex: Product Manager"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+            />
+            <CustomTextField
+              label="Company Size"
+              name="companySize"
+              placeholder="ex: 250"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+              type="number"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Lead Details Card */}
+      <Card>
+        <div className="flex items-center gap-3 px-6 py-4 border-b">
+          <TrendingUp className="h-4 w-4 text-primary" />
+          <span className="font-semibold text-sm">Lead Details</span>
+        </div>
+        <CardContent className="pt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <CustomSelectField
+              label="Lead Status"
+              name="status"
+              placeholder="status"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+              labelItms={toLabelItems(contactStatuses)}
+            />
+            <CustomSelectField
+              label="Priority"
+              name="priority"
+              placeholder="priority"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+              labelItms={toLabelItems(contactPriorities)}
+            />
+            <CustomTextField
+              label="Probability (0–1)"
+              name="probability"
+              placeholder="ex: 0.7"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Actions */}
+      <div className="flex items-center justify-end gap-3">
+        <Link to="/dashboard/contacts">
+          <Button variant="outline">Cancel</Button>
+        </Link>
+        <Button loading={isLoading} onClick={() => handleSubmit()}>
+          Add Contact
+        </Button>
+      </div>
+    </section>
   );
 };
 

@@ -32,6 +32,7 @@ const Signup = () => {
       toast.error("Please fill all the fields correctly");
       return;
     }
+    setIsLoading(true);
     apiAuth.post({ ...user, role: "admin" }, "register").then((res) => {
       if (res.status === "201") {
         navigate("/verification?status=success");
@@ -77,7 +78,7 @@ const Signup = () => {
             id="company"
             name="company"
             placeholder="Acme Inc."
-            value={values.cname}
+            value={values.company}
             onChange={handleChange}
             error={Boolean(touched.company && errors.company)}
             helperText={touched.company && errors.company}

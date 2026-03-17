@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FieldProps {
@@ -141,55 +140,6 @@ export const CustomSelectField = ({
       {touched[name] && errors[name] && (
         <p className="text-xs text-destructive">{errors[name]}</p>
       )}
-    </div>
-  );
-};
-
-interface ChipFieldProps {
-  name: string;
-  label?: string;
-  placeholder?: string;
-  labelItms?: { val: string; label: string }[];
-}
-
-export const CustomSelectChipField = ({
-  label = "",
-  labelItms = [],
-}: ChipFieldProps) => {
-  const [selected, setSelected] = useState<string[]>([]);
-
-  const handleRemove = (val: string) => {
-    setSelected(selected.filter((v) => v !== val));
-  };
-
-  return (
-    <div className="w-full space-y-2">
-      {label && <Label>{label}</Label>}
-      <div className="flex flex-wrap gap-1 min-h-[2.25rem] w-full rounded-md border border-input bg-transparent px-3 py-1.5">
-        {selected.map((val) => (
-          <span
-            key={val}
-            className="inline-flex items-center gap-1 bg-primary/10 text-primary text-xs rounded px-2 py-0.5"
-          >
-            {val}
-            <button onClick={() => handleRemove(val)} className="hover:text-destructive">
-              <X className="h-3 w-3" />
-            </button>
-          </span>
-        ))}
-      </div>
-      <Select onValueChange={(val) => !selected.includes(val) && setSelected([...selected, val])}>
-        <SelectTrigger>
-          <SelectValue placeholder="Select..." />
-        </SelectTrigger>
-        <SelectContent>
-          {labelItms.map((itm) => (
-            <SelectItem key={itm.val} value={itm.val}>
-              {itm.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
     </div>
   );
 };

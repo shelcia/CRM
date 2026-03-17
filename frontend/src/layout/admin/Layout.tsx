@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import Topbar, { menuContents } from "./components/Topbar";
+import Sidebar from "./components/Sidebar";
 
 const Layout = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -10,6 +11,11 @@ const Layout = () => {
   return (
     <div className="min-h-screen bg-background">
       <Topbar handleDrawerToggle={handleDrawerToggle} />
+
+      {/* Desktop sidebar */}
+      <div className="hidden sm:block">
+        <Sidebar />
+      </div>
 
       {/* Mobile sidebar overlay */}
       {mobileOpen && (
@@ -47,8 +53,8 @@ const Layout = () => {
         </ul>
       </nav>
 
-      {/* Main content */}
-      <main className="pt-14 min-h-screen">
+      {/* Main content — offset by collapsed sidebar width on desktop */}
+      <main className="pt-14 min-h-screen sm:ml-14">
         <div className="p-6">
           <Outlet />
         </div>

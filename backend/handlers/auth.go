@@ -65,27 +65,11 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	user := models.User{
-		ID:       primitive.NewObjectID(),
-		Name:     input.Name,
-		Email:    input.Email,
-		Password: string(hash),
-		Role:     input.Role,
-		Token:    token,
-		Verified: false,
-		Date:     time.Now(),
-	}
-
-	if _, err = db.Collection("users").InsertOne(ctx, user); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create user")
-		return
-	}
-
+	// Create company first so its ID is available when inserting the user.
 	company := models.Company{
-		ID:        primitive.NewObjectID(),
-		Name:      input.Company,
-		CreatedBy: user.ID.Hex(),
-		Date:      time.Now(),
+		ID:   primitive.NewObjectID(),
+		Name: input.Company,
+		Date: time.Now(),
 	}
 
 	if _, err = db.Collection("companies").InsertOne(ctx, company); err != nil {
@@ -93,13 +77,30 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	db.Collection("users").UpdateOne(ctx,
-		bson.M{"_id": user.ID},
-		bson.M{"$set": bson.M{
-			"companyId": company.ID.Hex(),
-			"company":   company.Name,
-		}},
+	user := models.User{
+		ID:        primitive.NewObjectID(),
+		Name:      input.Name,
+		Email:     input.Email,
+		Password:  string(hash),
+		Role:      input.Role,
+		Token:     token,
+		Verified:  false,
+		Date:      time.Now(),
+		CompanyID: company.ID.Hex(),
+		Company:   company.Name,
+	}
+
+	// Patch company.createdBy now that we have the user ID.
+	company.CreatedBy = user.ID.Hex()
+	db.Collection("companies").UpdateOne(ctx, //nolint
+		bson.M{"_id": company.ID},
+		bson.M{"$set": bson.M{"createdBy": company.CreatedBy}},
 	)
+
+	if _, err = db.Collection("users").InsertOne(ctx, user); err != nil {
+		utils.Err(c, http.StatusInternalServerError, "Failed to create user")
+		return
+	}
 
 	encryptedEmail, err := utils.Encrypt(input.Email)
 	if err == nil {

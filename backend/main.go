@@ -9,7 +9,6 @@ import (
 	"easycrm/handlers"
 	"easycrm/middleware"
 
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,18 +18,26 @@ func main() {
 
 	r := gin.Default()
 
-	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "auth-token"},
-		ExposeHeaders:    []string{"auth-token"},
-		AllowCredentials: true,
-	}))
+	r.Static("/uploads", "./uploads")
+
+	r.Use(func(c *gin.Context) {
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		c.Header("Access-Control-Allow-Headers", "Origin, Content-Type, Authorization, auth-token")
+		c.Header("Access-Control-Expose-Headers", "auth-token")
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+		c.Next()
+	})
 
 	r.Use(middleware.RateLimit())
 
 	api := r.Group("/api")
 	{
+		api.GET("/enums", handlers.GetEnums)
+
 		auth := api.Group("/auth")
 		{
 			auth.POST("/register", handlers.Register)
@@ -44,22 +51,73 @@ func main() {
 		users := api.Group("/users")
 		users.Use(middleware.Auth())
 		{
-			users.GET("/", handlers.GetUsers)
-			users.POST("/", handlers.CreateUser)
+			users.GET("", handlers.GetUsers)
+			users.POST("", handlers.CreateUser)
+			users.GET("/:id", handlers.GetUser)
+			users.PUT("/:id", handlers.UpdateUser)
+			users.DELETE("/:id", handlers.DeleteUser)
 		}
 
 		contacts := api.Group("/contacts")
 		contacts.Use(middleware.Auth())
 		{
-			contacts.GET("/", handlers.GetContacts)
-			contacts.POST("/", handlers.CreateContact)
+			contacts.GET("", handlers.GetContacts)
+			contacts.POST("", handlers.CreateContact)
+			contacts.GET("/export", handlers.ExportContacts)
+			contacts.POST("/import", handlers.ImportContacts)
+			contacts.GET("/:id/notes", handlers.GetNotes)
+			contacts.POST("/:id/notes", handlers.AddNote)
+			contacts.DELETE("/:id/notes/:noteId", handlers.DeleteNote)
 		}
 
 		company := api.Group("/company")
 		company.Use(middleware.Auth())
 		{
-			company.GET("/", handlers.GetCompany)
-			company.POST("/", handlers.CreateCompany)
+			company.GET("", handlers.GetCompany)
+			company.POST("", handlers.CreateCompany)
+			company.PUT("", handlers.UpdateCompany)
+			company.POST("/logo", handlers.UploadCompanyLogo)
+		}
+
+		projects := api.Group("/projects")
+		projects.Use(middleware.Auth())
+		{
+			projects.GET("", handlers.GetProjects)
+			projects.POST("", handlers.CreateProject)
+			projects.PUT("/:id", handlers.UpdateProject)
+			projects.DELETE("/:id", handlers.DeleteProject)
+			projects.GET("/:id/board", handlers.GetBoard)
+			projects.POST("/:id/columns", handlers.CreateColumn)
+			projects.PUT("/:id/columns/:colId", handlers.UpdateColumn)
+			projects.DELETE("/:id/columns/:colId", handlers.DeleteColumn)
+			projects.POST("/:id/todos", handlers.CreateTodo)
+		}
+
+		tickets := api.Group("/tickets")
+		tickets.Use(middleware.Auth())
+		{
+			tickets.GET("", handlers.GetTickets)
+			tickets.POST("", handlers.CreateTicket)
+			tickets.GET("/:id", handlers.GetTicket)
+			tickets.PUT("/:id", handlers.UpdateTicket)
+			tickets.DELETE("/:id", handlers.DeleteTicket)
+		}
+
+		todos := api.Group("/todos")
+		todos.Use(middleware.Auth())
+		{
+			todos.PUT("/:id", handlers.UpdateTodo)
+			todos.DELETE("/:id", handlers.DeleteTodo)
+		}
+
+		emailTemplates := api.Group("/email-templates")
+		emailTemplates.Use(middleware.Auth())
+		{
+			emailTemplates.GET("", handlers.GetEmailTemplates)
+			emailTemplates.POST("", handlers.CreateEmailTemplate)
+			emailTemplates.GET("/:id", handlers.GetEmailTemplate)
+			emailTemplates.PUT("/:id", handlers.UpdateEmailTemplate)
+			emailTemplates.DELETE("/:id", handlers.DeleteEmailTemplate)
 		}
 	}
 

@@ -1,0 +1,34 @@
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { menuContents } from "./Topbar";
+
+const Sidebar = () => {
+  return (
+    <aside className="group fixed left-0 top-14 bottom-0 z-30 w-14 hover:w-52 bg-card border-r transition-[width] duration-200 ease-in-out overflow-hidden">
+      <nav className="p-2 mt-1 space-y-0.5">
+        {menuContents.map((item) => (
+          <NavLink
+            key={item.link}
+            to={item.link}
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+                isActive
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
+              }`
+            }
+          >
+            <span className="shrink-0 h-4 w-4 flex items-center justify-center">
+              {item.icon}
+            </span>
+            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-100 delay-100">
+              {item.title}
+            </span>
+          </NavLink>
+        ))}
+      </nav>
+    </aside>
+  );
+};
+
+export default Sidebar;

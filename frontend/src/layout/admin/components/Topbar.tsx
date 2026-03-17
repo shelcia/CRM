@@ -4,14 +4,13 @@ import {
   TicketCheck,
   CheckSquare,
   Mail,
-  FileText,
   Users,
   Menu,
   LogOut,
   User,
   ChevronDown,
 } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +26,16 @@ interface TopbarProps {
 
 const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
   const navigate = useNavigate();
+
+  const userName = localStorage.getItem("CRM-name") ?? "";
+  const userRole = localStorage.getItem("CRM-type") ?? "";
+  const isAdmin = userRole === "admin";
+  const initials = userName
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   const logout = () => {
     localStorage.clear();
@@ -54,26 +63,6 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
         </span>
       </div>
 
-      {/* Nav links — desktop */}
-      <nav className="hidden sm:flex flex-1 items-center gap-0.5">
-        {menuContents.map((item) => (
-          <NavLink
-            key={item.link}
-            to={item.link}
-            className={({ isActive }) =>
-              `flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                isActive
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
-              }`
-            }
-          >
-            {item.icon}
-            {item.title}
-          </NavLink>
-        ))}
-      </nav>
-
       {/* Right actions */}
       <div className="ml-auto flex items-center gap-1">
         <CustomToggle />
@@ -82,17 +71,27 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
           <DropdownMenuTrigger asChild>
             <button className="flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded-md hover:bg-accent transition-colors text-foreground">
               <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
-                <User className="h-4 w-4 text-primary" />
+                {initials ? (
+                  <span className="text-primary text-xs font-bold">{initials}</span>
+                ) : (
+                  <User className="h-4 w-4 text-primary" />
+                )}
               </div>
               <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-44">
-            <DropdownMenuItem>
-              <User className="h-4 w-4" />
-              Profile
-            </DropdownMenuItem>
+          <DropdownMenuContent align="end" className="w-48">
+            <div className="px-2 py-1.5">
+              <p className="text-sm font-medium truncate">{userName || "User"}</p>
+              <p className="text-xs text-muted-foreground capitalize">{userRole}</p>
+            </div>
             <DropdownMenuSeparator />
+            {isAdmin && (
+              <DropdownMenuItem onClick={() => navigate("/dashboard/profile")}>
+                <User className="h-4 w-4" />
+                Profile
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem
               onClick={logout}
               className="text-destructive focus:text-destructive"
@@ -111,11 +110,6 @@ export default Topbar;
 
 export const menuContents = [
   {
-    title: "Users",
-    link: "/dashboard/users",
-    icon: <Users className="h-4 w-4" />,
-  },
-  {
     title: "Contacts",
     link: "/dashboard/contacts",
     icon: <Phone className="h-4 w-4" />,
@@ -126,7 +120,7 @@ export const menuContents = [
     icon: <TicketCheck className="h-4 w-4" />,
   },
   {
-    title: "Todos",
+    title: "Projects",
     link: "/dashboard/todos",
     icon: <CheckSquare className="h-4 w-4" />,
   },
@@ -136,8 +130,8 @@ export const menuContents = [
     icon: <Mail className="h-4 w-4" />,
   },
   {
-    title: "CDA",
-    link: "/dashboard/cda",
-    icon: <FileText className="h-4 w-4" />,
+    title: "Users",
+    link: "/dashboard/users",
+    icon: <Users className="h-4 w-4" />,
   },
 ];
