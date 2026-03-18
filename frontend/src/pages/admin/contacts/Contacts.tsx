@@ -137,6 +137,14 @@ const Contacts = () => {
         contact={panelContact}
         open={panelOpen}
         onClose={() => setPanelOpen(false)}
+        onUpdate={(updated) => {
+          setContacts((prev) => prev.map((c: any) => c._id === updated._id ? updated : c));
+          setPanelContact(updated);
+        }}
+        onDelete={(id) => {
+          setContacts((prev) => prev.filter((c: any) => c._id !== id));
+          setPanelOpen(false);
+        }}
       />
     </>
   );

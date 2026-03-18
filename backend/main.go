@@ -65,6 +65,8 @@ func main() {
 			contacts.POST("", handlers.CreateContact)
 			contacts.GET("/export", handlers.ExportContacts)
 			contacts.POST("/import", handlers.ImportContacts)
+			contacts.PUT("/:id", handlers.UpdateContact)
+			contacts.DELETE("/:id", handlers.DeleteContact)
 			contacts.GET("/:id/notes", handlers.GetNotes)
 			contacts.POST("/:id/notes", handlers.AddNote)
 			contacts.DELETE("/:id/notes/:noteId", handlers.DeleteNote)

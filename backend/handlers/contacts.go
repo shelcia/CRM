@@ -16,6 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func GetContacts(c *gin.Context) {
@@ -188,4 +189,60 @@ func ImportContacts(c *gin.Context) {
 		"imported": len(res.InsertedIDs),
 		"skipped":  skipped,
 	})
+}
+
+func UpdateContact(c *gin.Context) {
+	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		utils.Err(c, http.StatusBadRequest, "Invalid contact ID")
+		return
+	}
+
+	var body bson.M
+	if err := c.ShouldBindJSON(&body); err != nil {
+		utils.Err(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	delete(body, "_id")
+	body["lastActivity"] = time.Now()
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	after := options.After
+	var updated models.Contact
+	err = db.Collection("contacts").FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": id},
+		bson.M{"$set": body},
+		&options.FindOneAndUpdateOptions{ReturnDocument: &after},
+	).Decode(&updated)
+	if err != nil {
+		utils.Err(c, http.StatusNotFound, "Contact not found")
+		return
+	}
+
+	c.JSON(http.StatusOK, updated)
+}
+
+func DeleteContact(c *gin.Context) {
+	id, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		utils.Err(c, http.StatusBadRequest, "Invalid contact ID")
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	result, err := db.Collection("contacts").DeleteOne(ctx, bson.M{"_id": id})
+	if err != nil || result.DeletedCount == 0 {
+		utils.Err(c, http.StatusNotFound, "Contact not found")
+		return
+	}
+
+	// cascade — delete associated notes
+	db.Collection("contact_notes").DeleteMany(ctx, bson.M{"contactId": id})
+
+	c.JSON(http.StatusOK, gin.H{"deleted": id})
 }

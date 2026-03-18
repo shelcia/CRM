@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "@/assets/logo.png";
 import {
   Phone,
   TicketCheck,
@@ -55,12 +56,7 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
 
       {/* Brand */}
       <div className="flex items-center gap-2 shrink-0">
-        <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
-          <span className="text-primary-foreground text-xs font-black">C</span>
-        </div>
-        <span className="font-bold text-foreground tracking-tight hidden sm:block">
-          Tiny CRM
-        </span>
+        <img src={logo} alt="Tiny CRM" className="h-7 w-auto" />
       </div>
 
       {/* Right actions */}

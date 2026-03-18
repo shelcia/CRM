@@ -7,6 +7,8 @@ export const apiContacts = new ApiCore({
   getAll: true,
   post: true,
   postFormData: true,
+  putById: true,
+  remove: true,
   url: url,
 });
 
