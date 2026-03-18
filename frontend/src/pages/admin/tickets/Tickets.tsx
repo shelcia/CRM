@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CustomTable from "@/components/CustomTable";
+import TableSkeleton from "@/components/TableSkeleton";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -8,11 +9,13 @@ import { apiTickets } from "@/services/models/ticketsModel";
 
 const Tickets = () => {
   const [tickets, setTickets] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const controller = new AbortController();
     apiTickets.getAll!(controller.signal, true).then((res) => {
       if (Array.isArray(res)) setTickets(res);
+      setIsLoading(false);
     });
     return () => controller.abort();
   }, []);
@@ -40,7 +43,11 @@ const Tickets = () => {
           </Button>
         </Link>
       </div>
-      <CustomTable columns={columns} data={tickets} title="Tickets" downloadName="tickets" />
+      {isLoading ? (
+        <TableSkeleton rows={6} cols={7} />
+      ) : (
+        <CustomTable columns={columns} data={tickets} title="Tickets" downloadName="tickets" />
+      )}
     </>
   );
 };

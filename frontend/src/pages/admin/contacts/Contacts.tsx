@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CustomTable from "@/components/CustomTable";
+import TableSkeleton from "@/components/TableSkeleton";
 import { convertDateToDateWithoutTime } from "@/utils/calendarHelpers";
 import { Button } from "@/components/ui/button";
 import { Plus, Upload, Download, FileDown } from "lucide-react";
@@ -22,6 +23,7 @@ const downloadTemplate = () => {
 
 const Contacts = () => {
   const [contacts, setContacts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [panelContact, setPanelContact] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -31,6 +33,7 @@ const Contacts = () => {
     const controller = new AbortController();
     apiContacts.getAll!(controller.signal, true).then((res) => {
       if (Array.isArray(res)) setContacts(res);
+      setIsLoading(false);
     });
     return controller;
   };
@@ -124,7 +127,11 @@ const Contacts = () => {
         </Link>
       </div>
 
-      <CustomTable columns={columns} data={contacts} title="Contacts" downloadName="contacts" />
+      {isLoading ? (
+        <TableSkeleton rows={6} cols={8} />
+      ) : (
+        <CustomTable columns={columns} data={contacts} title="Contacts" downloadName="contacts" />
+      )}
 
       <ContactPanel
         contact={panelContact}

@@ -1,23 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  MoreHorizontal,
-  Plus,
-  Pencil,
-  Trash2,
-  Check,
-  X,
-} from "lucide-react";
+import { Plus, Pencil, Trash2, Check, X, GripVertical } from "lucide-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import {
-  CustomTextAreaField,
-  CustomTextField,
-} from "@/components/CustomInputs";
+import { CustomTextAreaField, CustomTextField } from "@/components/CustomInputs";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 import { apiProvider } from "@/services/utilities/provider";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -56,10 +52,9 @@ const reorder = <T,>(list: T[], from: number, to: number): T[] => {
 const Projects = () => {
   const { id: projectId } = useParams<{ id: string }>();
   const [columns, setColumns] = useState<Column[]>([]);
-  const [addingColId, setAddingColId] = useState<string | null>(null); // columnId where add-todo form is open
+  const [addingColId, setAddingColId] = useState<string | null>(null);
   const [showAddColumn, setShowAddColumn] = useState(false);
 
-  // Fetch board (columns + todos)
   useEffect(() => {
     if (!projectId) return;
     const controller = new AbortController();
@@ -83,9 +78,7 @@ const Projects = () => {
       return;
 
     const srcColIdx = columns.findIndex((c) => c._id === source.droppableId);
-    const dstColIdx = columns.findIndex(
-      (c) => c._id === destination.droppableId,
-    );
+    const dstColIdx = columns.findIndex((c) => c._id === destination.droppableId);
     const srcCol = columns[srcColIdx];
     const dstCol = columns[dstColIdx];
 
@@ -110,7 +103,6 @@ const Projects = () => {
         return c;
       });
 
-      // Persist column move
       apiProvider.put("todos", { columnId: dstCol._id }, movedTodo._id, true);
     }
 
@@ -150,14 +142,12 @@ const Projects = () => {
 
   // ── Todo CRUD ─────────────────────────────────────────────────────────────
 
-  const handleAddTodo = (colId: string, todo: Omit<Todo, "_id" | "date" | "projectId" | "columnId">) => {
+  const handleAddTodo = (
+    colId: string,
+    todo: Omit<Todo, "_id" | "date" | "projectId" | "columnId">,
+  ) => {
     apiProvider
-      .post(
-        "projects",
-        { ...todo, columnId: colId },
-        `${projectId}/todos`,
-        true,
-      )
+      .post("projects", { ...todo, columnId: colId }, `${projectId}/todos`, true)
       .then((res) => {
         if (res?._id) {
           setColumns((prev) =>
@@ -185,28 +175,29 @@ const Projects = () => {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4">
+    <div className="flex gap-3 overflow-x-auto pb-4 items-start">
       <DragDropContext onDragEnd={onDragEnd}>
         {columns.map((col) => (
-          <div key={col._id} className="flex-shrink-0 w-72">
-            <Card className="h-full max-h-[75vh] flex flex-col">
+          <div key={col._id} className="flex-shrink-0 w-68">
+            <div className="rounded-xl bg-muted/50 border flex flex-col max-h-[calc(100vh-10rem)]">
               <ColumnHeader
                 column={col}
                 onRename={(name) => handleRenameColumn(col._id, name)}
                 onDelete={() => handleDeleteColumn(col._id)}
                 onAddTodo={() =>
-                  setAddingColId((prev) =>
-                    prev === col._id ? null : col._id,
-                  )
+                  setAddingColId((prev) => (prev === col._id ? null : col._id))
                 }
               />
 
               <Droppable droppableId={col._id}>
-                {(provided) => (
+                {(provided, snapshot) => (
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="flex-1 overflow-auto p-3 space-y-3"
+                    className={cn(
+                      "flex-1 overflow-y-auto p-2 space-y-2 min-h-[4rem] transition-colors",
+                      snapshot.isDraggingOver && "bg-primary/5",
+                    )}
                   >
                     {addingColId === col._id && (
                       <AddTodoForm
@@ -215,48 +206,48 @@ const Projects = () => {
                       />
                     )}
                     {col.todos.map((todo, idx) => (
-                      <Draggable
-                        draggableId={todo._id}
-                        index={idx}
-                        key={todo._id}
-                      >
-                        {(provided) => (
+                      <Draggable draggableId={todo._id} index={idx} key={todo._id}>
+                        {(provided, snapshot) => (
                           <TodoCard
                             todo={todo}
                             provided={provided}
-                            onDelete={() =>
-                              handleDeleteTodo(col._id, todo._id)
-                            }
+                            isDragging={snapshot.isDragging}
+                            onDelete={() => handleDeleteTodo(col._id, todo._id)}
                           />
                         )}
                       </Draggable>
                     ))}
                     {provided.placeholder}
+                    {col.todos.length === 0 && addingColId !== col._id && (
+                      <p className="text-xs text-muted-foreground text-center py-4">
+                        No cards yet
+                      </p>
+                    )}
                   </div>
                 )}
               </Droppable>
-            </Card>
+            </div>
           </div>
         ))}
       </DragDropContext>
 
       {/* Add column */}
-      <div className="flex-shrink-0 w-72">
+      <div className="flex-shrink-0 w-68">
         {showAddColumn ? (
-          <Card className="p-3">
+          <div className="rounded-xl bg-muted/50 border p-3">
             <AddColumnForm
               onSubmit={handleAddColumn}
               onCancel={() => setShowAddColumn(false)}
             />
-          </Card>
+          </div>
         ) : (
-          <Button
-            variant="outline"
-            className="w-full h-12"
+          <button
             onClick={() => setShowAddColumn(true)}
+            className="w-full flex items-center gap-2 rounded-xl border border-dashed px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
           >
-            <Plus className="h-4 w-4 mr-1" /> Add Column
-          </Button>
+            <Plus className="h-4 w-4" />
+            Add column
+          </button>
         )}
       </div>
     </div>
@@ -287,7 +278,7 @@ const ColumnHeader = ({
   };
 
   return (
-    <div className="p-3 border-b flex items-center gap-1">
+    <div className="px-3 py-2.5 flex items-center gap-2">
       {editing ? (
         <>
           <input
@@ -310,27 +301,34 @@ const ColumnHeader = ({
       ) : (
         <>
           <h5 className="flex-1 font-semibold text-sm truncate">{column.name}</h5>
+          <span className="text-xs text-muted-foreground tabular-nums bg-muted rounded-full px-1.5 py-0.5">
+            {column.todos.length}
+          </span>
           <button
-            className="text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground transition-colors"
             onClick={onAddTodo}
-            title="Add todo"
+            title="Add card"
           >
             <Plus className="h-4 w-4" />
           </button>
-          <button
-            className="text-muted-foreground hover:text-foreground"
-            onClick={() => setEditing(true)}
-            title="Rename column"
-          >
-            <Pencil className="h-3.5 w-3.5" />
-          </button>
-          <button
-            className="text-muted-foreground hover:text-destructive"
-            onClick={onDelete}
-            title="Delete column"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="text-muted-foreground hover:text-foreground transition-colors">
+                <Pencil className="h-3.5 w-3.5" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setEditing(true)}>
+                Rename
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive"
+                onClick={onDelete}
+              >
+                Delete column
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </>
       )}
     </div>
@@ -342,50 +340,85 @@ const ColumnHeader = ({
 const TodoCard = ({
   todo,
   provided,
+  isDragging,
   onDelete,
 }: {
   todo: Todo;
   provided: any;
+  isDragging: boolean;
   onDelete: () => void;
 }) => (
-  <div
+  <Card
     ref={provided.innerRef}
     {...provided.draggableProps}
-    {...provided.dragHandleProps}
     style={{ ...provided.draggableProps.style }}
-    className="rounded-lg border bg-card p-3 shadow-sm"
+    className={cn(
+      "p-3 group transition-shadow",
+      isDragging && "shadow-lg ring-1 ring-primary/20",
+    )}
   >
-    <div className="flex items-center justify-between mb-2">
-      <p className="text-xs text-muted-foreground">
-        {new Date(todo.date).toLocaleDateString()}
-      </p>
-      <button
-        className="p-0 hover:text-destructive text-muted-foreground"
-        onClick={onDelete}
+    {/* Drag handle + actions row */}
+    <div className="flex items-start justify-between gap-2 mb-2">
+      <div
+        {...provided.dragHandleProps}
+        className="mt-0.5 text-muted-foreground/40 hover:text-muted-foreground cursor-grab active:cursor-grabbing transition-colors"
       >
-        <MoreHorizontal className="h-4 w-4" />
-      </button>
+        <GripVertical className="h-3.5 w-3.5" />
+      </div>
+      <div className="flex items-center gap-1.5 flex-1">
+        {todo.statusColor && (
+          <span
+            className="inline-block h-2 w-2 rounded-full flex-shrink-0 mt-0.5"
+            style={{ backgroundColor: todo.statusColor }}
+          />
+        )}
+        <p className="text-sm font-medium leading-snug">{todo.title}</p>
+      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-all flex-shrink-0">
+            <Pencil className="h-3.5 w-3.5" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            className="text-destructive focus:text-destructive"
+            onClick={onDelete}
+          >
+            <Trash2 className="h-3.5 w-3.5 mr-2" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
-    <div className="text-center py-2">
-      <h3 className="font-semibold text-sm">{todo.title}</h3>
-      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+
+    {/* Description */}
+    {todo.description && (
+      <p className="text-xs text-muted-foreground line-clamp-2 ml-5 mb-2">
         {todo.description}
       </p>
-    </div>
-    {todo.statusColor && (
-      <Progress value={40} indicatorColor={todo.statusColor} className="mt-2" />
     )}
-    <div className="flex items-center gap-2 pt-3">
-      <img
-        src={todo.author.image}
-        alt={todo.author.name}
-        className="h-6 w-6 rounded-full object-cover bg-muted"
-      />
-      <span className="text-xs text-muted-foreground truncate">
-        {todo.author.name}
+
+    {/* Footer */}
+    <div className="flex items-center justify-between ml-5">
+      <div className="flex items-center gap-1.5">
+        <img
+          src={todo.author.image}
+          alt={todo.author.name}
+          className="h-5 w-5 rounded-full object-cover bg-muted"
+        />
+        <span className="text-xs text-muted-foreground truncate max-w-[80px]">
+          {todo.author.name}
+        </span>
+      </div>
+      <span className="text-xs text-muted-foreground">
+        {new Date(todo.date).toLocaleDateString(undefined, {
+          month: "short",
+          day: "numeric",
+        })}
       </span>
     </div>
-  </div>
+  </Card>
 );
 
 // ── Add todo form ──────────────────────────────────────────────────────────────
@@ -401,12 +434,11 @@ const AddTodoForm = ({
     initialValues: {
       title: "",
       description: "",
-      statusColor: "#61A9FF",
+      statusColor: "#4ade80",
       author: { name: "", image: "/static/avatar/001-man.svg" },
     },
     validationSchema: Yup.object({
       title: Yup.string().min(3, "Too short").required("Required"),
-      description: Yup.string().min(5, "Too short").required("Required"),
     }),
     onSubmit: (v) =>
       onSubmit({
@@ -418,43 +450,45 @@ const AddTodoForm = ({
   });
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2 bg-muted/40 rounded-lg p-2">
+    <form
+      onSubmit={handleSubmit}
+      className="rounded-lg border bg-card p-3 space-y-2 shadow-sm"
+    >
       <CustomTextField
         name="title"
-        placeholder="Title"
+        placeholder="Card title"
         values={values}
-        handleChange={handleChange}
-        touched={touched}
-        errors={errors}
-      />
-      <CustomTextField
-        name="author.name"
-        placeholder="Author name"
-        values={{ "author.name": values.author.name }}
         handleChange={handleChange}
         touched={touched}
         errors={errors}
       />
       <CustomTextAreaField
         name="description"
-        placeholder="Description"
+        placeholder="Description (optional)"
+        rows={2}
         values={values}
         handleChange={handleChange}
         touched={touched}
         errors={errors}
       />
-      <Button type="submit" size="sm" className="w-full">
-        Add
-      </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        className="w-full"
-        onClick={onCancel}
-      >
-        Cancel
-      </Button>
+      <div className="flex items-center gap-2">
+        <label className="text-xs text-muted-foreground">Color</label>
+        <input
+          type="color"
+          name="statusColor"
+          value={values.statusColor}
+          onChange={handleChange}
+          className="h-6 w-6 rounded cursor-pointer border-0 bg-transparent p-0"
+        />
+      </div>
+      <div className="flex gap-2">
+        <Button type="submit" size="sm" className="flex-1">
+          Add card
+        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
+          Cancel
+        </Button>
+      </div>
     </form>
   );
 };
@@ -477,7 +511,7 @@ const AddColumnForm = ({
   });
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+    <form onSubmit={handleSubmit} className="space-y-2">
       <CustomTextField
         name="name"
         placeholder="Column name"
@@ -486,18 +520,14 @@ const AddColumnForm = ({
         touched={touched}
         errors={errors}
       />
-      <Button type="submit" size="sm" className="w-full">
-        Add Column
-      </Button>
-      <Button
-        type="button"
-        variant="ghost"
-        size="sm"
-        className="w-full"
-        onClick={onCancel}
-      >
-        Cancel
-      </Button>
+      <div className="flex gap-2">
+        <Button type="submit" size="sm" className="flex-1">
+          Add
+        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
+          Cancel
+        </Button>
+      </div>
     </form>
   );
 };

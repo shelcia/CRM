@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CustomTable from "@/components/CustomTable";
+import TableSkeleton from "@/components/TableSkeleton";
 import { convertDateToDateWithoutTime } from "@/utils/calendarHelpers";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,12 +10,14 @@ import toast from "react-hot-toast";
 
 const Users = () => {
   const [data, setData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const controller = new AbortController();
     apiUsers.getAll!(controller.signal, true).then((res) => {
       if (Array.isArray(res)) setData(res);
+      setIsLoading(false);
     });
     return () => controller.abort();
   }, []);
@@ -81,7 +84,11 @@ const Users = () => {
           </Button>
         </Link>
       </div>
-      <CustomTable columns={columns} data={data} title="Users" downloadName="users" />
+      {isLoading ? (
+        <TableSkeleton rows={6} cols={6} />
+      ) : (
+        <CustomTable columns={columns} data={data} title="Users" downloadName="users" />
+      )}
     </>
   );
 };

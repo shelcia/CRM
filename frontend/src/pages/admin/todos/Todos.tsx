@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Plus, Trash2 } from "lucide-react";
 import { useFormik } from "formik";
@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { CustomTextField } from "@/components/CustomInputs";
 import { apiProvider } from "@/services/utilities/provider";
 
@@ -17,12 +18,14 @@ type Project = {
 
 const Todos = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     const controller = new AbortController();
     apiProvider.getAll("projects", controller.signal, true).then((res) => {
       if (Array.isArray(res)) setProjects(res);
+      setIsLoading(false);
     });
     return () => controller.abort();
   }, []);
@@ -67,30 +70,46 @@ const Todos = () => {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {projects.map((project) => (
-          <Card key={project._id}>
-            <CardContent className="pt-6 flex flex-col gap-3">
-              <h2 className="text-xl font-semibold">{project.name}</h2>
-              <div className="flex gap-2">
-                <NavLink to={`${project._id}`} className="flex-1">
-                  <Button className="w-full">Open Board</Button>
-                </NavLink>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-destructive hover:text-destructive"
-                  onClick={() => handleDelete(project._id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-        {projects.length === 0 && !showForm && (
-          <p className="text-muted-foreground col-span-full text-sm">
-            No projects yet. Create one to get started.
-          </p>
+        {isLoading ? (
+          Array.from({ length: 3 }).map((_, i) => (
+            <Card key={i}>
+              <CardContent className="pt-6 flex flex-col gap-3">
+                <Skeleton className="h-6 w-3/4" />
+                <div className="flex gap-2">
+                  <Skeleton className="h-9 flex-1" />
+                  <Skeleton className="h-9 w-9" />
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <>
+            {projects.map((project) => (
+              <Card key={project._id}>
+                <CardContent className="pt-6 flex flex-col gap-3">
+                  <h2 className="text-xl font-semibold">{project.name}</h2>
+                  <div className="flex gap-2">
+                    <NavLink to={`${project._id}`} className="flex-1">
+                      <Button className="w-full">Open Board</Button>
+                    </NavLink>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive hover:text-destructive"
+                      onClick={() => handleDelete(project._id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+            {projects.length === 0 && !showForm && (
+              <p className="text-muted-foreground col-span-full text-sm">
+                No projects yet. Create one to get started.
+              </p>
+            )}
+          </>
         )}
       </div>
     </div>

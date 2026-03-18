@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus, Mail, Clock, Pencil, Trash2, CalendarClock } from "lucide-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import CustomTable from "@/components/CustomTable";
+import TableSkeleton from "@/components/TableSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -383,6 +384,7 @@ const TemplateDialog = ({ template, onSaved, trigger, statusItems, frequencyItem
 
 const Emails = () => {
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { emailTemplateStatuses, emailTemplateFrequencies } = useEnums();
 
   const statusItems = toLabelItems(emailTemplateStatuses);
@@ -392,6 +394,7 @@ const Emails = () => {
     const controller = new AbortController();
     apiEmailTemplates.getAll!(controller.signal, true).then((res) => {
       if (Array.isArray(res)) setTemplates(res);
+      setIsLoading(false);
     });
     return () => controller.abort();
   }, []);
@@ -560,12 +563,16 @@ const Emails = () => {
       </div>
 
       {/* Table */}
-      <CustomTable
-        columns={columns}
-        data={templates}
-        title="Templates"
-        downloadName="email-templates"
-      />
+      {isLoading ? (
+        <TableSkeleton rows={6} cols={7} />
+      ) : (
+        <CustomTable
+          columns={columns}
+          data={templates}
+          title="Templates"
+          downloadName="email-templates"
+        />
+      )}
     </section>
   );
 };
