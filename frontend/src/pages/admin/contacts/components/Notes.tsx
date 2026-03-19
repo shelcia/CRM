@@ -4,7 +4,7 @@ import { apiProvider } from "@/services/utilities/provider";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Send, Trash2 } from "lucide-react";
-import { convertDateToDateWithTime } from "@/utils/calendarHelpers";
+import { convertDateToDateWithTime } from "@/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { NOTE_TYPE_META, NOTE_TYPES } from "../constants";
 

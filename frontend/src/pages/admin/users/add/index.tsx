@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { CustomMultipleCheckBoxField, CustomTextField } from "@/components/custom";
+import {
+  CustomMultipleCheckBoxField,
+  CustomTextField,
+} from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFormik } from "formik";
@@ -8,30 +11,7 @@ import { apiUsers } from "@/services/models/usersModel";
 import toast from "react-hot-toast";
 import { ArrowLeft, UserRound, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
-
-const PERMISSION_GROUPS = [
-  {
-    label: "Users",
-    keys: ["users-view", "users-edit", "users-delete"],
-    labels: ["View", "Edit", "Delete"],
-  },
-  {
-    label: "Contacts",
-    keys: ["contacts-view", "contacts-edit", "contacts-delete"],
-    labels: ["View", "Edit", "Delete"],
-  },
-  {
-    label: "Tickets",
-    keys: ["tickets-view", "tickets-edit", "tickets-delete"],
-    labels: ["View", "Edit", "Delete"],
-  },
-  {
-    label: "Todos",
-    keys: ["todos-view", "todos-edit", "todos-delete"],
-    labels: ["View", "Edit", "Delete"],
-  },
-  { label: "Admin", keys: ["admin"], labels: ["Admin"] },
-];
+import { PERMISSION_GROUPS } from "../constants";
 
 const checkedToPermissions = (checked: boolean[][]) =>
   PERMISSION_GROUPS.flatMap((g, gi) =>

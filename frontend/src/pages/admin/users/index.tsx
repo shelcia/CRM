@@ -1,7 +1,7 @@
 import {} from "react";
 import { PageHeader, CustomTable, TableSkeleton } from "@/components/custom";
 import { useListData } from "@/hooks/useListData";
-import { convertDateToDateWithoutTime } from "@/utils/calendarHelpers";
+import { convertDateToDateWithoutTime } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus, Pencil, Trash2 } from "lucide-react";

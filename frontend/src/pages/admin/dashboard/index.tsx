@@ -10,10 +10,7 @@ import {
 } from "lucide-react";
 import { apiProvider } from "@/services/utilities/provider";
 import { StatusBadge, PriorityIndicator } from "@/components/custom";
-import {
-  convertDateToDateWithoutTime,
-  getTimeOfDay,
-} from "@/utils/calendarHelpers";
+import { convertDateToDateWithoutTime, getTimeOfDay } from "@/utils";
 import { Link } from "react-router-dom";
 import usePermissions from "@/hooks/usePermissions";
 import { DashboardStats, Metric } from "./types";

@@ -1,9 +1,8 @@
-import { Activity } from "react";
 import { INote } from "../types";
 import { ActivityIcon } from "lucide-react";
 import { NOTE_TYPE_META } from "../constants";
 import { cn } from "@/lib/utils";
-import { convertDateToDateWithTime } from "@/utils/calendarHelpers";
+import { convertDateToDateWithTime } from "@/utils";
 
 const ActivityTimeline = ({ notes }: { notes: INote[] }) => {
   if (notes.length === 0) {

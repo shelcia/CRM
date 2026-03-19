@@ -5,7 +5,7 @@ import {
   StatusBadge,
   PageHeader,
 } from "@/components/custom";
-import { convertDateToDateWithoutTime } from "@/utils/calendarHelpers";
+import { convertDateToDateWithoutTime } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Plus, Upload, FileDown, Pencil, Trash2 } from "lucide-react";
 import { apiContacts, importContacts } from "@/services/models/contactsModel";

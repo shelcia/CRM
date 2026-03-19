@@ -13,8 +13,6 @@ import Notes from "./Notes";
 import DealsTab from "./Deals";
 import Edit from "./Edit";
 
-// ── Contact Panel ──────────────────────────────────────────────────────────────
-
 interface ContactPanelProps {
   contact: IContact | null;
   open: boolean;

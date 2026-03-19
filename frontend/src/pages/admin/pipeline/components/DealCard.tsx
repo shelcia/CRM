@@ -2,8 +2,8 @@ import { Pencil, Trash2 } from "lucide-react";
 import AuthorAvatar from "@/components/custom/AuthorAvatar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import AddDealDialog from "./components/AddDealDialog";
-import { IDeal } from "./types";
+import AddDealDialog from "./AddDealDialog";
+import { IDeal } from "../types";
 import { convertDateToDateWithoutTime, getFmtCurrencyVal } from "@/utils";
 
 const DealCard = ({

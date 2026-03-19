@@ -16,9 +16,9 @@ import { cn } from "@/lib/utils";
 import { apiDeals } from "@/services/models/dealsModel";
 import PageHeader from "@/components/custom/PageHeader";
 import AddDealDialog from "./components/AddDealDialog";
-import DealCard from "./DealCard";
+import DealCard from "./components/DealCard";
 import { STAGES } from "./constants";
-import { getFmtCurrencyVal } from "@/utils/calendarHelpers";
+import { getFmtCurrencyVal } from "@/utils";
 import { IDeal } from "./types";
 
 const Pipeline = () => {

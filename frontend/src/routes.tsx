@@ -45,9 +45,7 @@ const Projects = Loadable(lazy(() => import("./pages/admin/projects")));
 const Todos = Loadable(lazy(() => import("./pages/admin/projects/tasks")));
 
 const Emails = Loadable(lazy(() => import("./pages/admin/emails")));
-const Pipeline = Loadable(
-  lazy(() => import("./pages/admin/pipeline/Pipeline")),
-);
+const Pipeline = Loadable(lazy(() => import("./pages/admin/pipeline")));
 const Dashboard = Loadable(lazy(() => import("./pages/admin/dashboard")));
 
 const ErrorPage = Loadable(lazy(() => import("./pages/others/ErrorPage")));

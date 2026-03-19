@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Plus, TicketCheck, Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { convertDateToDateWithoutTime } from "@/utils/calendarHelpers";
+import { convertDateToDateWithoutTime } from "@/utils";
 import { apiTickets } from "@/services/models/ticketsModel";
 import { confirmToast } from "@/utils/confirmToast";
 import toast from "react-hot-toast";
