@@ -59,15 +59,16 @@ func main() {
 				"admin",
 				"users-view", "users-edit", "users-delete",
 				"contacts-view", "contacts-edit", "contacts-delete",
+				"pipeline-view", "pipeline-edit", "pipeline-delete",
 				"tickets-view", "tickets-edit", "tickets-delete",
-				"todos-view", "todos-edit", "todos-delete",
+				"projects-view", "projects-edit", "projects-delete",
 			},
 			Verified:  true,
 			Date:      now,
 			CompanyID: companyID.Hex(),
 			Company:   "Acme Corp",
 		},
-		// Manager — contacts + tickets + todos, no user management
+		// Manager — contacts + pipeline + tickets + projects, no user management
 		models.User{
 			ID:       primitive.NewObjectID(),
 			Name:     "Mark Manager",
@@ -75,15 +76,16 @@ func main() {
 			Password: hash("admin123"),
 			Permissions: []string{
 				"contacts-view", "contacts-edit", "contacts-delete",
+				"pipeline-view", "pipeline-edit", "pipeline-delete",
 				"tickets-view", "tickets-edit", "tickets-delete",
-				"todos-view", "todos-edit", "todos-delete",
+				"projects-view", "projects-edit", "projects-delete",
 			},
 			Verified:  true,
 			Date:      now,
 			CompanyID: companyID.Hex(),
 			Company:   "Acme Corp",
 		},
-		// Support — read contacts, manage tickets only
+		// Support — read contacts + pipeline, manage tickets only
 		models.User{
 			ID:       primitive.NewObjectID(),
 			Name:     "Sam Support",
@@ -91,6 +93,7 @@ func main() {
 			Password: hash("admin123"),
 			Permissions: []string{
 				"contacts-view",
+				"pipeline-view",
 				"tickets-view", "tickets-edit",
 			},
 			Verified:  true,

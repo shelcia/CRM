@@ -146,12 +146,12 @@ const routes = [
       },
       {
         path: "todos",
-        element: <RequirePermission permission="todos-view" />,
+        element: <RequirePermission permission="projects-view" />,
         children: [{ index: true, element: <Todos /> }],
       },
       {
         path: "todos/:id",
-        element: <RequirePermission permission="todos-view" />,
+        element: <RequirePermission permission="projects-view" />,
         children: [{ index: true, element: <Projects /> }],
       },
       {
@@ -161,7 +161,7 @@ const routes = [
       },
       {
         path: "pipeline",
-        element: <RequirePermission permission="contacts-view" />,
+        element: <RequirePermission permission="pipeline-view" />,
         children: [{ index: true, element: <Pipeline /> }],
       },
     ],

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Plus, TrendingUp, DollarSign, Target, Search, X } from "lucide-react";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import toast from "react-hot-toast";
+import KanbanSkeleton from "@/components/custom/KanbanSkeleton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StatCard } from "@/components/custom/StatCard";
@@ -176,14 +177,7 @@ const Pipeline = () => {
 
       {/* Kanban board */}
       {isLoading ? (
-        <div className="flex gap-3 overflow-x-auto pb-4">
-          {STAGES.map((s) => (
-            <div
-              key={s.key}
-              className="flex-shrink-0 w-60 h-48 rounded-xl bg-muted animate-pulse"
-            />
-          ))}
-        </div>
+        <KanbanSkeleton columns={STAGES.length} />
       ) : (
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="flex gap-3 overflow-x-auto pb-4 items-start">

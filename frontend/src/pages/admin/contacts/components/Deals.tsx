@@ -7,6 +7,7 @@ import { Kanban, Plus } from "lucide-react";
 import { StatusBadge } from "@/components/custom";
 import { IDeal } from "../../pipeline/types";
 import { getFmtCurrencyVal } from "@/utils";
+import PageSpinner from "@/components/custom/PageSpinner";
 
 const DealsTab = ({ contact }: { contact: IContact }) => {
   const [deals, setDeals] = useState<IDeal[]>([]);
@@ -25,9 +26,7 @@ const DealsTab = ({ contact }: { contact: IContact }) => {
     .reduce((sum, d) => sum + d.value, 0);
 
   if (loading) {
-    return (
-      <p className="text-sm text-muted-foreground py-8 text-center">Loading…</p>
-    );
+    return <PageSpinner />;
   }
 
   return (

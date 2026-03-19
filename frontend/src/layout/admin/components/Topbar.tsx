@@ -140,7 +140,7 @@ export const menuContents = [
     title: "Pipeline",
     link: "/dashboard/pipeline",
     icon: <Kanban className="h-4 w-4" />,
-    permission: "contacts-view",
+    permission: "pipeline-view",
   },
   {
     title: "Tickets",
@@ -152,7 +152,7 @@ export const menuContents = [
     title: "Projects",
     link: "/dashboard/todos",
     icon: <CheckSquare className="h-4 w-4" />,
-    permission: "todos-view",
+    permission: "projects-view",
   },
   {
     title: "Email",

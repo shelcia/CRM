@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Skeleton } from "@/components/ui/skeleton";
+import KanbanSkeleton from "@/components/custom/KanbanSkeleton";
 import { Plus } from "lucide-react";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { Button } from "@/components/ui/button";
@@ -188,20 +188,7 @@ const Projects = () => {
   // ── Loading skeleton ──────────────────────────────────────────────────────
 
   if (isLoading) {
-    return (
-      <div className="flex gap-3 overflow-x-auto pb-4 items-start">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="flex-shrink-0 w-68">
-            <div className="rounded-xl bg-muted/50 border flex flex-col p-3 gap-3">
-              <Skeleton className="h-5 w-32" />
-              <Skeleton className="h-24 w-full rounded-lg" />
-              <Skeleton className="h-20 w-full rounded-lg" />
-              <Skeleton className="h-16 w-full rounded-lg" />
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+    return <KanbanSkeleton columns={3} columnWidth="w-68" />;
   }
 
   // ── Board ─────────────────────────────────────────────────────────────────

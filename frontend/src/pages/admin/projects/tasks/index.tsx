@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import PageSpinner from "@/components/custom/PageSpinner";
 
 import { CustomTextField } from "@/components/custom";
 import { apiProvider } from "@/services/utilities/provider";
@@ -81,85 +81,75 @@ const Todos = () => {
         />
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {isLoading ? (
-          Array.from({ length: 3 }).map((_, i) => (
-            <Card key={i}>
+      {isLoading ? (
+        <PageSpinner />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {projects.map((project) => (
+            <Card
+              key={project._id}
+              className="hover:shadow-md transition-shadow"
+            >
               <CardContent className="pt-5 pb-4 flex flex-col gap-3">
-                <Skeleton className="h-5 w-2/3" />
-                <Skeleton className="h-3 w-1/3" />
-                <Skeleton className="h-9 w-full" />
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <h2 className="font-semibold text-base leading-tight">
+                      {project.name}
+                    </h2>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Created{" "}
+                      {new Date(project.date).toLocaleDateString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                  {has("todos-delete") && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive"
+                      onClick={() => handleDelete(project._id)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {project.totalTasks} task
+                  {project.totalTasks !== 1 ? "s" : ""} · {project.doneTasks}{" "}
+                  done
+                </p>
+                <NavLink to={`${project._id}`}>
+                  <Button size="sm" className="w-full">
+                    Open Board
+                  </Button>
+                </NavLink>
               </CardContent>
             </Card>
-          ))
-        ) : (
-          <>
-            {projects.map((project) => (
-              <Card
-                key={project._id}
-                className="hover:shadow-md transition-shadow"
-              >
-                <CardContent className="pt-5 pb-4 flex flex-col gap-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <h2 className="font-semibold text-base leading-tight">
-                        {project.name}
-                      </h2>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Created{" "}
-                        {new Date(project.date).toLocaleDateString(undefined, {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </p>
-                    </div>
-                    {has("todos-delete") && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive"
-                        onClick={() => handleDelete(project._id)}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
-                    )}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {project.totalTasks} task
-                    {project.totalTasks !== 1 ? "s" : ""} · {project.doneTasks}{" "}
-                    done
-                  </p>
-                  <NavLink to={`${project._id}`}>
-                    <Button size="sm" className="w-full">
-                      Open Board
-                    </Button>
-                  </NavLink>
-                </CardContent>
-              </Card>
-            ))}
-            {projects.length === 0 && !showForm && (
-              <div className="col-span-full flex flex-col items-center justify-center py-20 gap-4 text-center">
-                <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
-                  <Plus className="h-7 w-7 text-muted-foreground/50" />
-                </div>
-                <div>
-                  <p className="font-semibold">No projects yet</p>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Create a project to start organizing work with a Kanban
-                    board.
-                  </p>
-                </div>
-                {has("todos-edit") && (
-                  <Button size="sm" onClick={() => setShowForm(true)}>
-                    <Plus className="h-4 w-4" /> Create First Project
-                  </Button>
-                )}
+          ))}
+          {projects.length === 0 && !showForm && (
+            <div className="col-span-full flex flex-col items-center justify-center py-20 gap-4 text-center">
+              <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
+                <Plus className="h-7 w-7 text-muted-foreground/50" />
               </div>
-            )}
-          </>
-        )}
-      </div>
+              <div>
+                <p className="font-semibold">No projects yet</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Create a project to start organizing work with a Kanban
+                  board.
+                </p>
+              </div>
+              {has("todos-edit") && (
+                <Button size="sm" onClick={() => setShowForm(true)}>
+                  <Plus className="h-4 w-4" /> Create First Project
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </section>
   );
 };

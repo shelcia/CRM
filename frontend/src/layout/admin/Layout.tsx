@@ -39,6 +39,7 @@ const Layout = () => {
             <li key={index}>
               <NavLink
                 to={item.link}
+                end={item.link === "/dashboard"}
                 onClick={handleDrawerToggle}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
