@@ -5,6 +5,7 @@ const url = "contacts";
 
 export const apiContacts = new ApiCore({
   getAll: true,
+  getByParams: true,
   post: true,
   postFormData: true,
   putById: true,

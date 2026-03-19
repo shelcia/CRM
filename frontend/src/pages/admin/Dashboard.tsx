@@ -81,7 +81,7 @@ const Dashboard = () => {
       permission: "tickets-view",
     },
     {
-      label: "Active Projects",
+      label: "Total Projects",
       value: loading ? "—" : (stats?.totalProjects ?? 0),
       icon: <CheckSquare className="h-5 w-5 text-amber-500" />,
       href: "/dashboard/todos",

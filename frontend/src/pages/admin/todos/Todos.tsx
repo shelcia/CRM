@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Progress } from "@/components/ui/progress";
+
 import { CustomTextField } from "@/components/CustomInputs";
 import { apiProvider } from "@/services/utilities/provider";
 import usePermissions from "@/hooks/usePermissions";
@@ -59,9 +59,12 @@ const Todos = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <section className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Projects</h2>
+        <div>
+          <h1 className="text-2xl font-bold">Projects</h1>
+          <p className="text-sm text-muted-foreground">Organise work with Kanban boards</p>
+        </div>
         {has("todos-edit") && (
           <Button size="sm" onClick={() => setShowForm((v) => !v)}>
             <Plus className="h-4 w-4 mr-1" /> New Project
@@ -83,7 +86,6 @@ const Todos = () => {
               <CardContent className="pt-5 pb-4 flex flex-col gap-3">
                 <Skeleton className="h-5 w-2/3" />
                 <Skeleton className="h-3 w-1/3" />
-                <Skeleton className="h-1.5 w-full" />
                 <Skeleton className="h-9 w-full" />
               </CardContent>
             </Card>
@@ -111,16 +113,9 @@ const Todos = () => {
                       </Button>
                     )}
                   </div>
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{project.totalTasks} task{project.totalTasks !== 1 ? "s" : ""}</span>
-                      <span>{project.doneTasks}/{project.totalTasks} done</span>
-                    </div>
-                    <Progress
-                      value={project.totalTasks > 0 ? (project.doneTasks / project.totalTasks) * 100 : 0}
-                      className="h-1.5"
-                    />
-                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {project.totalTasks} task{project.totalTasks !== 1 ? "s" : ""} · {project.doneTasks} done
+                  </p>
                   <NavLink to={`${project._id}`}>
                     <Button size="sm" className="w-full">Open Board</Button>
                   </NavLink>
@@ -146,7 +141,7 @@ const Todos = () => {
           </>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

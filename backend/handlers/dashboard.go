@@ -64,8 +64,8 @@ func GetDashboardStats(c *gin.Context) {
 	// Users in same company
 	stats.TotalUsers, _ = db.Collection("users").CountDocuments(ctx, companyIDFilter)
 
-	// Recent contacts (last 5, sorted by createdAt desc)
-	contactOpts := options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}}).SetLimit(5)
+	// Recent contacts (last 5, sorted by date desc — Contact.CreatedAt maps to bson:"date")
+	contactOpts := options.Find().SetSort(bson.D{{Key: "date", Value: -1}}).SetLimit(5)
 	contactCursor, err := db.Collection("contacts").Find(ctx, bson.M{}, contactOpts)
 	if err == nil {
 		defer contactCursor.Close(ctx)

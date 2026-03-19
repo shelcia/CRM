@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Plus, Mail, Clock, Pencil, Trash2, CalendarClock } from "lucide-react";
+import { Plus, Mail, Clock, Pencil, Trash2, CalendarClock, Users } from "lucide-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
@@ -7,7 +7,7 @@ import { SerializedEditorState } from "lexical";
 import CustomTable from "@/components/CustomTable";
 import TableSkeleton from "@/components/TableSkeleton";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { StatCard } from "@/components/StatCard";
 import {
   Dialog,
   DialogContent,
@@ -16,20 +16,40 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   CustomTextField,
   CustomSelectField,
 } from "@/components/CustomInputs";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Editor } from "@/components/blocks/editor-00/editor";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import { apiEmailTemplates } from "@/services/models/emailTemplatesModel";
+import { apiEmailGroups } from "@/services/models/emailGroupsModel";
+import { apiContacts } from "@/services/models/contactsModel";
 import { useEnums } from "@/hooks/useEnums";
 import { toLabelItems } from "@/utils/enumLabel";
+import { confirmToast } from "@/utils/confirmToast";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Frequency = "one-time" | "daily" | "weekly" | "monthly";
 type Status = "active" | "draft" | "paused";
+
+interface EmailGroup {
+  _id: string;
+  name: string;
+  description: string;
+  contactIds: string[];
+}
 
 interface EmailTemplate {
   _id: string;
@@ -75,31 +95,34 @@ const scheduleLabel = (t: EmailTemplate) => {
 
 // ─── Validation ───────────────────────────────────────────────────────────────
 
-const validationSchema = Yup.object().shape({
-  name: Yup.string().required("Template name is required"),
-  subject: Yup.string().required("Subject is required"),
-  body: Yup.string().required("Email body is required"),
-  recipient: Yup.string()
-    .required("Recipient email is required")
-    .test("emails", "Enter valid email(s)", (val) =>
-      (val ?? "")
-        .split(",")
-        .map((e) => e.trim())
-        .every((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)),
-    ),
-  frequency: Yup.string().required(),
-  sendDate: Yup.string().required("Send date is required"),
-  sendTime: Yup.string().required("Send time is required"),
-  dayOfWeek: Yup.string().when("frequency", {
-    is: "weekly",
-    then: (s) => s.required("Day of week is required"),
-  }),
-  dayOfMonth: Yup.string().when("frequency", {
-    is: "monthly",
-    then: (s) => s.required("Day of month is required"),
-  }),
-  status: Yup.string().required(),
-});
+const makeValidationSchema = (recipientType: "group" | "custom") =>
+  Yup.object().shape({
+    name: Yup.string().required("Template name is required"),
+    subject: Yup.string().required("Subject is required"),
+    body: Yup.string().required("Email body is required"),
+    recipient: recipientType === "group"
+      ? Yup.string().required("Select a recipient group")
+      : Yup.string()
+          .required("Recipient email is required")
+          .test("emails", "Enter valid email(s)", (val) =>
+            (val ?? "")
+              .split(",")
+              .map((e) => e.trim())
+              .every((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)),
+          ),
+    frequency: Yup.string().required(),
+    sendDate: Yup.string().required("Send date is required"),
+    sendTime: Yup.string().required("Send time is required"),
+    dayOfWeek: Yup.string().when("frequency", {
+      is: "weekly",
+      then: (s) => s.required("Day of week is required"),
+    }),
+    dayOfMonth: Yup.string().when("frequency", {
+      is: "monthly",
+      then: (s) => s.required("Day of month is required"),
+    }),
+    status: Yup.string().required(),
+  });
 
 const emptyTemplate = {
   name: "",
@@ -122,11 +145,21 @@ interface TemplateDialogProps {
   trigger: React.ReactNode;
   statusItems: { val: string; label: string }[];
   frequencyItems: { val: string; label: string }[];
+  groups: EmailGroup[];
 }
 
-const TemplateDialog = ({ template, onSaved, trigger, statusItems, frequencyItems }: TemplateDialogProps) => {
+const isGroupName = (recipient: string, groups: EmailGroup[]) =>
+  groups.some((g) => g.name === recipient);
+
+const TemplateDialog = ({ template, onSaved, trigger, statusItems, frequencyItems, groups }: TemplateDialogProps) => {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const initialRecipientType = (template && isGroupName(template.recipient, groups))
+    ? "group"
+    : "custom" as "group" | "custom";
+
+  const [recipientType, setRecipientType] = useState<"group" | "custom">(initialRecipientType);
 
   const { values, errors, touched, handleChange, handleSubmit, resetForm, setFieldValue } =
     useFormik({
@@ -145,7 +178,7 @@ const TemplateDialog = ({ template, onSaved, trigger, statusItems, frequencyItem
             status: template.status,
           }
         : emptyTemplate,
-      validationSchema,
+      validationSchema: makeValidationSchema(recipientType),
       onSubmit: (vals) => {
         setIsLoading(true);
 
@@ -231,19 +264,72 @@ const TemplateDialog = ({ template, onSaved, trigger, statusItems, frequencyItem
           />
 
           {/* Recipient */}
-          <div className="space-y-1">
-            <CustomTextField
-              label="Recipient Email(s)"
-              name="recipient"
-              placeholder="user@company.com, another@company.com"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-            />
-            <p className="text-xs text-muted-foreground pl-0.5">
-              Separate multiple emails with a comma
-            </p>
+          <div className="space-y-2">
+            <Label>Recipients</Label>
+            {/* Type toggle */}
+            <div className="flex rounded-md border overflow-hidden w-fit text-xs">
+              <button
+                type="button"
+                onClick={() => { setRecipientType("group"); setFieldValue("recipient", ""); }}
+                className={cn(
+                  "px-3 py-1.5 font-medium transition-colors",
+                  recipientType === "group"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-background text-muted-foreground hover:bg-muted",
+                )}
+              >
+                Email Group
+              </button>
+              <button
+                type="button"
+                onClick={() => { setRecipientType("custom"); setFieldValue("recipient", ""); }}
+                className={cn(
+                  "px-3 py-1.5 font-medium transition-colors",
+                  recipientType === "custom"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-background text-muted-foreground hover:bg-muted",
+                )}
+              >
+                Custom Email
+              </button>
+            </div>
+
+            {recipientType === "group" ? (
+              <div className="space-y-1">
+                <Select value={values.recipient} onValueChange={(v) => setFieldValue("recipient", v)}>
+                  <SelectTrigger className={cn(touched.recipient && errors.recipient && "border-destructive")}>
+                    <SelectValue placeholder="Select a group…" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {groups.map((g) => (
+                      <SelectItem key={g._id} value={g.name}>
+                        <span className="font-medium">{g.name}</span>
+                        {g.description && (
+                          <span className="text-muted-foreground ml-1.5 text-xs">— {g.description}</span>
+                        )}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {touched.recipient && errors.recipient && (
+                  <p className="text-xs text-destructive">{errors.recipient}</p>
+                )}
+              </div>
+            ) : (
+              <div className="space-y-1">
+                <Input
+                  name="recipient"
+                  placeholder="user@company.com, another@company.com"
+                  value={values.recipient}
+                  onChange={handleChange}
+                  className={cn(touched.recipient && errors.recipient && "border-destructive")}
+                />
+                {touched.recipient && errors.recipient && (
+                  <p className="text-xs text-destructive">{errors.recipient}</p>
+                )}
+                <p className="text-xs text-muted-foreground">Separate multiple emails with a comma</p>
+              </div>
+            )}
           </div>
 
           {/* Body */}
@@ -285,16 +371,13 @@ const TemplateDialog = ({ template, onSaved, trigger, statusItems, frequencyItem
               />
               <div className="space-y-1">
                 <Label htmlFor="sendTime">Send Time</Label>
-                <input
+                <Input
                   id="sendTime"
                   name="sendTime"
                   type="time"
                   value={values.sendTime}
                   onChange={handleChange}
-                  className={cn(
-                    "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-                    touched.sendTime && errors.sendTime && "border-destructive",
-                  )}
+                  className={cn(touched.sendTime && errors.sendTime && "border-destructive")}
                 />
                 {touched.sendTime && errors.sendTime && (
                   <p className="text-xs text-destructive">{errors.sendTime}</p>
@@ -308,16 +391,13 @@ const TemplateDialog = ({ template, onSaved, trigger, statusItems, frequencyItem
                 <Label htmlFor="sendDate">
                   {values.frequency === "one-time" ? "Send Date" : "Start Date"}
                 </Label>
-                <input
+                <Input
                   id="sendDate"
                   name="sendDate"
                   type="date"
                   value={values.sendDate}
                   onChange={handleChange}
-                  className={cn(
-                    "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-                    touched.sendDate && errors.sendDate && "border-destructive",
-                  )}
+                  className={cn(touched.sendDate && errors.sendDate && "border-destructive")}
                 />
                 {touched.sendDate && errors.sendDate && (
                   <p className="text-xs text-destructive">{errors.sendDate}</p>
@@ -383,10 +463,168 @@ const TemplateDialog = ({ template, onSaved, trigger, statusItems, frequencyItem
   );
 };
 
+// ─── GroupDialog ──────────────────────────────────────────────────────────────
+
+interface Contact {
+  _id: string;
+  name: string;
+  email: string;
+}
+
+interface GroupDialogProps {
+  group?: EmailGroup;
+  onSaved: (g: EmailGroup) => void;
+  trigger: React.ReactNode;
+}
+
+const GroupDialog = ({ group, onSaved, trigger }: GroupDialogProps) => {
+  const [open, setOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [loadingContacts, setLoadingContacts] = useState(false);
+  const [search, setSearch] = useState("");
+  const [name, setName] = useState(group?.name ?? "");
+  const [description, setDescription] = useState(group?.description ?? "");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(
+    new Set(group?.contactIds ?? []),
+  );
+  const [nameError, setNameError] = useState("");
+
+  const handleOpen = (v: boolean) => {
+    setOpen(v);
+    if (v) {
+      setName(group?.name ?? "");
+      setDescription(group?.description ?? "");
+      setSelectedIds(new Set(group?.contactIds ?? []));
+      setNameError("");
+      setSearch("");
+      setLoadingContacts(true);
+      apiContacts.getByParams!({ limit: 500 }, new AbortController().signal, "", true).then((res) => {
+        if (res?.data) setContacts(res.data);
+        setLoadingContacts(false);
+      });
+    }
+  };
+
+  const toggle = (id: string) =>
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+
+  const handleSubmit = async () => {
+    if (!name.trim()) { setNameError("Name is required"); return; }
+    setSaving(true);
+    const payload = { name: name.trim(), description: description.trim(), contactIds: [...selectedIds] };
+    const res = group?._id
+      ? await apiEmailGroups.putById!(group._id, payload, new AbortController().signal, "", true)
+      : await apiEmailGroups.post!(payload, "", true);
+    setSaving(false);
+    if (res?._id) {
+      toast.success(group?._id ? "Group updated" : "Group created");
+      onSaved(res as EmailGroup);
+      setOpen(false);
+    } else {
+      toast.error(res?.message ?? "Failed to save group");
+    }
+  };
+
+  const filtered = contacts.filter(
+    (c) =>
+      c.name.toLowerCase().includes(search.toLowerCase()) ||
+      c.email.toLowerCase().includes(search.toLowerCase()),
+  );
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpen}>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>{group ? "Edit Group" : "New Email Group"}</DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4 pt-1">
+          {/* Name */}
+          <div className="space-y-1">
+            <Label htmlFor="gname">Group Name</Label>
+            <Input
+              id="gname"
+              placeholder="ex: Qualified Leads"
+              value={name}
+              onChange={(e) => { setName(e.target.value); setNameError(""); }}
+              className={cn(nameError && "border-destructive")}
+            />
+            {nameError && <p className="text-xs text-destructive">{nameError}</p>}
+          </div>
+
+          {/* Description */}
+          <div className="space-y-1">
+            <Label htmlFor="gdesc">Description <span className="text-muted-foreground font-normal">(optional)</span></Label>
+            <Textarea
+              id="gdesc"
+              placeholder="What contacts does this group target?"
+              rows={2}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+
+          {/* Contact picker */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label>Contacts</Label>
+              <span className="text-xs text-muted-foreground">{selectedIds.size} selected</span>
+            </div>
+            <Input
+              placeholder="Search contacts…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="h-8 text-sm"
+            />
+            <div className="border rounded-md overflow-y-auto max-h-52">
+              {loadingContacts ? (
+                <p className="text-xs text-muted-foreground text-center py-6">Loading contacts…</p>
+              ) : filtered.length === 0 ? (
+                <p className="text-xs text-muted-foreground text-center py-6">No contacts found</p>
+              ) : (
+                filtered.map((c) => (
+                  <label
+                    key={c._id}
+                    className="flex items-center gap-3 px-3 py-2 hover:bg-muted/50 cursor-pointer border-b last:border-0"
+                  >
+                    <Checkbox
+                      checked={selectedIds.has(c._id)}
+                      onCheckedChange={() => toggle(c._id)}
+                    />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium truncate">{c.name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{c.email}</p>
+                    </div>
+                  </label>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex justify-end gap-2 pt-1">
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button onClick={handleSubmit} loading={saving}>
+              {group ? "Save Changes" : "Create Group"}
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 
 const Emails = () => {
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
+  const [groups, setGroups] = useState<EmailGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { emailTemplateStatuses, emailTemplateFrequencies } = useEnums();
 
@@ -395,8 +633,12 @@ const Emails = () => {
 
   useEffect(() => {
     const controller = new AbortController();
-    apiEmailTemplates.getAll!(controller.signal, true).then((res) => {
-      if (Array.isArray(res)) setTemplates(res);
+    Promise.all([
+      apiEmailTemplates.getAll!(controller.signal, true),
+      apiEmailGroups.getAll!(controller.signal, true),
+    ]).then(([tmplRes, groupRes]) => {
+      if (Array.isArray(tmplRes)) setTemplates(tmplRes);
+      if (Array.isArray(groupRes)) setGroups(groupRes);
       setIsLoading(false);
     });
     return () => controller.abort();
@@ -422,6 +664,34 @@ const Emails = () => {
       } else {
         toast.error(res?.message ?? "Failed to delete template");
       }
+    });
+  };
+
+  const handleGroupSaved = (updated: EmailGroup) => {
+    setGroups((prev) => {
+      const idx = prev.findIndex((g) => g._id === updated._id);
+      if (idx >= 0) {
+        const next = [...prev];
+        next[idx] = updated;
+        return next;
+      }
+      return [updated, ...prev];
+    });
+  };
+
+  const handleGroupDelete = (_id: string, name: string) => {
+    confirmToast({
+      title: `Delete "${name}"?`,
+      description: "Templates using this group will lose their recipient.",
+      onConfirm: async () => {
+        const res = await apiEmailGroups.remove!(_id, "", true);
+        if (res?.message === "Email group deleted" || res?._id || !res?.error) {
+          setGroups((prev) => prev.filter((g) => g._id !== _id));
+          toast.success("Group deleted");
+        } else {
+          toast.error(res?.message ?? "Failed to delete group");
+        }
+      },
     });
   };
 
@@ -501,6 +771,7 @@ const Emails = () => {
                 onSaved={handleSaved}
                 statusItems={statusItems}
                 frequencyItems={frequencyItems}
+                groups={groups}
                 trigger={
                   <Button variant="ghost" size="icon" className="h-7 w-7">
                     <Pencil className="h-3.5 w-3.5" />
@@ -522,59 +793,174 @@ const Emails = () => {
     },
   ];
 
+  const [tab, setTab] = useState<"templates" | "groups">("templates");
+
   return (
     <section className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold">Email Templates</h1>
+          <h1 className="text-2xl font-bold">Emails</h1>
           <p className="text-sm text-muted-foreground">
-            Create and schedule recurring or one-time emails
+            Manage templates and contact groups
           </p>
         </div>
-        <TemplateDialog
-          onSaved={handleSaved}
-          statusItems={statusItems}
-          frequencyItems={frequencyItems}
-          trigger={
-            <Button>
-              <Plus className="h-4 w-4" />
-              New Template
-            </Button>
-          }
-        />
+        <div className="flex items-center gap-2">
+          {/* Tab switcher */}
+          <div className="flex rounded-lg border overflow-hidden text-sm">
+            <button
+              onClick={() => setTab("templates")}
+              className={cn(
+                "px-4 py-1.5 font-medium transition-colors",
+                tab === "templates"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-background text-muted-foreground hover:bg-muted",
+              )}
+            >
+              <Mail className="h-3.5 w-3.5 inline mr-1.5 -mt-px" />
+              Templates
+            </button>
+            <button
+              onClick={() => setTab("groups")}
+              className={cn(
+                "px-4 py-1.5 font-medium transition-colors",
+                tab === "groups"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-background text-muted-foreground hover:bg-muted",
+              )}
+            >
+              <Users className="h-3.5 w-3.5 inline mr-1.5 -mt-px" />
+              Groups
+            </button>
+          </div>
+
+          {/* Context action */}
+          {tab === "templates" ? (
+            <TemplateDialog
+              onSaved={handleSaved}
+              statusItems={statusItems}
+              frequencyItems={frequencyItems}
+              groups={groups}
+              trigger={
+                <Button>
+                  <Plus className="h-4 w-4" /> New Template
+                </Button>
+              }
+            />
+          ) : (
+            <GroupDialog
+              onSaved={handleGroupSaved}
+              trigger={
+                <Button>
+                  <Plus className="h-4 w-4" /> New Group
+                </Button>
+              }
+            />
+          )}
+        </div>
       </div>
 
-      {/* Summary cards — driven from backend enums */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4 pt-4">
-            <p className="text-xs text-muted-foreground">Total</p>
-            <p className="text-2xl font-bold mt-1">{templates.length}</p>
-          </CardContent>
-        </Card>
-        {emailTemplateStatuses.map((status) => (
-          <Card key={status}>
-            <CardContent className="p-4 pt-4">
-              <p className="text-xs text-muted-foreground capitalize">{status}</p>
-              <p className="text-2xl font-bold mt-1">
-                {templates.filter((t) => t.status === status).length}
+      {/* ── Templates tab ─────────────────────────────────────────────────── */}
+      {tab === "templates" && (
+        <>
+          {/* Summary cards */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <StatCard label="Total" value={templates.length} />
+            {emailTemplateStatuses.map((status) => (
+              <StatCard
+                key={status}
+                label={status.charAt(0).toUpperCase() + status.slice(1)}
+                value={templates.filter((t) => t.status === status).length}
+              />
+            ))}
+          </div>
+
+          {isLoading ? (
+            <TableSkeleton rows={6} cols={7} />
+          ) : (
+            <CustomTable
+              columns={columns}
+              data={templates}
+              title="Templates"
+              downloadName="email-templates"
+            />
+          )}
+        </>
+      )}
+
+      {/* ── Groups tab ────────────────────────────────────────────────────── */}
+      {tab === "groups" && (
+        <>
+          {isLoading ? (
+            <TableSkeleton rows={3} cols={4} />
+          ) : groups.length === 0 ? (
+            <div className="rounded-lg border bg-card p-10 flex flex-col items-center gap-3 text-center">
+              <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+                <Users className="h-6 w-6 text-muted-foreground/50" />
+              </div>
+              <p className="font-medium">No groups yet</p>
+              <p className="text-sm text-muted-foreground">
+                Create a group to target specific contacts in your templates.
               </p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Table */}
-      {isLoading ? (
-        <TableSkeleton rows={6} cols={7} />
-      ) : (
-        <CustomTable
-          columns={columns}
-          data={templates}
-          title="Templates"
-          downloadName="email-templates"
-        />
+              <GroupDialog
+                onSaved={handleGroupSaved}
+                trigger={
+                  <Button size="sm">
+                    <Plus className="h-4 w-4" /> Create First Group
+                  </Button>
+                }
+              />
+            </div>
+          ) : (
+            <div className="rounded-lg border bg-card shadow-sm overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-muted/50">
+                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Name</th>
+                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Description</th>
+                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Contacts</th>
+                    <th className="px-4 py-3 text-left font-medium text-muted-foreground">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {groups.map((g) => (
+                    <tr key={g._id} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
+                      <td className="px-4 py-3 font-medium">{g.name}</td>
+                      <td className="px-4 py-3 text-muted-foreground">{g.description || "—"}</td>
+                      <td className="px-4 py-3">
+                        <span className="inline-flex items-center gap-1 text-xs bg-muted px-2 py-0.5 rounded-full">
+                          <Users className="h-3 w-3" />
+                          {g.contactIds.length}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-1">
+                          <GroupDialog
+                            group={g}
+                            onSaved={handleGroupSaved}
+                            trigger={
+                              <Button variant="ghost" size="icon" className="h-7 w-7">
+                                <Pencil className="h-3.5 w-3.5" />
+                              </Button>
+                            }
+                          />
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-destructive hover:text-destructive"
+                            onClick={() => handleGroupDelete(g._id, g.name)}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
       )}
     </section>
   );

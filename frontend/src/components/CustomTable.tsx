@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,20 +35,31 @@ import {
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 
-export interface TableColumn<TData = Record<string, any>> {
+export interface TableColumn {
   name: string;
   label: string;
   options?: {
     customBodyRender?: (value: any, rowIndex?: number) => React.ReactNode;
+    sortable?: boolean;
   };
 }
 
+export interface ServerSideProps {
+  total: number;
+  page: number;       // 1-indexed
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onSearchChange: (search: string) => void;
+  loading?: boolean;
+}
+
 interface CustomTableProps<TData extends Record<string, any> = Record<string, any>> {
-  columns: TableColumn<TData>[];
+  columns: TableColumn[];
   data: TData[];
   title?: string;
   downloadName?: string;
   pageSize?: number;
+  serverSide?: ServerSideProps;
 }
 
 const CustomTable = <TData extends Record<string, any>>({
@@ -57,12 +68,21 @@ const CustomTable = <TData extends Record<string, any>>({
   title = "Table",
   downloadName = "file",
   pageSize = 10,
+  serverSide,
 }: CustomTableProps<TData>) => {
   const [globalFilter, setGlobalFilter] = useState("");
+  const [serverSearch, setServerSearch] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [showColumnFilters, setShowColumnFilters] = useState(false);
+
+  // Debounce server-side search
+  React.useEffect(() => {
+    if (!serverSide) return;
+    const t = setTimeout(() => serverSide.onSearchChange(serverSearch), 350);
+    return () => clearTimeout(t);
+  }, [serverSearch]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const columns = useMemo<ColumnDef<TData>[]>(
     () =>
@@ -70,7 +90,7 @@ const CustomTable = <TData extends Record<string, any>>({
         id: col.name,
         accessorKey: col.name,
         header: col.label,
-        enableSorting: !col.options?.customBodyRender,
+        enableSorting: col.options?.sortable ?? !col.options?.customBodyRender,
         enableColumnFilter: !col.options?.customBodyRender,
         cell: col.options?.customBodyRender
           ? ({ getValue, row }) => col.options!.customBodyRender!(getValue(), row.index)
@@ -82,16 +102,25 @@ const CustomTable = <TData extends Record<string, any>>({
   const table = useReactTable({
     data,
     columns,
-    state: { sorting, globalFilter, columnFilters, columnVisibility },
+    state: {
+      sorting,
+      globalFilter: serverSide ? "" : globalFilter,
+      columnFilters: serverSide ? [] : columnFilters,
+      columnVisibility,
+    },
     onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
-    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: serverSide ? undefined : setGlobalFilter,
+    onColumnFiltersChange: serverSide ? undefined : setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    initialState: { pagination: { pageSize } },
+    ...(serverSide
+      ? {}
+      : {
+          getFilteredRowModel: getFilteredRowModel(),
+          getPaginationRowModel: getPaginationRowModel(),
+          initialState: { pagination: { pageSize } },
+        }),
   });
 
   const activeFilterCount = columnFilters.length;
@@ -112,10 +141,16 @@ const CustomTable = <TData extends Record<string, any>>({
     URL.revokeObjectURL(url);
   };
 
+  // Pagination display values
+  const totalRows = serverSide ? serverSide.total : table.getFilteredRowModel().rows.length;
   const { pageIndex, pageSize: currentPageSize } = table.getState().pagination;
-  const totalRows = table.getFilteredRowModel().rows.length;
-  const from = totalRows === 0 ? 0 : pageIndex * currentPageSize + 1;
-  const to = Math.min((pageIndex + 1) * currentPageSize, totalRows);
+  const displayPage = serverSide ? serverSide.page : pageIndex + 1;
+  const displayPageSize = serverSide ? serverSide.pageSize : currentPageSize;
+  const displayPageCount = serverSide
+    ? Math.ceil(serverSide.total / serverSide.pageSize) || 1
+    : table.getPageCount() || 1;
+  const from = totalRows === 0 ? 0 : (displayPage - 1) * displayPageSize + 1;
+  const to = Math.min(displayPage * displayPageSize, totalRows);
 
   return (
     <div className="w-full rounded-lg border bg-card shadow-sm">
@@ -123,32 +158,44 @@ const CustomTable = <TData extends Record<string, any>>({
       <div className="flex items-center justify-between p-4 border-b gap-3 flex-wrap">
         <h2 className="text-base font-semibold">{title}</h2>
         <div className="flex items-center gap-2 flex-wrap justify-end">
-          {/* Global search */}
+          {/* Global / server search */}
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
             <Input
               placeholder="Search..."
-              value={globalFilter}
-              onChange={(e) => setGlobalFilter(e.target.value)}
-              className="pl-8 h-8 text-xs w-48"
+              value={serverSide ? serverSearch : globalFilter}
+              onChange={(e) =>
+                serverSide ? setServerSearch(e.target.value) : setGlobalFilter(e.target.value)
+              }
+              className="pl-8 pr-7 h-8 w-56 text-sm"
             />
+            {(serverSide ? serverSearch : globalFilter) && (
+              <button
+                onClick={() => serverSide ? setServerSearch("") : setGlobalFilter("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
           </div>
 
-          {/* Toggle column filters */}
-          <Button
-            variant={showColumnFilters ? "secondary" : "outline"}
-            size="sm"
-            onClick={() => setShowColumnFilters((v) => !v)}
-            className="h-8 gap-1.5"
-          >
-            <Filter className="h-3.5 w-3.5" />
-            Filter
-            {activeFilterCount > 0 && (
-              <span className="ml-0.5 rounded-full bg-primary text-primary-foreground text-[10px] font-semibold w-4 h-4 flex items-center justify-center">
-                {activeFilterCount}
-              </span>
-            )}
-          </Button>
+          {/* Toggle column filters — hidden in server mode */}
+          {!serverSide && (
+            <Button
+              variant={showColumnFilters ? "secondary" : "outline"}
+              size="sm"
+              onClick={() => setShowColumnFilters((v) => !v)}
+              className="h-8 gap-1.5"
+            >
+              <Filter className="h-3.5 w-3.5" />
+              Filter
+              {activeFilterCount > 0 && (
+                <span className="ml-0.5 rounded-full bg-primary text-primary-foreground text-[10px] font-semibold w-4 h-4 flex items-center justify-center">
+                  {activeFilterCount}
+                </span>
+              )}
+            </Button>
+          )}
 
           {/* Column visibility */}
           <DropdownMenu>
@@ -292,20 +339,32 @@ const CustomTable = <TData extends Record<string, any>>({
             variant="outline"
             size="sm"
             className="h-7 w-7 p-0"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() =>
+              serverSide
+                ? serverSide.onPageChange(serverSide.page - 1)
+                : table.previousPage()
+            }
+            disabled={serverSide ? serverSide.page <= 1 : !table.getCanPreviousPage()}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
           <span className="px-2">
-            Page {pageIndex + 1} of {table.getPageCount() || 1}
+            Page {displayPage} of {displayPageCount}
           </span>
           <Button
             variant="outline"
             size="sm"
             className="h-7 w-7 p-0"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() =>
+              serverSide
+                ? serverSide.onPageChange(serverSide.page + 1)
+                : table.nextPage()
+            }
+            disabled={
+              serverSide
+                ? serverSide.page >= displayPageCount
+                : !table.getCanNextPage()
+            }
           >
             <ChevronRight className="h-4 w-4" />
           </Button>

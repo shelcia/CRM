@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import {} from "react";
 import CustomTable from "@/components/CustomTable";
+import { useListData } from "@/hooks/useListData";
 import TableSkeleton from "@/components/TableSkeleton";
 import { convertDateToDateWithoutTime } from "@/utils/calendarHelpers";
 import { Button } from "@/components/ui/button";
@@ -11,18 +12,8 @@ import usePermissions from "@/hooks/usePermissions";
 
 const Users = () => {
   const { has } = usePermissions();
-  const [data, setData] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data, isLoading, setData } = useListData<any>((signal) => apiUsers.getAll!(signal, true));
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const controller = new AbortController();
-    apiUsers.getAll!(controller.signal, true).then((res) => {
-      if (Array.isArray(res)) setData(res);
-      setIsLoading(false);
-    });
-    return () => controller.abort();
-  }, []);
 
   const handleDelete = (id: string) => {
     apiUsers.remove!(id, "", true).then((res) => {
@@ -42,7 +33,7 @@ const Users = () => {
     {
       label: "Joined",
       name: "date",
-      options: { customBodyRender: (val: string) => <span>{convertDateToDateWithoutTime(val)}</span> },
+      options: { sortable: true, customBodyRender: (val: string) => <span>{convertDateToDateWithoutTime(val)}</span> },
     },
     {
       label: "Actions",
@@ -81,22 +72,26 @@ const Users = () => {
   ];
 
   return (
-    <>
-      {has("users-edit") && (
-        <div className="flex justify-end mb-3">
+    <section className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Users</h1>
+          <p className="text-sm text-muted-foreground">Manage team members and their roles</p>
+        </div>
+        {has("users-edit") && (
           <Link to="add-user">
             <Button>
               <Plus className="h-4 w-4" /> Add User
             </Button>
           </Link>
-        </div>
-      )}
+        )}
+      </div>
       {isLoading ? (
         <TableSkeleton rows={6} cols={6} />
       ) : (
         <CustomTable columns={columns} data={data} title="Users" downloadName="users" />
       )}
-    </>
+    </section>
   );
 };
 

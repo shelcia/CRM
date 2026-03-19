@@ -16,7 +16,7 @@ const Layout = () => {
       <Topbar handleDrawerToggle={handleDrawerToggle} />
 
       {/* Desktop sidebar */}
-      <div className="hidden sm:block">
+      <div className="peer hidden sm:block">
         <Sidebar />
       </div>
 
@@ -57,7 +57,7 @@ const Layout = () => {
       </nav>
 
       {/* Main content — offset by collapsed sidebar width on desktop */}
-      <main className="pt-14 min-h-screen sm:ml-14">
+      <main className="pt-14 min-h-screen sm:ml-14 peer-hover:sm:ml-52 transition-[margin-left] duration-200 ease-in-out">
         <div className="p-6">
           <Outlet />
         </div>

@@ -10,11 +10,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { apiTickets } from "@/services/models/ticketsModel";
 import { useEnums } from "@/hooks/useEnums";
 import { toLabelItems } from "@/utils/enumLabel";
+import useUsers from "@/hooks/useUsers";
 
 const AddTicket = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const { ticketStatuses, ticketPriorities } = useEnums();
+  const { ticketStatuses, ticketPriorities, ticketCategories } = useEnums();
+  const { userItems } = useUsers();
 
   const { errors, values, handleChange, handleSubmit, touched, resetForm } = useFormik({
     initialValues: {
@@ -131,14 +133,7 @@ const AddTicket = () => {
               handleChange={handleChange}
               touched={touched}
               errors={errors}
-              labelItms={[
-                { val: "technical", label: "Technical" },
-                { val: "billing", label: "Billing" },
-                { val: "general", label: "General" },
-                { val: "featureRequest", label: "Feature Request" },
-                { val: "bug", label: "Bug" },
-                { val: "other", label: "Other" },
-              ]}
+              labelItms={toLabelItems(ticketCategories)}
             />
             <CustomSelectField
               label="Priority"
@@ -160,14 +155,14 @@ const AddTicket = () => {
               errors={errors}
               labelItms={toLabelItems(ticketStatuses)}
             />
-            <CustomTextField
+            <CustomSelectField
               label="Assigned To"
               name="assignedTo"
-              placeholder="ex: Alice"
               values={values}
               handleChange={handleChange}
               touched={touched}
               errors={errors}
+              labelItms={[{ val: "", label: "Unassigned" }, ...userItems]}
             />
           </div>
         </CardContent>

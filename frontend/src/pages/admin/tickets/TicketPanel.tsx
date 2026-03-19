@@ -1,19 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { StatusBadge } from "@/components/StatusBadge";
-import { PriorityIndicator } from "@/components/PriorityIndicator";
-import { apiTickets } from "@/services/models/ticketsModel";
-import { useEnums } from "@/hooks/useEnums";
-import { toLabelItems } from "@/utils/enumLabel";
-import { convertDateToDateWithoutTime } from "@/utils/calendarHelpers";
-import { Pencil, Save, X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import toast from "react-hot-toast";
-import usePermissions from "@/hooks/usePermissions";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { apiTickets } from "@/services/models/ticketsModel";
+import { useEnums } from "@/hooks/useEnums";
+import useUsers from "@/hooks/useUsers";
+import { toLabelItems } from "@/utils/enumLabel";
+import toast from "react-hot-toast";
 
 interface Ticket {
   _id: string;
@@ -36,32 +32,16 @@ interface TicketPanelProps {
   onDelete: (id: string) => void;
 }
 
-const FIELDS: { key: keyof Ticket; label: string }[] = [
-  { key: "contact", label: "Contact" },
-  { key: "email", label: "Email" },
-  { key: "category", label: "Category" },
-  { key: "assignedTo", label: "Assigned To" },
-  { key: "description", label: "Description" },
-];
-
-const TicketPanel = ({ ticket, open, onClose, onUpdate, onDelete }: TicketPanelProps) => {
-  const { has } = usePermissions();
-  const { ticketStatuses, ticketPriorities } = useEnums();
-  const [editing, setEditing] = useState(false);
+const TicketPanel = ({ ticket, open, onClose, onUpdate }: TicketPanelProps) => {
+  const { ticketStatuses, ticketPriorities, ticketCategories } = useEnums();
+  const { userItems } = useUsers();
   const [form, setForm] = useState<Partial<Ticket>>({});
   const [saving, setSaving] = useState(false);
-  const [deleting, setDeleting] = useState(false);
 
-  const startEdit = () => {
-    if (!ticket) return;
+  useEffect(() => {
+    if (!ticket || !open) return;
     setForm({ ...ticket });
-    setEditing(true);
-  };
-
-  const cancelEdit = () => {
-    setEditing(false);
-    setForm({});
-  };
+  }, [ticket?._id, open]);
 
   const handleSave = async () => {
     if (!ticket) return;
@@ -71,20 +51,10 @@ const TicketPanel = ({ ticket, open, onClose, onUpdate, onDelete }: TicketPanelP
     if (res?._id) {
       toast.success("Ticket updated");
       onUpdate(res as Ticket);
-      setEditing(false);
+      onClose();
     } else {
       toast.error(res?.message ?? "Failed to update ticket");
     }
-  };
-
-  const handleDelete = async () => {
-    if (!ticket || !confirm(`Delete "${ticket.title}"? This cannot be undone.`)) return;
-    setDeleting(true);
-    await apiTickets.remove!(ticket._id, "", true);
-    setDeleting(false);
-    toast.success("Ticket deleted");
-    onDelete(ticket._id);
-    onClose();
   };
 
   const set = (key: keyof Ticket, value: string) =>
@@ -94,107 +64,123 @@ const TicketPanel = ({ ticket, open, onClose, onUpdate, onDelete }: TicketPanelP
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent title={ticket.title}>
-        {/* Header */}
-        <div className="px-5 pt-5 pb-4 border-b">
-          <div className="flex items-start justify-between pr-6 gap-2">
-            <h2 className="text-base font-semibold leading-tight">{ticket.title}</h2>
-            <div className="flex items-center gap-1 shrink-0">
-              {editing ? (
-                <>
-                  <Button size="icon-sm" variant="ghost" onClick={cancelEdit}>
-                    <X className="h-3.5 w-3.5" />
-                  </Button>
-                  <Button size="sm" onClick={handleSave} loading={saving}>
-                    <Save className="h-3.5 w-3.5 mr-1" /> Save
-                  </Button>
-                </>
-              ) : (
-                <>
-                  {has("tickets-edit") && (
-                    <Button size="icon-sm" variant="ghost" onClick={startEdit}>
-                      <Pencil className="h-3.5 w-3.5" />
-                    </Button>
-                  )}
-                  {has("tickets-delete") && (
-                    <Button
-                      size="icon-sm"
-                      variant="ghost"
-                      onClick={handleDelete}
-                      disabled={deleting}
-                      className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                    >
-                      <X className="h-3.5 w-3.5" />
-                    </Button>
-                  )}
-                </>
-              )}
+      <SheetContent title={ticket.title} className="flex flex-col">
+        {/* ── Body ───────────────────────────────────────────────────── */}
+        <div className="flex-1 overflow-y-auto px-5 py-5">
+          <div className="space-y-4">
+            {/* Title */}
+            <div className="space-y-1.5">
+              <Label className="text-xs">Title</Label>
+              <Input
+                className="text-sm"
+                value={(form.title as string) ?? ""}
+                onChange={(e) => set("title", e.target.value)}
+              />
             </div>
-          </div>
 
-          {/* Status + Priority badges */}
-          <div className="flex flex-wrap gap-2 mt-3">
-            {editing ? (
-              <>
+            {/* Status / Priority / Category */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Status</Label>
                 <Select value={form.status} onValueChange={(v) => set("status", v)}>
-                  <SelectTrigger className="h-7 text-xs w-36">
+                  <SelectTrigger className="h-8 text-xs">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {toLabelItems(ticketStatuses).map((i) => (
-                      <SelectItem key={i.val} value={i.val}>{i.label}</SelectItem>
+                      <SelectItem key={i.val} value={i.val} className="text-xs">{i.label}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Priority</Label>
                 <Select value={form.priority} onValueChange={(v) => set("priority", v)}>
-                  <SelectTrigger className="h-7 text-xs w-36">
+                  <SelectTrigger className="h-8 text-xs">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     {toLabelItems(ticketPriorities).map((i) => (
-                      <SelectItem key={i.val} value={i.val}>{i.label}</SelectItem>
+                      <SelectItem key={i.val} value={i.val} className="text-xs">{i.label}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-              </>
-            ) : (
-              <>
-                <StatusBadge value={ticket.status} />
-                <PriorityIndicator value={ticket.priority} />
-              </>
-            )}
-          </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Category</Label>
+                <Select value={form.category ?? ""} onValueChange={(v) => set("category", v)}>
+                  <SelectTrigger className="h-8 text-xs">
+                    <SelectValue placeholder="—" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {toLabelItems(ticketCategories).map((i) => (
+                      <SelectItem key={i.val} value={i.val} className="text-xs">{i.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
 
-          <p className="text-xs text-muted-foreground mt-2">
-            Created {convertDateToDateWithoutTime(ticket.createdAt)}
-          </p>
+            {/* Contact / Email */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label className="text-xs">Contact</Label>
+                <Input
+                  className="h-8 text-sm"
+                  value={(form.contact as string) ?? ""}
+                  onChange={(e) => set("contact", e.target.value)}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label className="text-xs">Email</Label>
+                <Input
+                  className="h-8 text-sm"
+                  value={(form.email as string) ?? ""}
+                  onChange={(e) => set("email", e.target.value)}
+                />
+              </div>
+            </div>
+
+            {/* Assigned To */}
+            <div className="space-y-1.5">
+              <Label className="text-xs">Assigned To</Label>
+              <Select
+                value={form.assignedTo || "__none__"}
+                onValueChange={(v) => set("assignedTo", v === "__none__" ? "" : v)}
+              >
+                <SelectTrigger className="h-8 text-xs">
+                  <SelectValue placeholder="Unassigned" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">Unassigned</SelectItem>
+                  {userItems.map((u) => (
+                    <SelectItem key={u.val} value={u.val}>{u.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Description */}
+            <div className="space-y-1.5">
+              <Label className="text-xs">Description</Label>
+              <Textarea
+                rows={4}
+                className="text-sm resize-none"
+                value={(form.description as string) ?? ""}
+                onChange={(e) => set("description", e.target.value)}
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Detail rows */}
-        <div className="px-5 py-4 space-y-4">
-          {FIELDS.map(({ key, label }) => (
-            <div key={key}>
-              <p className="text-xs font-medium text-muted-foreground mb-1">{label}</p>
-              {editing && key !== "createdAt" ? (
-                key === "description" ? (
-                  <Textarea
-                    rows={3}
-                    value={(form[key] as string) ?? ""}
-                    onChange={(e) => set(key, e.target.value)}
-                  />
-                ) : (
-                  <Input
-                    value={(form[key] as string) ?? ""}
-                    onChange={(e) => set(key, e.target.value)}
-                  />
-                )
-              ) : (
-                <p className={cn("text-sm", !ticket[key] && "text-muted-foreground italic")}>
-                  {(ticket[key] as string) || "—"}
-                </p>
-              )}
-            </div>
-          ))}
+        {/* ── Footer ─────────────────────────────────────────────────── */}
+        <div className="px-5 py-4 border-t shrink-0 flex items-center justify-end gap-2">
+          <Button variant="outline" size="sm" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button size="sm" onClick={handleSave} loading={saving}>
+            Save Changes
+          </Button>
         </div>
       </SheetContent>
     </Sheet>

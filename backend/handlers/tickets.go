@@ -3,6 +3,8 @@ package handlers
 import (
 	"context"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 
 	"tinycrm/db"
@@ -12,13 +14,40 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func GetTickets(c *gin.Context) {
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
+	search := strings.TrimSpace(c.Query("search"))
+
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 || limit > 200 {
+		limit = 50
+	}
+
+	filter := bson.M{}
+	if search != "" {
+		filter["$or"] = bson.A{
+			bson.M{"title": bson.M{"$regex": search, "$options": "i"}},
+			bson.M{"contact": bson.M{"$regex": search, "$options": "i"}},
+		}
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	cursor, err := db.Collection("tickets").Find(ctx, bson.M{})
+	total, _ := db.Collection("tickets").CountDocuments(ctx, filter)
+
+	opts := options.Find().
+		SetSkip(int64((page-1)*limit)).
+		SetLimit(int64(limit)).
+		SetSort(bson.D{{Key: "createdAt", Value: -1}})
+
+	cursor, err := db.Collection("tickets").Find(ctx, filter, opts)
 	if err != nil {
 		utils.Err(c, http.StatusInternalServerError, "Failed to fetch tickets")
 		return
@@ -31,7 +60,12 @@ func GetTickets(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, tickets)
+	c.JSON(http.StatusOK, gin.H{
+		"data":  tickets,
+		"total": total,
+		"page":  page,
+		"limit": limit,
+	})
 }
 
 func GetTicket(c *gin.Context) {

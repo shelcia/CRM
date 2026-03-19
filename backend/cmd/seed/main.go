@@ -28,7 +28,7 @@ func main() {
 	defer cancel()
 
 	// ── Wipe all collections ──────────────────────────────────────────────────
-	collections := []string{"companies", "users", "contacts", "tickets", "projects", "columns", "todos", "contact_notes", "email_templates"}
+	collections := []string{"companies", "users", "contacts", "tickets", "projects", "columns", "todos", "contact_notes", "email_templates", "deals", "email_groups"}
 	for _, name := range collections {
 		if _, err := db.Collection(name).DeleteMany(ctx, bson.M{}); err != nil {
 			log.Fatalf("Failed to clear %s: %v", name, err)
@@ -112,39 +112,46 @@ func main() {
 	mustMany(db.Collection("users").InsertMany(ctx, users))
 
 	// ── Contacts ──────────────────────────────────────────────────────────────
+	tomID := primitive.NewObjectID()
+	janeID := primitive.NewObjectID()
+	bruceID := primitive.NewObjectID()
+	dianaID := primitive.NewObjectID()
+	peterID := primitive.NewObjectID()
+	natashaID := primitive.NewObjectID()
+
 	contacts := []interface{}{
 		models.Contact{
-			ID: primitive.NewObjectID(), Name: "Tom Cruise", Email: "tom@globex.com",
+			ID: tomID, Name: "Tom Cruise", Email: "tom@globex.com",
 			Number: "+1 555 100 0001", Company: "Globex", JobTitle: "CEO",
 			Priority: "high", Status: "qualified", Probability: "0.8",
 			LastActivity: now.AddDate(0, 0, -2), CreatedAt: now.AddDate(0, -1, 0),
 		},
 		models.Contact{
-			ID: primitive.NewObjectID(), Name: "Jane Foster", Email: "jane@initech.com",
+			ID: janeID, Name: "Jane Foster", Email: "jane@initech.com",
 			Number: "+1 555 100 0002", Company: "Initech", JobTitle: "VP Engineering",
 			Priority: "medium", Status: "new", Probability: "0.4",
 			LastActivity: now.AddDate(0, 0, -5), CreatedAt: now.AddDate(0, -2, 0),
 		},
 		models.Contact{
-			ID: primitive.NewObjectID(), Name: "Bruce Banner", Email: "bruce@umbrella.com",
+			ID: bruceID, Name: "Bruce Banner", Email: "bruce@umbrella.com",
 			Number: "+1 555 100 0003", Company: "Umbrella Corp", JobTitle: "Research Lead",
 			Priority: "high", Status: "openDeal", Probability: "0.9",
 			LastActivity: now.AddDate(0, 0, -1), CreatedAt: now.AddDate(0, -3, 0),
 		},
 		models.Contact{
-			ID: primitive.NewObjectID(), Name: "Diana Prince", Email: "diana@waynetech.com",
+			ID: dianaID, Name: "Diana Prince", Email: "diana@waynetech.com",
 			Number: "+1 555 100 0004", Company: "Wayne Tech", JobTitle: "CTO",
 			Priority: "veryHigh", Status: "connected", Probability: "0.6",
 			LastActivity: now, CreatedAt: now.AddDate(0, -1, -15),
 		},
 		models.Contact{
-			ID: primitive.NewObjectID(), Name: "Peter Parker", Email: "peter@dailybugle.com",
+			ID: peterID, Name: "Peter Parker", Email: "peter@dailybugle.com",
 			Number: "+1 555 100 0005", Company: "Daily Bugle", JobTitle: "Journalist",
 			Priority: "low", Status: "attempted", Probability: "0.2",
 			LastActivity: now.AddDate(0, 0, -10), CreatedAt: now.AddDate(0, -4, 0),
 		},
 		models.Contact{
-			ID: primitive.NewObjectID(), Name: "Natasha Romanoff", Email: "nat@shield.org",
+			ID: natashaID, Name: "Natasha Romanoff", Email: "nat@shield.org",
 			Number: "+1 555 100 0006", Company: "S.H.I.E.L.D", JobTitle: "Director",
 			Priority: "veryHigh", Status: "won", Probability: "1.0",
 			LastActivity: now.AddDate(0, 0, -3), CreatedAt: now.AddDate(0, -5, 0),
@@ -164,28 +171,28 @@ func main() {
 		models.Ticket{
 			ID: primitive.NewObjectID(), Title: "Billing invoice not generating",
 			Description: "Monthly invoice PDF is empty for accounts created after Nov 2024.",
-			Contact:     "Bruce Banner", Email: "bruce@umbrella.com", Category: "billing",
+			Contact:     "Bruce Banner", Email: "bruce@umbrella.com", Category: "support",
 			Priority: "high", Status: "inProgress", AssignedTo: "Mark Manager",
 			CreatedAt: now.AddDate(0, 0, -7), UpdatedAt: now.AddDate(0, 0, -2),
 		},
 		models.Ticket{
 			ID: primitive.NewObjectID(), Title: "Export contacts to CSV",
 			Description: "Feature request: bulk export of filtered contacts as a CSV file.",
-			Contact:     "Diana Prince", Email: "diana@waynetech.com", Category: "featureRequest",
+			Contact:     "Diana Prince", Email: "diana@waynetech.com", Category: "feature",
 			Priority: "medium", Status: "onHold", AssignedTo: "Alice Admin",
 			CreatedAt: now.AddDate(0, 0, -14), UpdatedAt: now.AddDate(0, 0, -5),
 		},
 		models.Ticket{
 			ID: primitive.NewObjectID(), Title: "Password reset email not arriving",
 			Description: "Several users report not receiving the reset email. Checked spam folders.",
-			Contact:     "Jane Foster", Email: "jane@initech.com", Category: "technical",
+			Contact:     "Jane Foster", Email: "jane@initech.com", Category: "question",
 			Priority: "high", Status: "resolved", AssignedTo: "Sam Support",
 			CreatedAt: now.AddDate(0, 0, -10), UpdatedAt: now.AddDate(0, 0, -1),
 		},
 		models.Ticket{
 			ID: primitive.NewObjectID(), Title: "Add dark mode support",
 			Description: "Customer request for dark mode across the dashboard.",
-			Contact:     "Natasha Romanoff", Email: "nat@shield.org", Category: "featureRequest",
+			Contact:     "Natasha Romanoff", Email: "nat@shield.org", Category: "feature",
 			Priority: "low", Status: "closed", AssignedTo: "Mark Manager",
 			CreatedAt: now.AddDate(0, -1, 0), UpdatedAt: now.AddDate(0, 0, -4),
 		},
@@ -334,6 +341,128 @@ func main() {
 	}
 	mustMany(db.Collection("email_templates").InsertMany(ctx, emailTemplates))
 
+	// ── Deals (linked to contacts) ────────────────────────────────────────────
+	closeIn := func(days int) *time.Time { t := now.AddDate(0, 0, days); return &t }
+
+	deals := []interface{}{
+		models.Deal{
+			ID: primitive.NewObjectID(), Title: "Globex Enterprise License",
+			ContactID: tomID.Hex(), ContactName: "Tom Cruise",
+			Value: 48000, Currency: "USD", Stage: "proposal",
+			AssignedTo: "Alice Admin", ExpectedClose: closeIn(14),
+			CreatedAt: now.AddDate(0, -1, 0), UpdatedAt: now.AddDate(0, 0, -2),
+		},
+		models.Deal{
+			ID: primitive.NewObjectID(), Title: "Globex Add-on Seats",
+			ContactID: tomID.Hex(), ContactName: "Tom Cruise",
+			Value: 8500, Currency: "USD", Stage: "negotiation",
+			AssignedTo: "Mark Manager", ExpectedClose: closeIn(7),
+			CreatedAt: now.AddDate(0, 0, -10), UpdatedAt: now.AddDate(0, 0, -1),
+		},
+		models.Deal{
+			ID: primitive.NewObjectID(), Title: "Initech Pilot Program",
+			ContactID: janeID.Hex(), ContactName: "Jane Foster",
+			Value: 12000, Currency: "USD", Stage: "lead",
+			AssignedTo: "Mark Manager", ExpectedClose: closeIn(30),
+			CreatedAt: now.AddDate(0, -2, 0), UpdatedAt: now.AddDate(0, 0, -5),
+		},
+		models.Deal{
+			ID: primitive.NewObjectID(), Title: "Umbrella Corp Research Suite",
+			ContactID: bruceID.Hex(), ContactName: "Bruce Banner",
+			Value: 75000, Currency: "USD", Stage: "negotiation",
+			AssignedTo: "Alice Admin", ExpectedClose: closeIn(10),
+			CreatedAt: now.AddDate(0, -3, 0), UpdatedAt: now.AddDate(0, 0, -1),
+		},
+		models.Deal{
+			ID: primitive.NewObjectID(), Title: "Wayne Tech Platform Deal",
+			ContactID: dianaID.Hex(), ContactName: "Diana Prince",
+			Value: 120000, Currency: "USD", Stage: "qualified",
+			AssignedTo: "Alice Admin", ExpectedClose: closeIn(45),
+			CreatedAt: now.AddDate(0, -1, -15), UpdatedAt: now,
+		},
+		models.Deal{
+			ID: primitive.NewObjectID(), Title: "Wayne Tech Pro Support",
+			ContactID: dianaID.Hex(), ContactName: "Diana Prince",
+			Value: 18000, Currency: "USD", Stage: "proposal",
+			AssignedTo: "Mark Manager", ExpectedClose: closeIn(21),
+			CreatedAt: now.AddDate(0, 0, -8), UpdatedAt: now.AddDate(0, 0, -2),
+		},
+		models.Deal{
+			ID: primitive.NewObjectID(), Title: "Daily Bugle Media Package",
+			ContactID: peterID.Hex(), ContactName: "Peter Parker",
+			Value: 3200, Currency: "USD", Stage: "lead",
+			AssignedTo: "Sam Support", ExpectedClose: closeIn(60),
+			CreatedAt: now.AddDate(0, -4, 0), UpdatedAt: now.AddDate(0, 0, -10),
+		},
+		models.Deal{
+			ID: primitive.NewObjectID(), Title: "S.H.I.E.L.D Annual Contract",
+			ContactID: natashaID.Hex(), ContactName: "Natasha Romanoff",
+			Value: 250000, Currency: "USD", Stage: "won",
+			AssignedTo: "Alice Admin", ExpectedClose: closeIn(-5),
+			CreatedAt: now.AddDate(0, -5, 0), UpdatedAt: now.AddDate(0, 0, -3),
+		},
+		models.Deal{
+			ID: primitive.NewObjectID(), Title: "S.H.I.E.L.D Security Audit",
+			ContactID: natashaID.Hex(), ContactName: "Natasha Romanoff",
+			Value: 32000, Currency: "USD", Stage: "won",
+			AssignedTo: "Mark Manager", ExpectedClose: closeIn(-15),
+			CreatedAt: now.AddDate(0, -6, 0), UpdatedAt: now.AddDate(0, -1, 0),
+		},
+		models.Deal{
+			ID: primitive.NewObjectID(), Title: "Initech Cloud Migration",
+			ContactID: janeID.Hex(), ContactName: "Jane Foster",
+			Value: 0, Currency: "USD", Stage: "lost",
+			AssignedTo: "Sam Support", ExpectedClose: closeIn(-30),
+			CreatedAt: now.AddDate(0, -3, 0), UpdatedAt: now.AddDate(0, -1, -5),
+		},
+	}
+	mustMany(db.Collection("deals").InsertMany(ctx, deals))
+
+	// ── Email Groups ──────────────────────────────────────────────────────────
+	emailGroups := []interface{}{
+		models.EmailGroup{
+			ID:          primitive.NewObjectID(),
+			Name:        "new-clients",
+			Description: "Contacts who recently signed up or onboarded",
+			ContactIDs:  []string{tomID.Hex(), janeID.Hex()},
+			CreatedAt:   now.AddDate(0, -3, 0),
+			UpdatedAt:   now.AddDate(0, -3, 0),
+		},
+		models.EmailGroup{
+			ID:          primitive.NewObjectID(),
+			Name:        "all-contacts",
+			Description: "Every contact in the CRM",
+			ContactIDs:  []string{tomID.Hex(), janeID.Hex(), bruceID.Hex(), dianaID.Hex(), peterID.Hex(), natashaID.Hex()},
+			CreatedAt:   now.AddDate(0, -5, 0),
+			UpdatedAt:   now.AddDate(0, -5, 0),
+		},
+		models.EmailGroup{
+			ID:          primitive.NewObjectID(),
+			Name:        "qualified-leads",
+			Description: "Contacts in qualified or openDeal status",
+			ContactIDs:  []string{tomID.Hex(), bruceID.Hex()},
+			CreatedAt:   now.AddDate(0, -2, 0),
+			UpdatedAt:   now.AddDate(0, -2, 0),
+		},
+		models.EmailGroup{
+			ID:          primitive.NewObjectID(),
+			Name:        "demo-attendees",
+			Description: "Contacts who attended a product demo",
+			ContactIDs:  []string{dianaID.Hex(), bruceID.Hex(), janeID.Hex()},
+			CreatedAt:   now.AddDate(0, -1, 0),
+			UpdatedAt:   now.AddDate(0, -1, 0),
+		},
+		models.EmailGroup{
+			ID:          primitive.NewObjectID(),
+			Name:        "inactive-contacts",
+			Description: "Contacts with no activity in 30+ days",
+			ContactIDs:  []string{peterID.Hex()},
+			CreatedAt:   now.AddDate(0, -4, 0),
+			UpdatedAt:   now.AddDate(0, -4, 0),
+		},
+	}
+	mustMany(db.Collection("email_groups").InsertMany(ctx, emailGroups))
+
 	fmt.Println("✓ Demo data seeded successfully")
 	fmt.Println("")
 	fmt.Println("  Company : Acme Corp")
@@ -342,6 +471,8 @@ func main() {
 	fmt.Printf("  Tickets : %d\n", len(tickets))
 	fmt.Println("  Projects: 2  (Website Redesign, CRM Onboarding)")
 	fmt.Printf("  Email Templates: %d\n", len(emailTemplates))
+	fmt.Printf("  Deals   : %d  (linked to contacts)\n", len(deals))
+	fmt.Printf("  Email Groups: %d\n", len(emailGroups))
 	fmt.Println("")
 	fmt.Println("  Password for all accounts: admin123")
 }

@@ -1,59 +1,23 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, Pencil, Trash2, Check, X, GripVertical } from "lucide-react";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { Plus } from "lucide-react";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
-import { CustomTextAreaField, CustomTextField } from "@/components/CustomInputs";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { apiProvider } from "@/services/utilities/provider";
-
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-type TodoAuthor = { name: string; image: string };
-
-type Todo = {
-  _id: string;
-  columnId: string;
-  projectId: string;
-  title: string;
-  description: string;
-  author: TodoAuthor;
-  statusColor?: string;
-  date: string;
-};
-
-type Column = {
-  _id: string;
-  name: string;
-  order: number;
-  todos: Todo[];
-};
-
-// ── Drag-and-drop helper ───────────────────────────────────────────────────────
-
-const reorder = <T,>(list: T[], from: number, to: number): T[] => {
-  const result = [...list];
-  const [removed] = result.splice(from, 1);
-  result.splice(to, 0, removed);
-  return result;
-};
-
-// ── Main board component ───────────────────────────────────────────────────────
+import { apiUsers } from "@/services/models/usersModel";
+import { type Column, type Todo, type TodoAuthor } from "./types";
+import reorder from "@/utils/reorder";
+import ColumnHeader from "./ColumnHeader";
+import TodoCard from "./TodoCard";
+import AddTodoForm from "./AddTodoForm";
+import AddColumnForm from "./AddColumnForm";
 
 const Projects = () => {
   const { id: projectId } = useParams<{ id: string }>();
   const [columns, setColumns] = useState<Column[]>([]);
+  const [users, setUsers] = useState<{ _id: string; name: string }[]>([]);
   const [addingColId, setAddingColId] = useState<string | null>(null);
   const [showAddColumn, setShowAddColumn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -61,25 +25,30 @@ const Projects = () => {
   useEffect(() => {
     if (!projectId) return;
     const controller = new AbortController();
-    apiProvider
-      .getAll(`projects/${projectId}/board`, controller.signal, true)
-      .then((res) => {
-        if (Array.isArray(res)) setColumns(res);
-        setIsLoading(false);
-      });
+    Promise.all([
+      apiProvider.getAll(`projects/${projectId}/board`, controller.signal, true),
+      apiUsers.getAll!(controller.signal, true),
+    ]).then(([boardRes, usersRes]) => {
+      if (Array.isArray(boardRes)) setColumns(boardRes);
+      if (Array.isArray(usersRes)) setUsers(usersRes);
+      setIsLoading(false);
+    });
     return () => controller.abort();
   }, [projectId]);
 
-  // ── Drag end ──────────────────────────────────────────────────────────────
+  // ── Drag and drop ─────────────────────────────────────────────────────────
 
   const onDragEnd = (result: any) => {
-    const { source, destination } = result;
+    const { source, destination, type } = result;
     if (!destination) return;
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
-    )
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+
+    if (type === "COLUMN") {
+      const newColumns = reorder(columns, source.index, destination.index);
+      setColumns(newColumns);
+      apiProvider.put("projects", { columnIds: newColumns.map((c) => c._id) }, `${projectId}/columns/reorder`, true);
       return;
+    }
 
     const srcColIdx = columns.findIndex((c) => c._id === source.droppableId);
     const dstColIdx = columns.findIndex((c) => c._id === destination.droppableId);
@@ -91,9 +60,7 @@ const Projects = () => {
 
     if (source.droppableId === destination.droppableId) {
       const newTodos = reorder(srcCol.todos, source.index, destination.index);
-      updatedColumns = columns.map((c) =>
-        c._id === srcCol._id ? { ...c, todos: newTodos } : c,
-      );
+      updatedColumns = columns.map((c) => (c._id === srcCol._id ? { ...c, todos: newTodos } : c));
       movedTodo = newTodos[destination.index];
     } else {
       const srcTodos = [...srcCol.todos];
@@ -106,7 +73,6 @@ const Projects = () => {
         if (c._id === dstCol._id) return { ...c, todos: dstTodos };
         return c;
       });
-
       apiProvider.put("todos", { columnId: dstCol._id }, movedTodo._id, true);
     }
 
@@ -116,67 +82,64 @@ const Projects = () => {
   // ── Column CRUD ───────────────────────────────────────────────────────────
 
   const handleAddColumn = (name: string) => {
-    apiProvider
-      .post("projects", { name }, `${projectId}/columns`, true)
-      .then((res) => {
-        if (res?._id) {
-          setColumns((prev) => [...prev, { ...res, todos: [] }]);
-          setShowAddColumn(false);
-        }
-      });
+    apiProvider.post("projects", { name }, `${projectId}/columns`, true).then((res) => {
+      if (res?._id) {
+        setColumns((prev) => [...prev, { ...res, todos: [] }]);
+        setShowAddColumn(false);
+      }
+    });
   };
 
   const handleRenameColumn = (colId: string, name: string) => {
-    apiProvider
-      .put("projects", { name }, `${projectId}/columns/${colId}`, true)
-      .then(() => {
-        setColumns((prev) =>
-          prev.map((c) => (c._id === colId ? { ...c, name } : c)),
-        );
-      });
+    apiProvider.put("projects", { name }, `${projectId}/columns/${colId}`, true).then(() => {
+      setColumns((prev) => prev.map((c) => (c._id === colId ? { ...c, name } : c)));
+    });
   };
 
   const handleDeleteColumn = (colId: string) => {
-    apiProvider
-      .remove("projects", colId, `${projectId}/columns`, true)
-      .then(() => {
-        setColumns((prev) => prev.filter((c) => c._id !== colId));
-      });
+    apiProvider.remove("projects", colId, `${projectId}/columns`, true).then(() => {
+      setColumns((prev) => prev.filter((c) => c._id !== colId));
+    });
   };
 
   // ── Todo CRUD ─────────────────────────────────────────────────────────────
 
-  const handleAddTodo = (
-    colId: string,
-    todo: Omit<Todo, "_id" | "date" | "projectId" | "columnId">,
-  ) => {
-    apiProvider
-      .post("projects", { ...todo, columnId: colId }, `${projectId}/todos`, true)
-      .then((res) => {
-        if (res?._id) {
-          setColumns((prev) =>
-            prev.map((c) =>
-              c._id === colId ? { ...c, todos: [...c.todos, res] } : c,
-            ),
-          );
-          setAddingColId(null);
-        }
-      });
+  const handleAddTodo = (colId: string, todo: Omit<Todo, "_id" | "date" | "projectId" | "columnId">) => {
+    apiProvider.post("projects", { ...todo, columnId: colId }, `${projectId}/todos`, true).then((res) => {
+      if (res?._id) {
+        setColumns((prev) => prev.map((c) => (c._id === colId ? { ...c, todos: [...c.todos, res] } : c)));
+        setAddingColId(null);
+      }
+    });
   };
 
   const handleDeleteTodo = (colId: string, todoId: string) => {
     apiProvider.remove("todos", todoId, "", true).then(() => {
       setColumns((prev) =>
         prev.map((c) =>
+          c._id === colId ? { ...c, todos: c.todos.filter((t) => t._id !== todoId) } : c,
+        ),
+      );
+    });
+  };
+
+  const handleEditTodo = (
+    colId: string,
+    todoId: string,
+    updates: { title: string; description: string; author: TodoAuthor },
+  ) => {
+    apiProvider.put("todos", updates, todoId, true).then(() => {
+      setColumns((prev) =>
+        prev.map((c) =>
           c._id === colId
-            ? { ...c, todos: c.todos.filter((t) => t._id !== todoId) }
+            ? { ...c, todos: c.todos.map((t) => (t._id === todoId ? { ...t, ...updates } : t)) }
             : c,
         ),
       );
     });
   };
 
-  // ── Render ────────────────────────────────────────────────────────────────
+  // ── Loading skeleton ──────────────────────────────────────────────────────
 
   if (isLoading) {
     return (
@@ -195,71 +158,90 @@ const Projects = () => {
     );
   }
 
+  // ── Board ─────────────────────────────────────────────────────────────────
+
   return (
     <div className="flex gap-3 overflow-x-auto pb-4 items-start">
       <DragDropContext onDragEnd={onDragEnd}>
-        {columns.map((col) => (
-          <div key={col._id} className="flex-shrink-0 w-68">
-            <div className="rounded-xl bg-muted/50 border flex flex-col max-h-[calc(100vh-10rem)]">
-              <ColumnHeader
-                column={col}
-                onRename={(name) => handleRenameColumn(col._id, name)}
-                onDelete={() => handleDeleteColumn(col._id)}
-                onAddTodo={() =>
-                  setAddingColId((prev) => (prev === col._id ? null : col._id))
-                }
-              />
-
-              <Droppable droppableId={col._id}>
-                {(provided, snapshot) => (
-                  <div
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className={cn(
-                      "flex-1 overflow-y-auto p-2 space-y-2 min-h-[4rem] transition-colors",
-                      snapshot.isDraggingOver && "bg-primary/5",
-                    )}
-                  >
-                    {addingColId === col._id && (
-                      <AddTodoForm
-                        onSubmit={(todo) => handleAddTodo(col._id, todo)}
-                        onCancel={() => setAddingColId(null)}
-                      />
-                    )}
-                    {col.todos.map((todo, idx) => (
-                      <Draggable draggableId={todo._id} index={idx} key={todo._id}>
-                        {(provided, snapshot) => (
-                          <TodoCard
-                            todo={todo}
-                            provided={provided}
-                            isDragging={snapshot.isDragging}
-                            onDelete={() => handleDeleteTodo(col._id, todo._id)}
-                          />
+        <Droppable droppableId="board" direction="horizontal" type="COLUMN">
+          {(boardProvided) => (
+            <div ref={boardProvided.innerRef} {...boardProvided.droppableProps} className="flex gap-3 items-start">
+              {columns.map((col, idx) => (
+                <Draggable draggableId={col._id} index={idx} key={col._id}>
+                  {(colProvided, colSnapshot) => (
+                    <div
+                      ref={colProvided.innerRef}
+                      {...colProvided.draggableProps}
+                      className="flex-shrink-0 w-68"
+                      style={{ ...colProvided.draggableProps.style }}
+                    >
+                      <div
+                        className={cn(
+                          "rounded-xl bg-muted/50 border flex flex-col max-h-[calc(100vh-10rem)] transition-shadow",
+                          colSnapshot.isDragging && "shadow-xl ring-1 ring-primary/20",
                         )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                    {col.todos.length === 0 && addingColId !== col._id && (
-                      <p className="text-xs text-muted-foreground text-center py-4">
-                        No cards yet
-                      </p>
-                    )}
-                  </div>
-                )}
-              </Droppable>
+                      >
+                        <ColumnHeader
+                          column={col}
+                          dragHandleProps={colProvided.dragHandleProps}
+                          onRename={(name) => handleRenameColumn(col._id, name)}
+                          onDelete={() => handleDeleteColumn(col._id)}
+                          onAddTodo={() => setAddingColId((prev) => (prev === col._id ? null : col._id))}
+                        />
+
+                        <Droppable droppableId={col._id}>
+                          {(provided, snapshot) => (
+                            <div
+                              {...provided.droppableProps}
+                              ref={provided.innerRef}
+                              className={cn(
+                                "flex-1 overflow-y-auto p-2 space-y-2 min-h-[4rem] transition-colors",
+                                snapshot.isDraggingOver && "bg-primary/5",
+                              )}
+                            >
+                              {addingColId === col._id && (
+                                <AddTodoForm
+                                  onSubmit={(todo) => handleAddTodo(col._id, todo)}
+                                  onCancel={() => setAddingColId(null)}
+                                />
+                              )}
+                              {col.todos.map((todo, todoIdx) => (
+                                <Draggable draggableId={todo._id} index={todoIdx} key={todo._id}>
+                                  {(provided, snapshot) => (
+                                    <TodoCard
+                                      todo={todo}
+                                      provided={provided}
+                                      isDragging={snapshot.isDragging}
+                                      users={users}
+                                      onDelete={() => handleDeleteTodo(col._id, todo._id)}
+                                      onEdit={(updates) => handleEditTodo(col._id, todo._id, updates)}
+                                    />
+                                  )}
+                                </Draggable>
+                              ))}
+                              {provided.placeholder}
+                              {col.todos.length === 0 && addingColId !== col._id && (
+                                <p className="text-xs text-muted-foreground text-center py-4">No tasks yet</p>
+                              )}
+                            </div>
+                          )}
+                        </Droppable>
+                      </div>
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {boardProvided.placeholder}
             </div>
-          </div>
-        ))}
+          )}
+        </Droppable>
       </DragDropContext>
 
       {/* Add column */}
       <div className="flex-shrink-0 w-68">
         {showAddColumn ? (
           <div className="rounded-xl bg-muted/50 border p-3">
-            <AddColumnForm
-              onSubmit={handleAddColumn}
-              onCancel={() => setShowAddColumn(false)}
-            />
+            <AddColumnForm onSubmit={handleAddColumn} onCancel={() => setShowAddColumn(false)} />
           </div>
         ) : (
           <Button
@@ -277,297 +259,3 @@ const Projects = () => {
 };
 
 export default Projects;
-
-// ── Column header ──────────────────────────────────────────────────────────────
-
-const ColumnHeader = ({
-  column,
-  onRename,
-  onDelete,
-  onAddTodo,
-}: {
-  column: Column;
-  onRename: (name: string) => void;
-  onDelete: () => void;
-  onAddTodo: () => void;
-}) => {
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(column.name);
-
-  const save = () => {
-    if (draft.trim() && draft !== column.name) onRename(draft.trim());
-    setEditing(false);
-  };
-
-  return (
-    <div className="px-3 py-2.5 flex items-center gap-2">
-      {editing ? (
-        <>
-          <Input
-            autoFocus
-            className="flex-1 h-7 text-sm font-semibold bg-transparent border-0 border-b border-primary rounded-none shadow-none focus-visible:ring-0 px-0"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") save();
-              if (e.key === "Escape") setEditing(false);
-            }}
-          />
-          <Button size="icon-sm" variant="ghost" onClick={save} className="text-primary hover:text-primary">
-            <Check className="h-3.5 w-3.5" />
-          </Button>
-          <Button size="icon-sm" variant="ghost" onClick={() => setEditing(false)}>
-            <X className="h-3.5 w-3.5" />
-          </Button>
-        </>
-      ) : (
-        <>
-          <h5 className="flex-1 font-semibold text-sm truncate">{column.name}</h5>
-          <span className="text-xs text-muted-foreground tabular-nums bg-muted rounded-full px-1.5 py-0.5">
-            {column.todos.length}
-          </span>
-          <Button size="icon-sm" variant="ghost" onClick={onAddTodo} title="Add card">
-            <Plus className="h-4 w-4" />
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="icon-sm" variant="ghost">
-                <Pencil className="h-3.5 w-3.5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setEditing(true)}>
-                Rename
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-destructive focus:text-destructive"
-                onClick={onDelete}
-              >
-                Delete column
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </>
-      )}
-    </div>
-  );
-};
-
-// ── Author avatar ──────────────────────────────────────────────────────────────
-
-const AuthorAvatar = ({ name, image }: { name: string; image: string }) => {
-  const [imgError, setImgError] = React.useState(false);
-  const initials = name
-    ? name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2)
-    : "?";
-
-  if (image && !imgError) {
-    return (
-      <img
-        src={image}
-        alt={name}
-        className="h-5 w-5 rounded-full object-cover bg-muted shrink-0"
-        onError={() => setImgError(true)}
-      />
-    );
-  }
-
-  return (
-    <span className="h-5 w-5 rounded-full bg-primary/20 text-primary flex items-center justify-center text-[9px] font-bold shrink-0">
-      {initials}
-    </span>
-  );
-};
-
-// ── Todo card ──────────────────────────────────────────────────────────────────
-
-const TodoCard = ({
-  todo,
-  provided,
-  isDragging,
-  onDelete,
-}: {
-  todo: Todo;
-  provided: any;
-  isDragging: boolean;
-  onDelete: () => void;
-}) => (
-  <Card
-    ref={provided.innerRef}
-    {...provided.draggableProps}
-    style={{ ...provided.draggableProps.style }}
-    className={cn(
-      "p-3 group transition-shadow",
-      isDragging && "shadow-lg ring-1 ring-primary/20",
-    )}
-  >
-    {/* Drag handle + actions row */}
-    <div className="flex items-start justify-between gap-2 mb-2">
-      <div
-        {...provided.dragHandleProps}
-        className="mt-0.5 text-muted-foreground/40 hover:text-muted-foreground cursor-grab active:cursor-grabbing transition-colors"
-      >
-        <GripVertical className="h-3.5 w-3.5" />
-      </div>
-      <div className="flex items-center gap-1.5 flex-1">
-        {todo.statusColor && (
-          <span
-            className="inline-block h-2 w-2 rounded-full flex-shrink-0 mt-0.5"
-            style={{ backgroundColor: todo.statusColor }}
-          />
-        )}
-        <p className="text-sm font-medium leading-snug">{todo.title}</p>
-      </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <button className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-all flex-shrink-0">
-            <Pencil className="h-3.5 w-3.5" />
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem
-            className="text-destructive focus:text-destructive"
-            onClick={onDelete}
-          >
-            <Trash2 className="h-3.5 w-3.5 mr-2" />
-            Delete
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-
-    {/* Description */}
-    {todo.description && (
-      <p className="text-xs text-muted-foreground line-clamp-2 ml-5 mb-2">
-        {todo.description}
-      </p>
-    )}
-
-    {/* Footer */}
-    <div className="flex items-center justify-between ml-5">
-      <div className="flex items-center gap-1.5">
-        <AuthorAvatar name={todo.author.name} image={todo.author.image} />
-        <span className="text-xs text-muted-foreground truncate max-w-[80px]">
-          {todo.author.name}
-        </span>
-      </div>
-      <span className="text-xs text-muted-foreground">
-        {new Date(todo.date).toLocaleDateString(undefined, {
-          month: "short",
-          day: "numeric",
-        })}
-      </span>
-    </div>
-  </Card>
-);
-
-// ── Add todo form ──────────────────────────────────────────────────────────────
-
-const AddTodoForm = ({
-  onSubmit,
-  onCancel,
-}: {
-  onSubmit: (todo: Omit<Todo, "_id" | "date" | "projectId" | "columnId">) => void;
-  onCancel: () => void;
-}) => {
-  const { errors, values, handleChange, handleSubmit, touched } = useFormik({
-    initialValues: {
-      title: "",
-      description: "",
-      statusColor: "#4ade80",
-      author: { name: "", image: "/static/avatar/001-man.svg" },
-    },
-    validationSchema: Yup.object({
-      title: Yup.string().min(3, "Too short").required("Required"),
-    }),
-    onSubmit: (v) =>
-      onSubmit({
-        title: v.title,
-        description: v.description,
-        statusColor: v.statusColor,
-        author: v.author,
-      }),
-  });
-
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="rounded-lg border bg-card p-3 space-y-2 shadow-sm"
-    >
-      <CustomTextField
-        name="title"
-        placeholder="Card title"
-        values={values}
-        handleChange={handleChange}
-        touched={touched}
-        errors={errors}
-      />
-      <CustomTextAreaField
-        name="description"
-        placeholder="Description (optional)"
-        rows={2}
-        values={values}
-        handleChange={handleChange}
-        touched={touched}
-        errors={errors}
-      />
-      <div className="flex items-center gap-2">
-        <label className="text-xs text-muted-foreground">Color</label>
-        <input
-          type="color"
-          name="statusColor"
-          value={values.statusColor}
-          onChange={handleChange}
-          className="h-6 w-6 rounded cursor-pointer border-0 bg-transparent p-0"
-        />
-      </div>
-      <div className="flex gap-2">
-        <Button type="submit" size="sm" className="flex-1">
-          Add card
-        </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
-          Cancel
-        </Button>
-      </div>
-    </form>
-  );
-};
-
-// ── Add column form ────────────────────────────────────────────────────────────
-
-const AddColumnForm = ({
-  onSubmit,
-  onCancel,
-}: {
-  onSubmit: (name: string) => void;
-  onCancel: () => void;
-}) => {
-  const { values, errors, touched, handleChange, handleSubmit } = useFormik({
-    initialValues: { name: "" },
-    validationSchema: Yup.object({
-      name: Yup.string().min(2, "Too short").required("Required"),
-    }),
-    onSubmit: (v) => onSubmit(v.name),
-  });
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-2">
-      <CustomTextField
-        name="name"
-        placeholder="Column name"
-        values={values}
-        handleChange={handleChange}
-        touched={touched}
-        errors={errors}
-      />
-      <div className="flex gap-2">
-        <Button type="submit" size="sm" className="flex-1">
-          Add
-        </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
-          Cancel
-        </Button>
-      </div>
-    </form>
-  );
-};

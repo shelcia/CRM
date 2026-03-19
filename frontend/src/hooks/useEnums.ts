@@ -9,6 +9,7 @@ export type Enums = {
   contactPriorities: string[];
   ticketStatuses: string[];
   ticketPriorities: string[];
+  ticketCategories: string[];
   emailTemplateStatuses: string[];
   emailTemplateFrequencies: string[];
   permissions: string[];
@@ -20,6 +21,7 @@ const DEFAULT: Enums = {
   contactPriorities: [],
   ticketStatuses: [],
   ticketPriorities: [],
+  ticketCategories: [],
   emailTemplateStatuses: [],
   emailTemplateFrequencies: [],
   permissions: [],

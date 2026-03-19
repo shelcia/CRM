@@ -82,6 +82,39 @@ func UpdateColumn(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"_id": colID, "name": body.Name})
 }
 
+func ReorderColumns(c *gin.Context) {
+	projectID, err := primitive.ObjectIDFromHex(c.Param("id"))
+	if err != nil {
+		utils.Err(c, http.StatusBadRequest, "Invalid project ID")
+		return
+	}
+
+	var body struct {
+		ColumnIDs []string `json:"columnIds"`
+	}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		utils.Err(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	for i, idHex := range body.ColumnIDs {
+		colID, err := primitive.ObjectIDFromHex(idHex)
+		if err != nil {
+			continue
+		}
+		db.Collection("columns").UpdateOne(
+			ctx,
+			bson.M{"_id": colID, "projectId": projectID},
+			bson.M{"$set": bson.M{"order": i}},
+		) //nolint
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Columns reordered"})
+}
+
 func DeleteColumn(c *gin.Context) {
 	colID, err := primitive.ObjectIDFromHex(c.Param("colId"))
 	if err != nil {

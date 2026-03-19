@@ -20,10 +20,37 @@ import (
 )
 
 func GetContacts(c *gin.Context) {
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
+	search := strings.TrimSpace(c.Query("search"))
+
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 || limit > 200 {
+		limit = 50
+	}
+
+	filter := bson.M{}
+	if search != "" {
+		filter["$or"] = bson.A{
+			bson.M{"name": bson.M{"$regex": search, "$options": "i"}},
+			bson.M{"mail": bson.M{"$regex": search, "$options": "i"}},
+			bson.M{"company": bson.M{"$regex": search, "$options": "i"}},
+		}
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	cursor, err := db.Collection("contacts").Find(ctx, bson.M{})
+	total, _ := db.Collection("contacts").CountDocuments(ctx, filter)
+
+	opts := options.Find().
+		SetSkip(int64((page-1)*limit)).
+		SetLimit(int64(limit)).
+		SetSort(bson.D{{Key: "date", Value: -1}})
+
+	cursor, err := db.Collection("contacts").Find(ctx, filter, opts)
 	if err != nil {
 		utils.Err(c, http.StatusInternalServerError, "Failed to fetch contacts")
 		return
@@ -36,7 +63,12 @@ func GetContacts(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, contacts)
+	c.JSON(http.StatusOK, gin.H{
+		"data":  contacts,
+		"total": total,
+		"page":  page,
+		"limit": limit,
+	})
 }
 
 func CreateContact(c *gin.Context) {

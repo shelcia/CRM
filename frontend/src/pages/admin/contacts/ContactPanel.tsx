@@ -8,7 +8,6 @@ import {
   Activity,
   Trash2,
   Send,
-  Pencil,
   Kanban,
   Plus,
 } from "lucide-react";
@@ -358,87 +357,51 @@ const DealsTab = ({ contact }: { contact: Contact }) => {
 
 // ── Edit Tab ───────────────────────────────────────────────────────────────────
 
+type EditForm = {
+  name: string; email: string; number: string; company: string;
+  jobTitle: string; companySize: string; probability: string;
+  status: string; priority: string;
+};
+
 const EditTab = ({
-  contact,
-  onSave,
+  form,
+  set,
 }: {
-  contact: Contact;
-  onSave: (updated: Contact) => void;
+  form: EditForm;
+  set: (field: keyof EditForm, value: string) => void;
 }) => {
   const { contactStatuses, contactPriorities } = useEnums();
-  const [form, setForm] = useState({
-    name: contact.name ?? "",
-    email: contact.email ?? "",
-    number: contact.number ?? "",
-    company: contact.company ?? "",
-    jobTitle: contact.jobTitle ?? "",
-    companySize: String(contact.companySize ?? ""),
-    probability: contact.probability ?? "",
-    status: contact.status ?? "",
-    priority: contact.priority ?? "",
-  });
-  const [saving, setSaving] = useState(false);
 
-  const set = (field: string, value: string) =>
-    setForm((prev) => ({ ...prev, [field]: value }));
-
-  const handleSave = async () => {
-    if (!form.name.trim()) {
-      toast.error("Name is required");
-      return;
-    }
-    setSaving(true);
-    const res = await apiContacts.putById!(contact._id, form, new AbortController().signal, "", true);
-    setSaving(false);
-    if (res?._id) {
-      toast.success("Contact updated");
-      onSave(res as Contact);
-    } else {
-      toast.error(res?.message ?? "Failed to update contact");
-    }
-  };
-
-  const field = (label: string, key: keyof typeof form, type = "text") => (
+  const field = (label: string, key: keyof EditForm, type = "text") => (
     <div className="flex flex-col gap-1">
       <label className="text-xs font-medium text-muted-foreground">{label}</label>
       <Input type={type} value={form[key]} onChange={(e) => set(key, e.target.value)} />
     </div>
   );
 
-  const select = (label: string, key: keyof typeof form, items: { val: string; label: string }[]) => (
+  const select = (label: string, key: keyof EditForm, items: { val: string; label: string }[]) => (
     <div className="flex flex-col gap-1">
       <label className="text-xs font-medium text-muted-foreground">{label}</label>
       <Select value={form[key]} onValueChange={(v) => set(key, v)}>
-        <SelectTrigger>
-          <SelectValue />
-        </SelectTrigger>
+        <SelectTrigger><SelectValue /></SelectTrigger>
         <SelectContent>
-          {items.map((i) => (
-            <SelectItem key={i.val} value={i.val}>{i.label}</SelectItem>
-          ))}
+          {items.map((i) => <SelectItem key={i.val} value={i.val}>{i.label}</SelectItem>)}
         </SelectContent>
       </Select>
     </div>
   );
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-1 gap-3">
-        {field("Full Name", "name")}
-        {field("Email", "email", "email")}
-        {field("Phone", "number")}
-        {field("Company", "company")}
-        {field("Job Title", "jobTitle")}
-        {field("Company Size", "companySize", "number")}
-        {field("Probability (0–1)", "probability")}
-        {select("Status", "status", toLabelItems(contactStatuses))}
-        {select("Priority", "priority", toLabelItems(contactPriorities))}
-      </div>
-      <div className="flex justify-end pt-1">
-        <Button size="sm" onClick={handleSave} loading={saving}>
-          Save Changes
-        </Button>
-      </div>
+    <div className="flex flex-col gap-3">
+      {field("Full Name", "name")}
+      {field("Email", "email", "email")}
+      {field("Phone", "number")}
+      {field("Company", "company")}
+      {field("Job Title", "jobTitle")}
+      {field("Company Size", "companySize", "number")}
+      {field("Probability (0–1)", "probability")}
+      {select("Status", "status", toLabelItems(contactStatuses))}
+      {select("Priority", "priority", toLabelItems(contactPriorities))}
     </div>
   );
 };
@@ -453,67 +416,64 @@ interface ContactPanelProps {
   onClose: () => void;
   onUpdate: (updated: Contact) => void;
   onDelete: (id: string) => void;
+  defaultTab?: Tab;
 }
 
-const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete }: ContactPanelProps) => {
+const initForm = (c: Contact) => ({
+  name: c.name ?? "",
+  email: c.email ?? "",
+  number: c.number ?? "",
+  company: c.company ?? "",
+  jobTitle: c.jobTitle ?? "",
+  companySize: String(c.companySize ?? ""),
+  probability: c.probability ?? "",
+  status: c.status ?? "",
+  priority: c.priority ?? "",
+});
+
+const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete, defaultTab = "edit" }: ContactPanelProps) => {
   const { has } = usePermissions();
-  const [tab, setTab] = useState<Tab>("activity");
+  const [tab, setTab] = useState<Tab>(defaultTab);
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(false);
-  const [deleting, setDeleting] = useState(false);
+  const [form, setForm] = useState<ReturnType<typeof initForm>>(() =>
+    contact ? initForm(contact) : initForm({} as Contact),
+  );
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!contact?._id || !open) return;
     setNotes([]);
-    setTab("activity");
+    setTab(defaultTab);
+    setForm(initForm(contact));
     setLoading(true);
     const controller = new AbortController();
     apiProvider
       .getAll(`contacts/${contact._id}/notes`, controller.signal, true)
-      .then((res) => {
-        if (Array.isArray(res)) setNotes(res);
-      })
+      .then((res) => { if (Array.isArray(res)) setNotes(res); })
       .finally(() => setLoading(false));
     return () => controller.abort();
   }, [contact?._id, open]);
 
-  if (!contact) return null;
+  const set = (field: keyof ReturnType<typeof initForm>, value: string) =>
+    setForm((prev) => ({ ...prev, [field]: value }));
 
-  const handleDelete = () => {
-    toast(
-      (t) => (
-        <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium">Delete <strong>{contact.name}</strong>?</p>
-          <p className="text-xs text-muted-foreground">This cannot be undone.</p>
-          <div className="flex gap-2 justify-end">
-            <Button size="sm" variant="outline" onClick={() => toast.dismiss(t.id)}>
-              Cancel
-            </Button>
-            <Button
-              size="sm"
-              variant="destructive"
-              onClick={async () => {
-                toast.dismiss(t.id);
-                setDeleting(true);
-                const res = await apiContacts.remove!(contact._id, "", true);
-                setDeleting(false);
-                if (res?.deleted || res?._id || res?.message === undefined) {
-                  toast.success("Contact deleted");
-                  onDelete(contact._id);
-                  onClose();
-                } else {
-                  toast.error("Failed to delete contact");
-                }
-              }}
-            >
-              Delete
-            </Button>
-          </div>
-        </div>
-      ),
-      { duration: Infinity },
-    );
+  const handleSave = async () => {
+    if (!contact) return;
+    if (!form.name.trim()) { toast.error("Name is required"); return; }
+    setSaving(true);
+    const res = await apiContacts.putById!(contact._id, form, new AbortController().signal, "", true);
+    setSaving(false);
+    if (res?._id) {
+      toast.success("Contact updated");
+      onUpdate(res as Contact);
+      onClose();
+    } else {
+      toast.error(res?.message ?? "Failed to update contact");
+    }
   };
+
+  if (!contact) return null;
 
   const TABS: { key: Tab; label: string }[] = [
     { key: "activity", label: "Activity" },
@@ -524,37 +484,13 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete }: ContactPan
 
   return (
     <Sheet open={open} onOpenChange={(v) => !v && onClose()}>
-      <SheetContent title={contact.name}>
+      <SheetContent title={contact.name} className="flex flex-col">
         {/* Header */}
-        <div className="px-5 pt-5 pb-4 border-b">
-          <div className="flex items-start justify-between pr-6">
+        <div className="px-5 pt-5 pb-4 border-b shrink-0">
+          <div className="flex items-start pr-6">
             <div>
               <h2 className="text-base font-semibold truncate">{contact.name}</h2>
               <p className="text-sm text-muted-foreground truncate">{contact.jobTitle || contact.company}</p>
-            </div>
-            <div className="flex items-center gap-1 shrink-0">
-              {has("contacts-edit") && (
-                <Button
-                  size="icon-sm"
-                  variant="ghost"
-                  onClick={() => setTab("edit")}
-                  title="Edit contact"
-                >
-                  <Pencil className="h-3.5 w-3.5" />
-                </Button>
-              )}
-              {has("contacts-delete") && (
-                <Button
-                  size="icon-sm"
-                  variant="ghost"
-                  onClick={handleDelete}
-                  disabled={deleting}
-                  className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                  title="Delete contact"
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </Button>
-              )}
             </div>
           </div>
           <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-xs text-muted-foreground">
@@ -577,7 +513,7 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete }: ContactPan
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b">
+        <div className="flex border-b shrink-0">
           {TABS.map((t) => (
             <button
               key={t.key}
@@ -597,9 +533,7 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete }: ContactPan
         {/* Tab content */}
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {loading ? (
-            <div className="flex items-center justify-center py-16 text-muted-foreground text-sm">
-              Loading…
-            </div>
+            <div className="flex items-center justify-center py-16 text-muted-foreground text-sm">Loading…</div>
           ) : tab === "activity" ? (
             <ActivityTimeline notes={notes} />
           ) : tab === "notes" ? (
@@ -612,15 +546,21 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete }: ContactPan
           ) : tab === "deals" ? (
             <DealsTab contact={contact} />
           ) : (
-            <EditTab
-              contact={contact}
-              onSave={(updated) => {
-                onUpdate(updated);
-                setTab("activity");
-              }}
-            />
+            <EditTab form={form} set={set} />
           )}
         </div>
+
+        {/* Footer — only shown on edit tab */}
+        {tab === "edit" && (
+          <div className="px-5 py-4 border-t shrink-0 flex items-center justify-end gap-2">
+            <Button variant="outline" size="sm" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button size="sm" onClick={handleSave} loading={saving}>
+              Save Changes
+            </Button>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );

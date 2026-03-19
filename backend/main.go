@@ -90,6 +90,7 @@ func main() {
 			projects.DELETE("/:id", handlers.DeleteProject)
 			projects.GET("/:id/board", handlers.GetBoard)
 			projects.POST("/:id/columns", handlers.CreateColumn)
+			projects.PUT("/:id/columns/reorder", handlers.ReorderColumns)
 			projects.PUT("/:id/columns/:colId", handlers.UpdateColumn)
 			projects.DELETE("/:id/columns/:colId", handlers.DeleteColumn)
 			projects.POST("/:id/todos", handlers.CreateTodo)
@@ -136,6 +137,16 @@ func main() {
 			deals.GET("/:id", handlers.GetDeal)
 			deals.PUT("/:id", handlers.UpdateDeal)
 			deals.DELETE("/:id", handlers.DeleteDeal)
+		}
+
+		emailGroups := api.Group("/email-groups")
+		emailGroups.Use(middleware.Auth())
+		{
+			emailGroups.GET("", handlers.GetEmailGroups)
+			emailGroups.POST("", handlers.CreateEmailGroup)
+			emailGroups.GET("/:id", handlers.GetEmailGroup)
+			emailGroups.PUT("/:id", handlers.UpdateEmailGroup)
+			emailGroups.DELETE("/:id", handlers.DeleteEmailGroup)
 		}
 	}
 

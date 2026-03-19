@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Plus, Trash2, TrendingUp, DollarSign, Target } from "lucide-react";
+import { Plus, Trash2, TrendingUp, DollarSign, Target, Pencil } from "lucide-react";
+import AuthorAvatar from "@/components/AuthorAvatar";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { StatCard } from "@/components/StatCard";
 import {
   Dialog,
   DialogContent,
@@ -18,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { apiDeals } from "@/services/models/dealsModel";
+import useUsers from "@/hooks/useUsers";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -64,13 +66,14 @@ const DealCard = ({
   provided,
   isDragging,
   onDelete,
+  onUpdated,
 }: {
   deal: Deal;
   provided: any;
   isDragging: boolean;
   onDelete: () => void;
+  onUpdated: (deal: Deal) => void;
 }) => {
-  const meta = stageMeta[deal.stage];
   return (
     <div
       ref={provided.innerRef}
@@ -84,12 +87,25 @@ const DealCard = ({
     >
       <div className="flex items-start justify-between gap-2">
         <p className="text-sm font-medium leading-snug flex-1">{deal.title}</p>
-        <button
-          onClick={(e) => { e.stopPropagation(); onDelete(); }}
-          className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all shrink-0"
-        >
-          <Trash2 className="h-3.5 w-3.5" />
-        </button>
+        <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all shrink-0">
+          <AddDealDialog
+            deal={deal}
+            onUpdated={onUpdated}
+            trigger={
+              <Button size="icon-sm" variant="ghost" onClick={(e) => e.stopPropagation()}>
+                <Pencil className="h-3.5 w-3.5" />
+              </Button>
+            }
+          />
+          <Button
+            size="icon-sm"
+            variant="ghost"
+            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </Button>
+        </div>
       </div>
 
       {deal.contactName && (
@@ -106,7 +122,10 @@ const DealCard = ({
       </div>
 
       {deal.assignedTo && (
-        <p className="text-xs text-muted-foreground mt-1">→ {deal.assignedTo}</p>
+        <div className="flex items-center gap-1.5 mt-2">
+          <AuthorAvatar name={deal.assignedTo} className="h-5 w-5 text-[9px]" />
+          <span className="text-xs text-muted-foreground truncate">{deal.assignedTo}</span>
+        </div>
       )}
     </div>
   );
@@ -118,32 +137,38 @@ const CURRENCIES = ["USD", "EUR", "GBP", "JPY", "CAD", "AUD"].map((c) => ({ val:
 const STAGE_ITEMS = STAGES.map((s) => ({ val: s.key, label: s.label }));
 
 const AddDealDialog = ({
+  deal,
   onCreated,
+  onUpdated,
   defaultStage,
   defaultContactId,
   defaultContactName,
   trigger,
 }: {
-  onCreated: (deal: Deal) => void;
+  deal?: Deal;
+  onCreated?: (deal: Deal) => void;
+  onUpdated?: (deal: Deal) => void;
   defaultStage?: string;
   defaultContactId?: string;
   defaultContactName?: string;
   trigger: React.ReactNode;
 }) => {
+  const isEdit = !!deal;
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const { userItems } = useUsers();
 
   const { values, errors, touched, handleChange, handleSubmit, resetForm } = useFormik({
     enableReinitialize: true,
     initialValues: {
-      title: "",
-      contactName: defaultContactName ?? "",
-      contactId: defaultContactId ?? "",
-      value: "",
-      currency: "USD",
-      stage: defaultStage ?? "lead",
-      assignedTo: "",
-      expectedClose: "",
+      title: deal?.title ?? "",
+      contactName: deal?.contactName ?? defaultContactName ?? "",
+      contactId: deal?.contactId ?? defaultContactId ?? "",
+      value: deal?.value?.toString() ?? "",
+      currency: deal?.currency ?? "USD",
+      stage: deal?.stage ?? defaultStage ?? "lead",
+      assignedTo: deal?.assignedTo ?? "",
+      expectedClose: deal?.expectedClose ? deal.expectedClose.slice(0, 10) : "",
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Title is required"),
@@ -163,26 +188,39 @@ const AddDealDialog = ({
         assignedTo: vals.assignedTo || undefined,
         expectedClose: vals.expectedClose || undefined,
       };
-      apiDeals.post!(payload, "", true).then((res) => {
-        setSaving(false);
-        if (res?._id) {
-          toast.success("Deal created");
-          onCreated(res as Deal);
-          setOpen(false);
-          resetForm();
-        } else {
-          toast.error(res?.message ?? "Failed to create deal");
-        }
-      });
+      if (isEdit) {
+        apiDeals.putById!(deal._id, payload, new AbortController().signal, "", true).then((res) => {
+          setSaving(false);
+          if (res?._id) {
+            toast.success("Deal updated");
+            onUpdated?.(res as Deal);
+            setOpen(false);
+          } else {
+            toast.error(res?.message ?? "Failed to update deal");
+          }
+        });
+      } else {
+        apiDeals.post!(payload, "", true).then((res) => {
+          setSaving(false);
+          if (res?._id) {
+            toast.success("Deal created");
+            onCreated?.(res as Deal);
+            setOpen(false);
+            resetForm();
+          } else {
+            toast.error(res?.message ?? "Failed to create deal");
+          }
+        });
+      }
     },
   });
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) resetForm(); }}>
+    <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v && !isEdit) resetForm(); }}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>New Deal</DialogTitle>
+          <DialogTitle>{isEdit ? "Edit Deal" : "New Deal"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 pt-1">
           <CustomTextField
@@ -243,20 +281,20 @@ const AddDealDialog = ({
               onChange={handleChange}
             />
           </div>
-          <CustomTextField
+          <CustomSelectField
             label="Assigned To"
             name="assignedTo"
-            placeholder="Team member name"
             values={values}
             handleChange={handleChange}
             touched={touched}
             errors={errors}
+            labelItms={[{ val: "", label: "Unassigned" }, ...userItems]}
           />
           <div className="flex justify-end gap-3 pt-1">
-            <Button type="button" variant="outline" onClick={() => { setOpen(false); resetForm(); }}>
+            <Button type="button" variant="outline" onClick={() => { setOpen(false); if (!isEdit) resetForm(); }}>
               Cancel
             </Button>
-            <Button type="submit" loading={saving}>Create Deal</Button>
+            <Button type="submit" loading={saving}>{isEdit ? "Save Changes" : "Create Deal"}</Button>
           </div>
         </form>
       </DialogContent>
@@ -315,6 +353,10 @@ const Pipeline = () => {
       });
   };
 
+  const handleUpdate = (updated: Deal) => {
+    setDeals((prev) => prev.map((d) => (d._id === updated._id ? updated : d)));
+  };
+
   const handleDelete = (id: string) => {
     apiDeals.remove!(id, "", true).then((res) => {
       if (res?.message === "Deal deleted") {
@@ -347,39 +389,9 @@ const Pipeline = () => {
 
       {/* Summary stats */}
       <div className="grid grid-cols-3 gap-4">
-        <Card>
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-              <DollarSign className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Pipeline Value</p>
-              <p className="text-xl font-bold">{fmt(totalValue, "USD")}</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-              <Target className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Total Deals</p>
-              <p className="text-xl font-bold">{deals.length}</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-              <TrendingUp className="h-4 w-4 text-primary" />
-            </div>
-            <div>
-              <p className="text-xs text-muted-foreground">Win Rate</p>
-              <p className="text-xl font-bold">{winRate}%</p>
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard label="Pipeline Value" value={fmt(totalValue, "USD")} icon={DollarSign} />
+        <StatCard label="Total Deals" value={deals.length} icon={Target} />
+        <StatCard label="Win Rate" value={`${winRate}%`} icon={TrendingUp} />
       </div>
 
       {/* Kanban board */}
@@ -445,6 +457,7 @@ const Pipeline = () => {
                                   provided={provided}
                                   isDragging={snapshot.isDragging}
                                   onDelete={() => handleDelete(deal._id)}
+                                  onUpdated={handleUpdate}
                                 />
                               )}
                             </Draggable>

@@ -3,15 +3,23 @@ import CustomTable from "@/components/CustomTable";
 import TableSkeleton from "@/components/TableSkeleton";
 import { convertDateToDateWithoutTime } from "@/utils/calendarHelpers";
 import { Button } from "@/components/ui/button";
-import { Plus, Upload, Download, FileDown } from "lucide-react";
-import { apiContacts, exportContacts, importContacts } from "@/services/models/contactsModel";
+import { Plus, Upload, FileDown, Pencil, Trash2 } from "lucide-react";
+import {
+  apiContacts,
+  exportContacts,
+  importContacts,
+} from "@/services/models/contactsModel";
 import { Link } from "react-router-dom";
 import ContactPanel from "./ContactPanel";
 import { StatusBadge } from "@/components/StatusBadge";
 import toast from "react-hot-toast";
 import usePermissions from "@/hooks/usePermissions";
+import { confirmToast } from "@/utils/confirmToast";
 
-const CSV_TEMPLATE = "name,email,number,company,jobTitle,priority,companySize,probability,status\nJane Smith,jane@acme.com,+15550001234,Acme Corp,Product Manager,high,250,0.7,new";
+const PAGE_SIZE = 50;
+
+const CSV_TEMPLATE =
+  "name,email,number,company,jobTitle,priority,companySize,probability,status\nJane Smith,jane@acme.com,+15550001234,Acme Corp,Product Manager,high,250,0.7,new";
 
 const downloadTemplate = () => {
   const blob = new Blob([CSV_TEMPLATE], { type: "text/csv" });
@@ -25,26 +33,40 @@ const downloadTemplate = () => {
 
 const Contacts = () => {
   const { has } = usePermissions();
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState<any[]>([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [panelContact, setPanelContact] = useState(null);
+
+  const [panelContact, setPanelContact] = useState<any>(null);
   const [panelOpen, setPanelOpen] = useState(false);
+  const [panelDefaultTab, setPanelDefaultTab] = useState<"activity" | "edit">("activity");
   const [importing, setImporting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const fetchContacts = () => {
-    const controller = new AbortController();
-    apiContacts.getAll!(controller.signal, true).then((res) => {
-      if (Array.isArray(res)) setContacts(res);
+  useEffect(() => {
+    let cancelled = false;
+    const ctrl = new AbortController();
+    setIsLoading(true);
+    const params: Record<string, unknown> = { page, limit: PAGE_SIZE };
+    if (search) params.search = search;
+    apiContacts.getByParams!(params, ctrl.signal, "", true).then((res) => {
+      if (cancelled) return;
+      if (res?.data) {
+        setContacts(res.data);
+        setTotal(res.total ?? 0);
+      }
       setIsLoading(false);
     });
-    return controller;
-  };
+    return () => { cancelled = true; ctrl.abort(); };
+  }, [page, search]);
 
-  useEffect(() => {
-    const controller = fetchContacts();
-    return () => controller.abort();
-  }, []);
+  const openPanel = (contact: any, tab: "activity" | "edit" = "activity") => {
+    setPanelContact(contact);
+    setPanelDefaultTab(tab);
+    setPanelOpen(true);
+  };
 
   const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -54,17 +76,15 @@ const Contacts = () => {
       .then((res) => {
         if (res.imported > 0) {
           toast.success(`Imported ${res.imported} contact${res.imported !== 1 ? "s" : ""}`);
-          fetchContacts();
+          setPage(1);
+          setSearch("");
         }
         if (res.skipped?.length) {
           toast.error(`${res.skipped.length} row(s) skipped — missing name`);
         }
       })
       .catch(() => toast.error("Import failed"))
-      .finally(() => {
-        setImporting(false);
-        e.target.value = "";
-      });
+      .finally(() => { setImporting(false); e.target.value = ""; });
   };
 
   const columns = [
@@ -75,7 +95,10 @@ const Contacts = () => {
     {
       label: "Last Activity",
       name: "lastActivity",
-      options: { customBodyRender: (data) => <span>{convertDateToDateWithoutTime(data)}</span> },
+      options: {
+        sortable: true,
+        customBodyRender: (data: string) => <span>{convertDateToDateWithoutTime(data)}</span>,
+      },
     },
     {
       label: "Lead Status",
@@ -85,83 +108,122 @@ const Contacts = () => {
     {
       label: "Created At",
       name: "createdAt",
-      options: { customBodyRender: (data) => <span>{convertDateToDateWithoutTime(data)}</span> },
+      options: {
+        sortable: true,
+        customBodyRender: (data: string) => <span>{convertDateToDateWithoutTime(data)}</span>,
+      },
     },
     {
       label: "Actions",
       name: "url",
       options: {
-        customBodyRender: (_val, rowIdx = 0) => (
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => {
-              setPanelContact(contacts[rowIdx]);
-              setPanelOpen(true);
-            }}
-          >
-            View
-          </Button>
-        ),
+        customBodyRender: (_val: any, rowIdx = 0) => {
+          const contact = contacts[rowIdx];
+          return (
+            <div className="flex items-center gap-1">
+              {has("contacts-edit") && (
+                <Button size="icon-sm" variant="outline" onClick={() => openPanel(contact, "edit")}>
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
+              )}
+              {has("contacts-delete") && (
+                <Button
+                  size="icon-sm"
+                  variant="destructive"
+                  onClick={() =>
+                    confirmToast({
+                      title: `Delete "${contact?.name}"?`,
+                      onConfirm: async () => {
+                        const res = await apiContacts.remove!(contact._id, "", true);
+                        if (res?.message === "Contact deleted" || !res?.error) {
+                          setContacts((prev) => prev.filter((c) => c._id !== contact._id));
+                          setTotal((t) => t - 1);
+                          if (panelContact?._id === contact._id) setPanelOpen(false);
+                          toast.success("Contact deleted");
+                        } else {
+                          toast.error(res?.message ?? "Failed to delete contact");
+                        }
+                      },
+                    })
+                  }
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              )}
+            </div>
+          );
+        },
       },
     },
   ];
 
   return (
-    <>
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".csv"
-        className="hidden"
-        onChange={handleImportFile}
-      />
+    <section className="space-y-6">
+      <input ref={fileInputRef} type="file" accept=".csv" className="hidden" onChange={handleImportFile} />
 
-      <div className="flex items-center justify-end gap-2 mb-3">
-        {has("contacts-edit") && (
-          <>
-            <Button variant="outline" size="sm" onClick={downloadTemplate}>
-              <FileDown className="h-4 w-4" /> Template
-            </Button>
-            <Button variant="outline" size="sm" loading={importing} onClick={() => fileInputRef.current?.click()}>
-              <Upload className="h-4 w-4" /> Import CSV
-            </Button>
-          </>
-        )}
-        {has("contacts-view") && (
-          <Button variant="outline" size="sm" onClick={() => exportContacts().catch(() => toast.error("Export failed"))}>
-            <Download className="h-4 w-4" /> Export CSV
-          </Button>
-        )}
-        {has("contacts-edit") && (
-          <Link to="/dashboard/contacts/add-contact">
-            <Button size="sm">
-              <Plus className="h-4 w-4" /> Add Contact
-            </Button>
-          </Link>
-        )}
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold">Contacts</h1>
+          <p className="text-sm text-muted-foreground">Manage and track your leads and customers</p>
+        </div>
+        <div className="flex items-center gap-2">
+          {has("contacts-edit") && (
+            <>
+              <Button variant="outline" size="sm" onClick={downloadTemplate}>
+                <FileDown className="h-4 w-4" /> Template
+              </Button>
+              <Button variant="outline" size="sm" loading={importing} onClick={() => fileInputRef.current?.click()}>
+                <Upload className="h-4 w-4" /> Import CSV
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => exportContacts()}>
+                Export CSV
+              </Button>
+            </>
+          )}
+          {has("contacts-edit") && (
+            <Link to="/dashboard/contacts/add-contact">
+              <Button size="sm">
+                <Plus className="h-4 w-4" /> Add Contact
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
 
-      {isLoading ? (
+      {isLoading && contacts.length === 0 ? (
         <TableSkeleton rows={6} cols={8} />
       ) : (
-        <CustomTable columns={columns} data={contacts} title="Contacts" downloadName="contacts" />
+        <CustomTable
+          columns={columns}
+          data={contacts}
+          title="Contacts"
+          serverSide={{
+            total,
+            page,
+            pageSize: PAGE_SIZE,
+            onPageChange: setPage,
+            onSearchChange: (s) => { setSearch(s); setPage(1); },
+            loading: isLoading,
+          }}
+        />
       )}
 
       <ContactPanel
         contact={panelContact}
         open={panelOpen}
+        defaultTab={panelDefaultTab}
         onClose={() => setPanelOpen(false)}
         onUpdate={(updated) => {
-          setContacts((prev) => prev.map((c: any) => c._id === updated._id ? updated : c));
+          setContacts((prev) => prev.map((c) => (c._id === updated._id ? updated : c)));
           setPanelContact(updated);
         }}
         onDelete={(id) => {
-          setContacts((prev) => prev.filter((c: any) => c._id !== id));
+          setContacts((prev) => prev.filter((c) => c._id !== id));
+          setTotal((t) => t - 1);
           setPanelOpen(false);
         }}
       />
-    </>
+    </section>
   );
 };
 

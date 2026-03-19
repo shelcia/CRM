@@ -10,6 +10,7 @@ type ContactStatus string
 type ContactPriority string
 type TicketStatus string
 type TicketPriority string
+type TicketCategory string
 type EmailTemplateStatus string
 type EmailTemplateFrequency string
 type Permission string
@@ -76,6 +77,22 @@ const (
 
 var TicketPriorities = []TicketPriority{
 	TicketPriorityLow, TicketPriorityMedium, TicketPriorityHigh, TicketPriorityCritical,
+}
+
+// ── Ticket categories ─────────────────────────────────────────────────────────
+
+const (
+	TicketCategoryTechnical      TicketCategory = "technical"
+	TicketCategoryBilling        TicketCategory = "billing"
+	TicketCategoryGeneral        TicketCategory = "general"
+	TicketCategoryFeatureRequest TicketCategory = "featureRequest"
+	TicketCategoryBug            TicketCategory = "bug"
+	TicketCategoryOther          TicketCategory = "other"
+)
+
+var TicketCategories = []TicketCategory{
+	TicketCategoryTechnical, TicketCategoryBilling, TicketCategoryGeneral,
+	TicketCategoryFeatureRequest, TicketCategoryBug, TicketCategoryOther,
 }
 
 // ── Email template statuses ───────────────────────────────────────────────────
@@ -145,6 +162,7 @@ type EnumsResponse struct {
 	ContactPriorities        []ContactPriority        `json:"contactPriorities"`
 	TicketStatuses           []TicketStatus           `json:"ticketStatuses"`
 	TicketPriorities         []TicketPriority         `json:"ticketPriorities"`
+	TicketCategories         []TicketCategory         `json:"ticketCategories"`
 	EmailTemplateStatuses    []EmailTemplateStatus    `json:"emailTemplateStatuses"`
 	EmailTemplateFrequencies []EmailTemplateFrequency `json:"emailTemplateFrequencies"`
 	Permissions              []Permission             `json:"permissions"`
@@ -159,6 +177,7 @@ func All() EnumsResponse {
 		ContactPriorities:        ContactPriorities,
 		TicketStatuses:           TicketStatuses,
 		TicketPriorities:         TicketPriorities,
+		TicketCategories:         TicketCategories,
 		EmailTemplateStatuses:    EmailTemplateStatuses,
 		EmailTemplateFrequencies: EmailTemplateFrequencies,
 		Permissions:              Permissions,

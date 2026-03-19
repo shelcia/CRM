@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { invalidateCache } from "@/services/utilities/provider";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,6 +43,9 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
 
   const logout = () => {
     localStorage.clear();
+    // Clear all cached API data so the next user starts fresh
+    ["dashboard/stats", "users", "contacts", "tickets", "projects", "email-templates", "email-groups", "deals"]
+      .forEach(invalidateCache);
     navigate("/");
   };
 
