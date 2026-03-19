@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Plus, Pencil, Trash2, Check, X, GripVertical } from "lucide-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -54,6 +55,7 @@ const Projects = () => {
   const [columns, setColumns] = useState<Column[]>([]);
   const [addingColId, setAddingColId] = useState<string | null>(null);
   const [showAddColumn, setShowAddColumn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!projectId) return;
@@ -62,6 +64,7 @@ const Projects = () => {
       .getAll(`projects/${projectId}/board`, controller.signal, true)
       .then((res) => {
         if (Array.isArray(res)) setColumns(res);
+        setIsLoading(false);
       });
     return () => controller.abort();
   }, [projectId]);
@@ -173,6 +176,23 @@ const Projects = () => {
   };
 
   // ── Render ────────────────────────────────────────────────────────────────
+
+  if (isLoading) {
+    return (
+      <div className="flex gap-3 overflow-x-auto pb-4 items-start">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <div key={i} className="flex-shrink-0 w-68">
+            <div className="rounded-xl bg-muted/50 border flex flex-col p-3 gap-3">
+              <Skeleton className="h-5 w-32" />
+              <Skeleton className="h-24 w-full rounded-lg" />
+              <Skeleton className="h-20 w-full rounded-lg" />
+              <Skeleton className="h-16 w-full rounded-lg" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="flex gap-3 overflow-x-auto pb-4 items-start">
@@ -335,6 +355,32 @@ const ColumnHeader = ({
   );
 };
 
+// ── Author avatar ──────────────────────────────────────────────────────────────
+
+const AuthorAvatar = ({ name, image }: { name: string; image: string }) => {
+  const [imgError, setImgError] = React.useState(false);
+  const initials = name
+    ? name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2)
+    : "?";
+
+  if (image && !imgError) {
+    return (
+      <img
+        src={image}
+        alt={name}
+        className="h-5 w-5 rounded-full object-cover bg-muted shrink-0"
+        onError={() => setImgError(true)}
+      />
+    );
+  }
+
+  return (
+    <span className="h-5 w-5 rounded-full bg-primary/20 text-primary flex items-center justify-center text-[9px] font-bold shrink-0">
+      {initials}
+    </span>
+  );
+};
+
 // ── Todo card ──────────────────────────────────────────────────────────────────
 
 const TodoCard = ({
@@ -402,11 +448,7 @@ const TodoCard = ({
     {/* Footer */}
     <div className="flex items-center justify-between ml-5">
       <div className="flex items-center gap-1.5">
-        <img
-          src={todo.author.image}
-          alt={todo.author.name}
-          className="h-5 w-5 rounded-full object-cover bg-muted"
-        />
+        <AuthorAvatar name={todo.author.name} image={todo.author.image} />
         <span className="text-xs text-muted-foreground truncate max-w-[80px]">
           {todo.author.name}
         </span>

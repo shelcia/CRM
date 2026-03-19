@@ -53,6 +53,14 @@ func CreateContact(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	if contact.Email != "" {
+		count, _ := db.Collection("contacts").CountDocuments(ctx, bson.M{"mail": contact.Email})
+		if count > 0 {
+			utils.Err(c, http.StatusConflict, "A contact with this email already exists")
+			return
+		}
+	}
+
 	if _, err := db.Collection("contacts").InsertOne(ctx, contact); err != nil {
 		utils.Err(c, http.StatusInternalServerError, "Failed to create contact")
 		return
@@ -142,7 +150,35 @@ func ImportContacts(c *gin.Context) {
 		return strings.TrimSpace(row[i])
 	}
 
-	var docs []interface{}
+	// Collect non-empty emails from the CSV for duplicate checking
+	var csvEmails []string
+	for _, row := range rows[1:] {
+		if e := col(row, "email"); e != "" {
+			csvEmails = append(csvEmails, e)
+		}
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	// Fetch which of those emails already exist in one query
+	existingEmails := make(map[string]bool)
+	if len(csvEmails) > 0 {
+		type emailDoc struct {
+			Email string `bson:"mail"`
+		}
+		cur, err := db.Collection("contacts").Find(ctx, bson.M{"mail": bson.M{"$in": csvEmails}},
+			options.Find().SetProjection(bson.M{"mail": 1}))
+		if err == nil {
+			var existing []emailDoc
+			cur.All(ctx, &existing) //nolint
+			for _, e := range existing {
+				existingEmails[e.Email] = true
+			}
+		}
+	}
+
+	var docs []any
 	var skipped []string
 
 	for rowNum, row := range rows[1:] {
@@ -152,12 +188,18 @@ func ImportContacts(c *gin.Context) {
 			continue
 		}
 
+		email := col(row, "email")
+		if email != "" && existingEmails[email] {
+			skipped = append(skipped, fmt.Sprintf("row %d: duplicate email %s", rowNum+2, email))
+			continue
+		}
+
 		size, _ := strconv.Atoi(col(row, "companysize"))
 
 		contact := models.Contact{
 			ID:           primitive.NewObjectID(),
 			Name:         name,
-			Email:        col(row, "email"),
+			Email:        email,
 			Number:       col(row, "number"),
 			Company:      col(row, "company"),
 			JobTitle:     col(row, "jobtitle"),
@@ -175,9 +217,6 @@ func ImportContacts(c *gin.Context) {
 		utils.Err(c, http.StatusBadRequest, "No valid rows to import")
 		return
 	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
-	defer cancel()
 
 	res, err := db.Collection("contacts").InsertMany(ctx, docs)
 	if err != nil {

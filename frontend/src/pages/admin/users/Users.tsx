@@ -7,8 +7,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { apiUsers } from "@/services/models/usersModel";
 import toast from "react-hot-toast";
+import usePermissions from "@/hooks/usePermissions";
 
 const Users = () => {
+  const { has } = usePermissions();
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
@@ -36,7 +38,6 @@ const Users = () => {
   const columns = [
     { label: "Name", name: "name" },
     { label: "Email", name: "email" },
-    { label: "Role", name: "role" },
     { label: "Company", name: "company" },
     {
       label: "Joined",
@@ -52,22 +53,26 @@ const Users = () => {
           if (!user) return null;
           return (
             <div className="flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7"
-                onClick={() => navigate(`edit-user/${user._id}`)}
-              >
-                <Pencil className="h-3.5 w-3.5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-7 w-7 text-destructive hover:text-destructive"
-                onClick={() => handleDelete(user._id)}
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </Button>
+              {has("users-edit") && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7"
+                  onClick={() => navigate(`edit-user/${user._id}`)}
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </Button>
+              )}
+              {has("users-delete") && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7 text-destructive hover:text-destructive"
+                  onClick={() => handleDelete(user._id)}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              )}
             </div>
           );
         },
@@ -77,13 +82,15 @@ const Users = () => {
 
   return (
     <>
-      <div className="flex justify-end mb-3">
-        <Link to="add-user">
-          <Button>
-            <Plus className="h-4 w-4" /> Add User
-          </Button>
-        </Link>
-      </div>
+      {has("users-edit") && (
+        <div className="flex justify-end mb-3">
+          <Link to="add-user">
+            <Button>
+              <Plus className="h-4 w-4" /> Add User
+            </Button>
+          </Link>
+        </div>
+      )}
       {isLoading ? (
         <TableSkeleton rows={6} cols={6} />
       ) : (

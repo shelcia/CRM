@@ -13,6 +13,7 @@ type TicketPriority string
 type EmailTemplateStatus string
 type EmailTemplateFrequency string
 type Permission string
+type DealStage string
 
 // ── User roles ────────────────────────────────────────────────────────────────
 
@@ -27,20 +28,16 @@ var Roles = []Role{RoleAdmin, RoleManager, RoleNonAdmin}
 // ── Contact statuses ──────────────────────────────────────────────────────────
 
 const (
-	ContactNew         ContactStatus = "new"
-	ContactOpen        ContactStatus = "open"
-	ContactInProgress  ContactStatus = "inProgress"
-	ContactOpenDeal    ContactStatus = "openDeal"
-	ContactUnqualified ContactStatus = "unqualified"
-	ContactBadTiming   ContactStatus = "badTiming"
-	ContactAttempted   ContactStatus = "attempted"
-	ContactConnected   ContactStatus = "connected"
-	ContactClosed      ContactStatus = "closed"
+	ContactNew       ContactStatus = "new"
+	ContactQualified ContactStatus = "qualified"
+	ContactOpenDeal  ContactStatus = "openDeal"
+	ContactConnected ContactStatus = "connected"
+	ContactAttempted ContactStatus = "attempted"
+	ContactWon       ContactStatus = "won"
 )
 
 var ContactStatuses = []ContactStatus{
-	ContactNew, ContactOpen, ContactInProgress, ContactOpenDeal,
-	ContactUnqualified, ContactBadTiming, ContactAttempted, ContactConnected, ContactClosed,
+	ContactNew, ContactQualified, ContactOpenDeal, ContactConnected, ContactAttempted, ContactWon,
 }
 
 // ── Contact priorities ────────────────────────────────────────────────────────
@@ -104,6 +101,22 @@ var EmailTemplateFrequencies = []EmailTemplateFrequency{
 	EmailFreqOneTime, EmailFreqDaily, EmailFreqWeekly, EmailFreqMonthly,
 }
 
+// ── Deal stages ───────────────────────────────────────────────────────────────
+
+const (
+	DealStageLead        DealStage = "lead"
+	DealStageQualified   DealStage = "qualified"
+	DealStageProposal    DealStage = "proposal"
+	DealStageNegotiation DealStage = "negotiation"
+	DealStageWon         DealStage = "won"
+	DealStageLost        DealStage = "lost"
+)
+
+var DealStages = []DealStage{
+	DealStageLead, DealStageQualified, DealStageProposal,
+	DealStageNegotiation, DealStageWon, DealStageLost,
+}
+
 // ── Permissions ───────────────────────────────────────────────────────────────
 
 const (
@@ -135,6 +148,7 @@ type EnumsResponse struct {
 	EmailTemplateStatuses    []EmailTemplateStatus    `json:"emailTemplateStatuses"`
 	EmailTemplateFrequencies []EmailTemplateFrequency `json:"emailTemplateFrequencies"`
 	Permissions              []Permission             `json:"permissions"`
+	DealStages               []DealStage              `json:"dealStages"`
 }
 
 // All returns the full payload for the /api/enums endpoint.
@@ -148,5 +162,6 @@ func All() EnumsResponse {
 		EmailTemplateStatuses:    EmailTemplateStatuses,
 		EmailTemplateFrequencies: EmailTemplateFrequencies,
 		Permissions:              Permissions,
+		DealStages:               DealStages,
 	}
 }

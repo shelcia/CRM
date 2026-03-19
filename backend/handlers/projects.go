@@ -15,6 +15,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+type ProjectSummary struct {
+	ID         primitive.ObjectID `json:"_id"`
+	Name       string             `json:"name"`
+	Date       time.Time          `json:"date"`
+	TotalTasks int                `json:"totalTasks"`
+	DoneTasks  int                `json:"doneTasks"`
+}
+
 func GetProjects(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -32,7 +40,79 @@ func GetProjects(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, projects)
+	if len(projects) == 0 {
+		c.JSON(http.StatusOK, []ProjectSummary{})
+		return
+	}
+
+	// Collect project IDs for batch queries
+	projectIDs := make([]primitive.ObjectID, len(projects))
+	for i, p := range projects {
+		projectIDs[i] = p.ID
+	}
+
+	// Fetch all todos for these projects in one query
+	todoCursor, err := db.Collection("todos").Find(ctx, bson.M{"projectId": bson.M{"$in": projectIDs}})
+	if err != nil {
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch tasks")
+		return
+	}
+	defer todoCursor.Close(ctx)
+
+	type todoDoc struct {
+		ColumnID  primitive.ObjectID `bson:"columnId"`
+		ProjectID primitive.ObjectID `bson:"projectId"`
+	}
+	allTodos := make([]todoDoc, 0)
+	if err = todoCursor.All(ctx, &allTodos); err != nil {
+		utils.Err(c, http.StatusInternalServerError, "Failed to decode tasks")
+		return
+	}
+
+	// Fetch all "Done" columns for these projects
+	colCursor, err := db.Collection("columns").Find(ctx, bson.M{
+		"projectId": bson.M{"$in": projectIDs},
+		"name":      bson.M{"$regex": "^done$", "$options": "i"},
+	})
+	if err != nil {
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch columns")
+		return
+	}
+	defer colCursor.Close(ctx)
+
+	type colDoc struct {
+		ID primitive.ObjectID `bson:"_id"`
+	}
+	doneColumns := make([]colDoc, 0)
+	colCursor.All(ctx, &doneColumns) //nolint
+
+	doneColSet := make(map[primitive.ObjectID]bool, len(doneColumns))
+	for _, col := range doneColumns {
+		doneColSet[col.ID] = true
+	}
+
+	// Aggregate stats per project
+	totalMap := make(map[primitive.ObjectID]int)
+	doneMap := make(map[primitive.ObjectID]int)
+	for _, t := range allTodos {
+		totalMap[t.ProjectID]++
+		if doneColSet[t.ColumnID] {
+			doneMap[t.ProjectID]++
+		}
+	}
+
+	summaries := make([]ProjectSummary, len(projects))
+	for i, p := range projects {
+		summaries[i] = ProjectSummary{
+			ID:         p.ID,
+			Name:       p.Name,
+			Date:       p.CreatedAt,
+			TotalTasks: totalMap[p.ID],
+			DoneTasks:  doneMap[p.ID],
+		}
+	}
+
+	c.JSON(http.StatusOK, summaries)
 }
 
 func CreateProject(c *gin.Context) {

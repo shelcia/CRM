@@ -48,10 +48,10 @@ func GetUsers(c *gin.Context) {
 }
 
 type createUserInput struct {
-	Name     string `json:"name" binding:"required"`
-	Email    string `json:"email" binding:"required,email"`
-	Role     string `json:"role" binding:"required"`
-	Password string `json:"password" binding:"required,min=6"`
+	Name        string   `json:"name" binding:"required"`
+	Email       string   `json:"email" binding:"required,email"`
+	Password    string   `json:"password" binding:"required,min=6"`
+	Permissions []string `json:"permissions"`
 }
 
 func GetUser(c *gin.Context) {
@@ -77,7 +77,6 @@ func GetUser(c *gin.Context) {
 type updateUserInput struct {
 	Name        string   `json:"name"        binding:"required"`
 	Email       string   `json:"email"       binding:"required,email"`
-	Role        string   `json:"role"        binding:"required"`
 	Permissions []string `json:"permissions"`
 }
 
@@ -97,7 +96,6 @@ func UpdateUser(c *gin.Context) {
 	update := bson.M{"$set": bson.M{
 		"name":        input.Name,
 		"email":       input.Email,
-		"role":        input.Role,
 		"permissions": input.Permissions,
 	}}
 
@@ -173,17 +171,22 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+	permissions := input.Permissions
+	if permissions == nil {
+		permissions = []string{}
+	}
+
 	newUser := models.User{
-		ID:        primitive.NewObjectID(),
-		Name:      input.Name,
-		Email:     input.Email,
-		Password:  string(hash),
-		Role:      input.Role,
-		Token:     token,
-		Verified:  true,
-		Date:      time.Now(),
-		CompanyID: currentUser.CompanyID,
-		Company:   currentUser.Company,
+		ID:          primitive.NewObjectID(),
+		Name:        input.Name,
+		Email:       input.Email,
+		Password:    string(hash),
+		Token:       token,
+		Verified:    true,
+		Date:        time.Now(),
+		CompanyID:   currentUser.CompanyID,
+		Company:     currentUser.Company,
+		Permissions: permissions,
 	}
 
 	if _, err = db.Collection("users").InsertOne(ctx, newUser); err != nil {

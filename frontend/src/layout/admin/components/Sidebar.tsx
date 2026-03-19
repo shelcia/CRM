@@ -1,12 +1,15 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
 import { menuContents } from "./Topbar";
+import usePermissions from "@/hooks/usePermissions";
 
 const Sidebar = () => {
+  const { has } = usePermissions();
+  const visibleItems = menuContents.filter((item) => has(item.permission));
+
   return (
     <aside className="group fixed left-0 top-14 bottom-0 z-30 w-14 hover:w-52 bg-card border-r transition-[width] duration-200 ease-in-out overflow-hidden">
       <nav className="p-2 mt-1 space-y-0.5">
-        {menuContents.map((item) => (
+        {visibleItems.map((item) => (
           <NavLink
             key={item.link}
             to={item.link}

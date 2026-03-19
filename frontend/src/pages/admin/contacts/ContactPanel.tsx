@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import usePermissions from "@/hooks/usePermissions";
 import {
   Phone,
   Mail,
@@ -8,11 +9,15 @@ import {
   Trash2,
   Send,
   Pencil,
+  Kanban,
+  Plus,
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { apiProvider } from "@/services/utilities/provider";
 import { apiContacts } from "@/services/models/contactsModel";
+import { getDealsByContact } from "@/services/models/dealsModel";
+import { AddDealDialog, type Deal } from "@/pages/admin/pipeline/Pipeline";
 import { cn } from "@/lib/utils";
 import { useEnums } from "@/hooks/useEnums";
 import { toLabelItems } from "@/utils/enumLabel";
@@ -257,6 +262,96 @@ const NotesTab = ({
   );
 };
 
+// ── Deals Tab ─────────────────────────────────────────────────────────────────
+
+const STAGE_DOT: Record<string, string> = {
+  lead: "bg-slate-400",
+  qualified: "bg-blue-500",
+  proposal: "bg-amber-500",
+  negotiation: "bg-orange-500",
+  won: "bg-primary",
+  lost: "bg-red-500",
+};
+
+const DealsTab = ({ contact }: { contact: Contact }) => {
+  const [deals, setDeals] = useState<Deal[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    getDealsByContact(contact._id).then((res) => {
+      if (Array.isArray(res)) setDeals(res);
+      setLoading(false);
+    });
+  }, [contact._id]);
+
+  const totalValue = deals
+    .filter((d) => d.stage !== "lost")
+    .reduce((sum, d) => sum + d.value, 0);
+
+  const fmtVal = (v: number, c: string) =>
+    new Intl.NumberFormat(undefined, { style: "currency", currency: c, maximumFractionDigits: 0 }).format(v);
+
+  if (loading) {
+    return <p className="text-sm text-muted-foreground py-8 text-center">Loading…</p>;
+  }
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        {deals.length > 0 && (
+          <p className="text-xs text-muted-foreground">
+            {deals.length} deal{deals.length !== 1 ? "s" : ""} · {fmtVal(totalValue, "USD")} pipeline
+          </p>
+        )}
+        <AddDealDialog
+          defaultContactId={contact._id}
+          defaultContactName={contact.name}
+          onCreated={(deal) => setDeals((prev) => [deal, ...prev])}
+          trigger={
+            <Button size="sm" variant="outline" className="ml-auto">
+              <Plus className="h-3.5 w-3.5 mr-1" />
+              Add Deal
+            </Button>
+          }
+        />
+      </div>
+
+      {deals.length === 0 ? (
+        <div className="flex flex-col items-center py-10 text-muted-foreground gap-2">
+          <Kanban className="h-8 w-8 opacity-30" />
+          <p className="text-sm">No deals yet</p>
+        </div>
+      ) : (
+        <ul className="space-y-2">
+          {deals.map((deal) => (
+            <li key={deal._id} className="rounded-lg border bg-card p-3">
+              <div className="flex items-start justify-between gap-2">
+                <p className="text-sm font-medium leading-snug">{deal.title}</p>
+                <span className="text-sm font-semibold text-primary shrink-0">
+                  {fmtVal(deal.value, deal.currency)}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 mt-1.5">
+                <span className={cn("h-2 w-2 rounded-full shrink-0", STAGE_DOT[deal.stage] ?? "bg-muted")} />
+                <span className="text-xs text-muted-foreground capitalize">{deal.stage}</span>
+                {deal.expectedClose && (
+                  <>
+                    <span className="text-muted-foreground/40 text-xs">·</span>
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(deal.expectedClose).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+                    </span>
+                  </>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
 // ── Edit Tab ───────────────────────────────────────────────────────────────────
 
 const EditTab = ({
@@ -350,7 +445,7 @@ const EditTab = ({
 
 // ── Contact Panel ──────────────────────────────────────────────────────────────
 
-type Tab = "activity" | "notes" | "edit";
+type Tab = "activity" | "notes" | "deals" | "edit";
 
 interface ContactPanelProps {
   contact: Contact | null;
@@ -361,6 +456,7 @@ interface ContactPanelProps {
 }
 
 const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete }: ContactPanelProps) => {
+  const { has } = usePermissions();
   const [tab, setTab] = useState<Tab>("activity");
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(false);
@@ -383,24 +479,49 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete }: ContactPan
 
   if (!contact) return null;
 
-  const handleDelete = async () => {
-    if (!confirm(`Delete ${contact.name}? This cannot be undone.`)) return;
-    setDeleting(true);
-    const res = await apiContacts.remove!(contact._id, "", true);
-    setDeleting(false);
-    if (res?.deleted || res?._id || res?.message === undefined) {
-      toast.success("Contact deleted");
-      onDelete(contact._id);
-      onClose();
-    } else {
-      toast.error("Failed to delete contact");
-    }
+  const handleDelete = () => {
+    toast(
+      (t) => (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-medium">Delete <strong>{contact.name}</strong>?</p>
+          <p className="text-xs text-muted-foreground">This cannot be undone.</p>
+          <div className="flex gap-2 justify-end">
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="px-3 py-1 text-xs rounded-md border hover:bg-muted transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={async () => {
+                toast.dismiss(t.id);
+                setDeleting(true);
+                const res = await apiContacts.remove!(contact._id, "", true);
+                setDeleting(false);
+                if (res?.deleted || res?._id || res?.message === undefined) {
+                  toast.success("Contact deleted");
+                  onDelete(contact._id);
+                  onClose();
+                } else {
+                  toast.error("Failed to delete contact");
+                }
+              }}
+              className="px-3 py-1 text-xs rounded-md bg-destructive text-white hover:bg-destructive/90 transition-colors"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: Infinity },
+    );
   };
 
   const TABS: { key: Tab; label: string }[] = [
     { key: "activity", label: "Activity" },
     { key: "notes", label: "Notes" },
-    { key: "edit", label: "Edit" },
+    { key: "deals", label: "Deals" },
+    ...(has("contacts-edit") ? [{ key: "edit" as Tab, label: "Edit" }] : []),
   ];
 
   return (
@@ -414,21 +535,25 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete }: ContactPan
               <p className="text-sm text-muted-foreground truncate">{contact.jobTitle || contact.company}</p>
             </div>
             <div className="flex items-center gap-1 shrink-0">
-              <button
-                onClick={() => setTab("edit")}
-                className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                title="Edit contact"
-              >
-                <Pencil className="h-3.5 w-3.5" />
-              </button>
-              <button
-                onClick={handleDelete}
-                disabled={deleting}
-                className="p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                title="Delete contact"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
+              {has("contacts-edit") && (
+                <button
+                  onClick={() => setTab("edit")}
+                  className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                  title="Edit contact"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </button>
+              )}
+              {has("contacts-delete") && (
+                <button
+                  onClick={handleDelete}
+                  disabled={deleting}
+                  className="p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                  title="Delete contact"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              )}
             </div>
           </div>
           <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-xs text-muted-foreground">
@@ -483,6 +608,8 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete }: ContactPan
               onAdd={(note) => setNotes((prev) => [note, ...prev])}
               onDelete={(id) => setNotes((prev) => prev.filter((n) => n._id !== id))}
             />
+          ) : tab === "deals" ? (
+            <DealsTab contact={contact} />
           ) : (
             <EditTab
               contact={contact}

@@ -112,6 +112,12 @@ func main() {
 			todos.DELETE("/:id", handlers.DeleteTodo)
 		}
 
+		dashboard := api.Group("/dashboard")
+		dashboard.Use(middleware.Auth())
+		{
+			dashboard.GET("/stats", handlers.GetDashboardStats)
+		}
+
 		emailTemplates := api.Group("/email-templates")
 		emailTemplates.Use(middleware.Auth())
 		{
@@ -120,6 +126,16 @@ func main() {
 			emailTemplates.GET("/:id", handlers.GetEmailTemplate)
 			emailTemplates.PUT("/:id", handlers.UpdateEmailTemplate)
 			emailTemplates.DELETE("/:id", handlers.DeleteEmailTemplate)
+		}
+
+		deals := api.Group("/deals")
+		deals.Use(middleware.Auth())
+		{
+			deals.GET("", handlers.GetDeals)
+			deals.POST("", handlers.CreateDeal)
+			deals.GET("/:id", handlers.GetDeal)
+			deals.PUT("/:id", handlers.UpdateDeal)
+			deals.DELETE("/:id", handlers.DeleteDeal)
 		}
 	}
 

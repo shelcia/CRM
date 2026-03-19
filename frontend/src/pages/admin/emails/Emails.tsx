@@ -3,6 +3,7 @@ import { Plus, Mail, Clock, Pencil, Trash2, CalendarClock } from "lucide-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
+import { SerializedEditorState } from "lexical";
 import CustomTable from "@/components/CustomTable";
 import TableSkeleton from "@/components/TableSkeleton";
 import { Button } from "@/components/ui/button";
@@ -16,11 +17,11 @@ import {
 } from "@/components/ui/dialog";
 import {
   CustomTextField,
-  CustomTextAreaField,
   CustomSelectField,
 } from "@/components/CustomInputs";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { Editor } from "@/components/blocks/editor-00/editor";
 import { apiEmailTemplates } from "@/services/models/emailTemplatesModel";
 import { useEnums } from "@/hooks/useEnums";
 import { toLabelItems } from "@/utils/enumLabel";
@@ -127,7 +128,7 @@ const TemplateDialog = ({ template, onSaved, trigger, statusItems, frequencyItem
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { values, errors, touched, handleChange, handleSubmit, resetForm } =
+  const { values, errors, touched, handleChange, handleSubmit, resetForm, setFieldValue } =
     useFormik({
       enableReinitialize: true,
       initialValues: template
@@ -188,7 +189,7 @@ const TemplateDialog = ({ template, onSaved, trigger, statusItems, frequencyItem
       }}
     >
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {template ? "Edit Template" : "New Email Template"}
@@ -248,15 +249,17 @@ const TemplateDialog = ({ template, onSaved, trigger, statusItems, frequencyItem
           {/* Body */}
           <div className="space-y-1">
             <Label>Email Body</Label>
-            <CustomTextAreaField
-              name="body"
-              placeholder={`Write your email content here.\nSupported variables: {{name}}, {{email}}, {{date}}`}
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-              rows={5}
+            <Editor
+              key={template?._id ?? "new"}
+              editorSerializedState={(() => {
+                try { return values.body ? (JSON.parse(values.body) as SerializedEditorState) : undefined; }
+                catch { return undefined; }
+              })()}
+              onSerializedChange={(s) => setFieldValue("body", JSON.stringify(s))}
             />
+            {touched.body && errors.body && (
+              <p className="text-xs text-destructive">{errors.body}</p>
+            )}
             <p className="text-xs text-muted-foreground pl-0.5">
               Dynamic variables: {"{{name}}"}, {"{{email}}"}, {"{{date}}"}
             </p>

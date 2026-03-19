@@ -3,7 +3,13 @@ import { lazy, Suspense, ComponentType } from "react";
 import Layout from "./layout/admin/Layout";
 import HomeLayout from "./layout/home/Layout";
 import AuthLayout from "./layout/auth/Layout";
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
+import usePermissions from "./hooks/usePermissions";
+
+const RequirePermission = ({ permission }: { permission: string }) => {
+  const { has } = usePermissions();
+  return has(permission) ? <Outlet /> : <Navigate to="/dashboard" replace />;
+};
 
 const Loadable =
   <P extends object>(Component: ComponentType<P>) =>
@@ -48,6 +54,8 @@ const Projects = Loadable(lazy(() => import("./pages/admin/todos/Projects")));
 const Todos = Loadable(lazy(() => import("./pages/admin/todos/Todos")));
 
 const Emails = Loadable(lazy(() => import("./pages/admin/emails/Emails")));
+const Pipeline = Loadable(lazy(() => import("./pages/admin/pipeline/Pipeline")));
+const Dashboard = Loadable(lazy(() => import("./pages/admin/Dashboard")));
 
 const ErrorPage = Loadable(lazy(() => import("./pages/others/ErrorPage")));
 
@@ -99,6 +107,10 @@ const routes = [
     element: <Layout />,
     children: [
       {
+        index: true,
+        element: <Dashboard />,
+      },
+      {
         path: "add-company",
         element: <AddCompany />,
       },
@@ -108,43 +120,58 @@ const routes = [
       },
       {
         path: "users",
-        element: <Users />,
+        element: <RequirePermission permission="users-view" />,
+        children: [{ index: true, element: <Users /> }],
       },
       {
         path: "users/add-user",
-        element: <AddUser />,
+        element: <RequirePermission permission="users-edit" />,
+        children: [{ index: true, element: <AddUser /> }],
       },
       {
         path: "users/edit-user/:id",
-        element: <EditUser />,
+        element: <RequirePermission permission="users-edit" />,
+        children: [{ index: true, element: <EditUser /> }],
       },
       {
         path: "contacts",
-        element: <Contacts />,
+        element: <RequirePermission permission="contacts-view" />,
+        children: [{ index: true, element: <Contacts /> }],
       },
       {
         path: "contacts/add-contact",
-        element: <AddContact />,
+        element: <RequirePermission permission="contacts-edit" />,
+        children: [{ index: true, element: <AddContact /> }],
       },
       {
         path: "tickets",
-        element: <Tickets />,
+        element: <RequirePermission permission="tickets-view" />,
+        children: [{ index: true, element: <Tickets /> }],
       },
       {
         path: "tickets/add-ticket",
-        element: <AddTicket />,
+        element: <RequirePermission permission="tickets-edit" />,
+        children: [{ index: true, element: <AddTicket /> }],
       },
       {
         path: "todos",
-        element: <Todos />,
+        element: <RequirePermission permission="todos-view" />,
+        children: [{ index: true, element: <Todos /> }],
       },
       {
         path: "todos/:id",
-        element: <Projects />,
+        element: <RequirePermission permission="todos-view" />,
+        children: [{ index: true, element: <Projects /> }],
       },
       {
         path: "emails",
-        element: <Emails />,
+        element: <RequirePermission permission="admin" />,
+        children: [{ index: true, element: <Emails /> }],
+      },
+      {
+        path: "pipeline",
+        element: <RequirePermission permission="contacts-view" />,
+        children: [{ index: true, element: <Pipeline /> }],
       },
     ],
   },

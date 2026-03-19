@@ -11,6 +11,8 @@ import (
 	"tinycrm/templates"
 	"tinycrm/utils"
 
+	"slices"
+
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"go.mongodb.org/mongo-driver/bson"
@@ -23,7 +25,6 @@ type registerInput struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=6"`
 	Company  string `json:"company" binding:"required"`
-	Role     string `json:"role" binding:"required"`
 }
 
 type loginInput struct {
@@ -78,16 +79,22 @@ func Register(c *gin.Context) {
 	}
 
 	user := models.User{
-		ID:        primitive.NewObjectID(),
-		Name:      input.Name,
-		Email:     input.Email,
-		Password:  string(hash),
-		Role:      input.Role,
-		Token:     token,
-		Verified:  false,
-		Date:      time.Now(),
-		CompanyID: company.ID.Hex(),
-		Company:   company.Name,
+		ID:          primitive.NewObjectID(),
+		Name:        input.Name,
+		Email:       input.Email,
+		Password:    string(hash),
+		Permissions: []string{
+			"admin",
+			"users-view", "users-edit", "users-delete",
+			"contacts-view", "contacts-edit", "contacts-delete",
+			"tickets-view", "tickets-edit", "tickets-delete",
+			"todos-view", "todos-edit", "todos-delete",
+		},
+		Token:       token,
+		Verified:    false,
+		Date:        time.Now(),
+		CompanyID:   company.ID.Hex(),
+		Company:     company.Name,
 	}
 
 	// Patch company.createdBy now that we have the user ID.
@@ -159,14 +166,25 @@ func Login(c *gin.Context) {
 
 	// Frontend reads: res.message.id, res.message.name, res.message.email,
 	// res.message.type (role), res.message.token, res.message.companyId, res.message.company
+	scope := "user"
+	if slices.Contains(user.Permissions, "admin") {
+		scope = "admin"
+	}
+
+	permissions := user.Permissions
+	if permissions == nil {
+		permissions = []string{}
+	}
+
 	utils.Success(c, http.StatusOK, gin.H{
-		"id":        user.ID.Hex(),
-		"name":      user.Name,
-		"email":     user.Email,
-		"type":      user.Role,
-		"token":     token,
-		"companyId": user.CompanyID,
-		"company":   user.Company,
+		"id":          user.ID.Hex(),
+		"name":        user.Name,
+		"email":       user.Email,
+		"type":        scope,
+		"token":       token,
+		"companyId":   user.CompanyID,
+		"company":     user.Company,
+		"permissions": permissions,
 	})
 }
 

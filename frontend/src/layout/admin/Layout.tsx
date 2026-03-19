@@ -2,9 +2,12 @@ import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import Topbar, { menuContents } from "./components/Topbar";
 import Sidebar from "./components/Sidebar";
+import usePermissions from "@/hooks/usePermissions";
 
 const Layout = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const { has } = usePermissions();
+  const visibleItems = menuContents.filter((item) => has(item.permission));
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
 
@@ -32,7 +35,7 @@ const Layout = () => {
         }`}
       >
         <ul className="p-2 space-y-1">
-          {menuContents.map((item, index) => (
+          {visibleItems.map((item, index) => (
             <li key={index}>
               <NavLink
                 to={item.link}

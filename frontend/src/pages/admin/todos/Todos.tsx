@@ -7,16 +7,21 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Progress } from "@/components/ui/progress";
 import { CustomTextField } from "@/components/CustomInputs";
 import { apiProvider } from "@/services/utilities/provider";
+import usePermissions from "@/hooks/usePermissions";
 
 type Project = {
   _id: string;
   name: string;
   date: string;
+  totalTasks: number;
+  doneTasks: number;
 };
 
 const Todos = () => {
+  const { has } = usePermissions();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -57,9 +62,11 @@ const Todos = () => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Projects</h2>
-        <Button size="sm" onClick={() => setShowForm((v) => !v)}>
-          <Plus className="h-4 w-4 mr-1" /> New Project
-        </Button>
+        {has("todos-edit") && (
+          <Button size="sm" onClick={() => setShowForm((v) => !v)}>
+            <Plus className="h-4 w-4 mr-1" /> New Project
+          </Button>
+        )}
       </div>
 
       {showForm && (
@@ -73,41 +80,68 @@ const Todos = () => {
         {isLoading ? (
           Array.from({ length: 3 }).map((_, i) => (
             <Card key={i}>
-              <CardContent className="pt-6 flex flex-col gap-3">
-                <Skeleton className="h-6 w-3/4" />
-                <div className="flex gap-2">
-                  <Skeleton className="h-9 flex-1" />
-                  <Skeleton className="h-9 w-9" />
-                </div>
+              <CardContent className="pt-5 pb-4 flex flex-col gap-3">
+                <Skeleton className="h-5 w-2/3" />
+                <Skeleton className="h-3 w-1/3" />
+                <Skeleton className="h-1.5 w-full" />
+                <Skeleton className="h-9 w-full" />
               </CardContent>
             </Card>
           ))
         ) : (
           <>
             {projects.map((project) => (
-              <Card key={project._id}>
-                <CardContent className="pt-6 flex flex-col gap-3">
-                  <h2 className="text-xl font-semibold">{project.name}</h2>
-                  <div className="flex gap-2">
-                    <NavLink to={`${project._id}`} className="flex-1">
-                      <Button className="w-full">Open Board</Button>
-                    </NavLink>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-destructive hover:text-destructive"
-                      onClick={() => handleDelete(project._id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+              <Card key={project._id} className="hover:shadow-md transition-shadow">
+                <CardContent className="pt-5 pb-4 flex flex-col gap-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <h2 className="font-semibold text-base leading-tight">{project.name}</h2>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Created {new Date(project.date).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+                      </p>
+                    </div>
+                    {has("todos-delete") && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive"
+                        onClick={() => handleDelete(project._id)}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
                   </div>
+                  <div className="space-y-1.5">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>{project.totalTasks} task{project.totalTasks !== 1 ? "s" : ""}</span>
+                      <span>{project.doneTasks}/{project.totalTasks} done</span>
+                    </div>
+                    <Progress
+                      value={project.totalTasks > 0 ? (project.doneTasks / project.totalTasks) * 100 : 0}
+                      className="h-1.5"
+                    />
+                  </div>
+                  <NavLink to={`${project._id}`}>
+                    <Button size="sm" className="w-full">Open Board</Button>
+                  </NavLink>
                 </CardContent>
               </Card>
             ))}
             {projects.length === 0 && !showForm && (
-              <p className="text-muted-foreground col-span-full text-sm">
-                No projects yet. Create one to get started.
-              </p>
+              <div className="col-span-full flex flex-col items-center justify-center py-20 gap-4 text-center">
+                <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
+                  <Plus className="h-7 w-7 text-muted-foreground/50" />
+                </div>
+                <div>
+                  <p className="font-semibold">No projects yet</p>
+                  <p className="text-sm text-muted-foreground mt-1">Create a project to start organizing work with a Kanban board.</p>
+                </div>
+                {has("todos-edit") && (
+                  <Button size="sm" onClick={() => setShowForm(true)}>
+                    <Plus className="h-4 w-4" /> Create First Project
+                  </Button>
+                )}
+              </div>
             )}
           </>
         )}

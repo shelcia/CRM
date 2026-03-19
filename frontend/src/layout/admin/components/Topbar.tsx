@@ -10,6 +10,7 @@ import {
   LogOut,
   User,
   ChevronDown,
+  Kanban,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -79,7 +80,6 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
           <DropdownMenuContent align="end" className="w-48">
             <div className="px-2 py-1.5">
               <p className="text-sm font-medium truncate">{userName || "User"}</p>
-              <p className="text-xs text-muted-foreground capitalize">{userRole}</p>
             </div>
             <DropdownMenuSeparator />
             {isAdmin && (
@@ -109,25 +109,36 @@ export const menuContents = [
     title: "Contacts",
     link: "/dashboard/contacts",
     icon: <Phone className="h-4 w-4" />,
+    permission: "contacts-view",
+  },
+  {
+    title: "Pipeline",
+    link: "/dashboard/pipeline",
+    icon: <Kanban className="h-4 w-4" />,
+    permission: "contacts-view",
   },
   {
     title: "Tickets",
     link: "/dashboard/tickets",
     icon: <TicketCheck className="h-4 w-4" />,
+    permission: "tickets-view",
   },
   {
     title: "Projects",
     link: "/dashboard/todos",
     icon: <CheckSquare className="h-4 w-4" />,
+    permission: "todos-view",
   },
   {
     title: "Email",
     link: "/dashboard/emails",
     icon: <Mail className="h-4 w-4" />,
+    permission: "admin",
   },
   {
     title: "Users",
     link: "/dashboard/users",
     icon: <Users className="h-4 w-4" />,
+    permission: "users-view",
   },
 ];

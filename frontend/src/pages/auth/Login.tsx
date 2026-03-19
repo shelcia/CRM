@@ -36,8 +36,9 @@ const Login = () => {
         localStorage.setItem("CRM-token", res.message.token);
         localStorage.setItem("CRM-companyId", res.message.companyId);
         localStorage.setItem("CRM-company", res.message.company);
+        localStorage.setItem("CRM-permissions", JSON.stringify(res.message.permissions ?? []));
         if (res.message.companyId) {
-          navigate("/dashboard/contacts");
+          navigate("/dashboard");
         } else {
           navigate("/dashboard/add-company");
         }

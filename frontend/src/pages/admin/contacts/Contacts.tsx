@@ -7,7 +7,9 @@ import { Plus, Upload, Download, FileDown } from "lucide-react";
 import { apiContacts, exportContacts, importContacts } from "@/services/models/contactsModel";
 import { Link } from "react-router-dom";
 import ContactPanel from "./ContactPanel";
+import { StatusBadge } from "@/components/StatusBadge";
 import toast from "react-hot-toast";
+import usePermissions from "@/hooks/usePermissions";
 
 const CSV_TEMPLATE = "name,email,number,company,jobTitle,priority,companySize,probability,status\nJane Smith,jane@acme.com,+15550001234,Acme Corp,Product Manager,high,250,0.7,new";
 
@@ -22,6 +24,7 @@ const downloadTemplate = () => {
 };
 
 const Contacts = () => {
+  const { has } = usePermissions();
   const [contacts, setContacts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [panelContact, setPanelContact] = useState(null);
@@ -74,7 +77,11 @@ const Contacts = () => {
       name: "lastActivity",
       options: { customBodyRender: (data) => <span>{convertDateToDateWithoutTime(data)}</span> },
     },
-    { label: "Lead Status", name: "status" },
+    {
+      label: "Lead Status",
+      name: "status",
+      options: { customBodyRender: (val: string) => <StatusBadge value={val} /> },
+    },
     {
       label: "Created At",
       name: "createdAt",
@@ -111,20 +118,28 @@ const Contacts = () => {
       />
 
       <div className="flex items-center justify-end gap-2 mb-3">
-        <Button variant="outline" size="sm" onClick={downloadTemplate}>
-          <FileDown className="h-4 w-4" /> Template
-        </Button>
-        <Button variant="outline" size="sm" loading={importing} onClick={() => fileInputRef.current?.click()}>
-          <Upload className="h-4 w-4" /> Import CSV
-        </Button>
-        <Button variant="outline" size="sm" onClick={() => exportContacts().catch(() => toast.error("Export failed"))}>
-          <Download className="h-4 w-4" /> Export CSV
-        </Button>
-        <Link to="/dashboard/contacts/add-contact">
-          <Button size="sm">
-            <Plus className="h-4 w-4" /> Add Contact
+        {has("contacts-edit") && (
+          <>
+            <Button variant="outline" size="sm" onClick={downloadTemplate}>
+              <FileDown className="h-4 w-4" /> Template
+            </Button>
+            <Button variant="outline" size="sm" loading={importing} onClick={() => fileInputRef.current?.click()}>
+              <Upload className="h-4 w-4" /> Import CSV
+            </Button>
+          </>
+        )}
+        {has("contacts-view") && (
+          <Button variant="outline" size="sm" onClick={() => exportContacts().catch(() => toast.error("Export failed"))}>
+            <Download className="h-4 w-4" /> Export CSV
           </Button>
-        </Link>
+        )}
+        {has("contacts-edit") && (
+          <Link to="/dashboard/contacts/add-contact">
+            <Button size="sm">
+              <Plus className="h-4 w-4" /> Add Contact
+            </Button>
+          </Link>
+        )}
       </div>
 
       {isLoading ? (

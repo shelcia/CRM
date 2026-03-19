@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CustomMultipleCheckBoxField,
-  CustomSelectField,
   CustomTextField,
 } from "@/components/CustomInputs";
 import { Button } from "@/components/ui/button";
@@ -12,42 +11,39 @@ import { apiUsers } from "@/services/models/usersModel";
 import toast from "react-hot-toast";
 import { ArrowLeft, UserRound, ShieldCheck } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useEnums } from "@/hooks/useEnums";
-import { toLabelItems } from "@/utils/enumLabel";
 
 const PERMISSION_GROUPS = [
-  { label: "Users",    keys: ["users-view",    "users-edit",    "users-delete"]    },
-  { label: "Contacts", keys: ["contacts-view", "contacts-edit", "contacts-delete"] },
-  { label: "Tickets",  keys: ["tickets-view",  "tickets-edit",  "tickets-delete"]  },
-  { label: "Todos",    keys: ["todos-view",    "todos-edit",    "todos-delete"]    },
+  { label: "Users",    keys: ["users-view",    "users-edit",    "users-delete"],    labels: ["View", "Edit", "Delete"] },
+  { label: "Contacts", keys: ["contacts-view", "contacts-edit", "contacts-delete"], labels: ["View", "Edit", "Delete"] },
+  { label: "Tickets",  keys: ["tickets-view",  "tickets-edit",  "tickets-delete"],  labels: ["View", "Edit", "Delete"] },
+  { label: "Todos",    keys: ["todos-view",    "todos-edit",    "todos-delete"],    labels: ["View", "Edit", "Delete"] },
+  { label: "Admin",    keys: ["admin"],                                              labels: ["Admin"]                  },
 ];
 
-const permissionsToChecked = (permissions: string[]) =>
-  PERMISSION_GROUPS.map((g) => g.keys.map((k) => permissions.includes(k)));
+const permissionsToChecked = (permissions: string[]) => {
+  const isAdmin = permissions.includes("admin");
+  return PERMISSION_GROUPS.map((g) => g.keys.map((k) => isAdmin || permissions.includes(k)));
+};
 
 const checkedToPermissions = (checked: boolean[][]) =>
-  PERMISSION_GROUPS.flatMap((g, gi) =>
-    g.keys.filter((_, ki) => checked[gi][ki]),
-  );
+  PERMISSION_GROUPS.flatMap((g, gi) => g.keys.filter((_, ki) => checked[gi][ki]));
 
 const EditUser = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { roles } = useEnums();
 
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [checked, setChecked] = useState<boolean[][]>(
-    PERMISSION_GROUPS.map(() => [true, true, true]),
+    PERMISSION_GROUPS.map((g) => g.keys.map(() => true)),
   );
 
   const { errors, values, handleChange, handleSubmit, touched, setValues } =
     useFormik({
-      initialValues: { name: "", email: "", role: "non-admin" },
+      initialValues: { name: "", email: "" },
       validationSchema: Yup.object().shape({
         name: Yup.string().required("Name is required"),
-        email: Yup.string().email("Enter valid email").required("Email is required"),
-        role: Yup.string().required(),
+        email: Yup.string().email("Enter a valid email").required("Email is required"),
       }),
       onSubmit: (vals) => {
         setIsLoading(true);
@@ -72,7 +68,7 @@ const EditUser = () => {
     const controller = new AbortController();
     apiUsers.getSingle!(id, controller.signal, "", true).then((res) => {
       if (res?._id || res?.name) {
-        setValues({ name: res.name, email: res.email, role: res.role });
+        setValues({ name: res.name, email: res.email });
         if (Array.isArray(res.permissions)) {
           setChecked(permissionsToChecked(res.permissions));
         }
@@ -122,12 +118,11 @@ const EditUser = () => {
               </div>
               <span className="text-xs text-muted-foreground">Photo</span>
             </div>
-
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <CustomTextField
                 label="Name"
                 name="name"
-                placeholder="ex: Ram"
+                placeholder="ex: Jane Smith"
                 values={values}
                 handleChange={handleChange}
                 touched={touched}
@@ -136,20 +131,11 @@ const EditUser = () => {
               <CustomTextField
                 label="Email"
                 name="email"
-                placeholder="ex: james@company.com"
+                placeholder="ex: jane@company.com"
                 values={values}
                 handleChange={handleChange}
                 touched={touched}
                 errors={errors}
-              />
-              <CustomSelectField
-                label="Role"
-                name="role"
-                values={values}
-                handleChange={handleChange}
-                touched={touched}
-                errors={errors}
-                labelItms={toLabelItems(roles)}
               />
             </div>
           </div>
@@ -168,7 +154,7 @@ const EditUser = () => {
               <CustomMultipleCheckBoxField
                 key={group.label}
                 label={group.label}
-                labelItms={["View", "Edit", "Delete"]}
+                labelItms={group.labels}
                 checked={checked[gi]}
                 setChecked={(val) =>
                   setChecked((prev) => {
