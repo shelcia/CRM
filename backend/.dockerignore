@@ -1,0 +1,6 @@
+.env
+*.env.*
+seed/
+cmd/seed/
+uploads/
+README.md

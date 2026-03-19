@@ -1,0 +1,32 @@
+services:
+
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    volumes:
+      - uploads:/app/uploads
+    ports:
+      - "4050:4050"   # optional — remove if you don't need direct API access
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:4050/api/enums || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: /api   # relative path — nginx proxies to backend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  uploads:

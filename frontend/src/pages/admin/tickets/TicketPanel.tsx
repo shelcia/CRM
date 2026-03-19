@@ -11,6 +11,9 @@ import { Pencil, Save, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 import usePermissions from "@/hooks/usePermissions";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Ticket {
   _id: string;
@@ -99,12 +102,9 @@ const TicketPanel = ({ ticket, open, onClose, onUpdate, onDelete }: TicketPanelP
             <div className="flex items-center gap-1 shrink-0">
               {editing ? (
                 <>
-                  <button
-                    onClick={cancelEdit}
-                    className="p-1.5 rounded-md text-muted-foreground hover:bg-muted transition-colors"
-                  >
+                  <Button size="icon-sm" variant="ghost" onClick={cancelEdit}>
                     <X className="h-3.5 w-3.5" />
-                  </button>
+                  </Button>
                   <Button size="sm" onClick={handleSave} loading={saving}>
                     <Save className="h-3.5 w-3.5 mr-1" /> Save
                   </Button>
@@ -112,21 +112,20 @@ const TicketPanel = ({ ticket, open, onClose, onUpdate, onDelete }: TicketPanelP
               ) : (
                 <>
                   {has("tickets-edit") && (
-                    <button
-                      onClick={startEdit}
-                      className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                    >
+                    <Button size="icon-sm" variant="ghost" onClick={startEdit}>
                       <Pencil className="h-3.5 w-3.5" />
-                    </button>
+                    </Button>
                   )}
                   {has("tickets-delete") && (
-                    <button
+                    <Button
+                      size="icon-sm"
+                      variant="ghost"
                       onClick={handleDelete}
                       disabled={deleting}
-                      className="p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                      className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                     >
                       <X className="h-3.5 w-3.5" />
-                    </button>
+                    </Button>
                   )}
                 </>
               )}
@@ -137,24 +136,26 @@ const TicketPanel = ({ ticket, open, onClose, onUpdate, onDelete }: TicketPanelP
           <div className="flex flex-wrap gap-2 mt-3">
             {editing ? (
               <>
-                <select
-                  value={form.status}
-                  onChange={(e) => set("status", e.target.value)}
-                  className="rounded-md border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-ring"
-                >
-                  {toLabelItems(ticketStatuses).map((i) => (
-                    <option key={i.val} value={i.val}>{i.label}</option>
-                  ))}
-                </select>
-                <select
-                  value={form.priority}
-                  onChange={(e) => set("priority", e.target.value)}
-                  className="rounded-md border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-ring"
-                >
-                  {toLabelItems(ticketPriorities).map((i) => (
-                    <option key={i.val} value={i.val}>{i.label}</option>
-                  ))}
-                </select>
+                <Select value={form.status} onValueChange={(v) => set("status", v)}>
+                  <SelectTrigger className="h-7 text-xs w-36">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {toLabelItems(ticketStatuses).map((i) => (
+                      <SelectItem key={i.val} value={i.val}>{i.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Select value={form.priority} onValueChange={(v) => set("priority", v)}>
+                  <SelectTrigger className="h-7 text-xs w-36">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {toLabelItems(ticketPriorities).map((i) => (
+                      <SelectItem key={i.val} value={i.val}>{i.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </>
             ) : (
               <>
@@ -176,18 +177,15 @@ const TicketPanel = ({ ticket, open, onClose, onUpdate, onDelete }: TicketPanelP
               <p className="text-xs font-medium text-muted-foreground mb-1">{label}</p>
               {editing && key !== "createdAt" ? (
                 key === "description" ? (
-                  <textarea
+                  <Textarea
                     rows={3}
                     value={(form[key] as string) ?? ""}
                     onChange={(e) => set(key, e.target.value)}
-                    className="w-full resize-none rounded-md border bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                 ) : (
-                  <input
-                    type="text"
+                  <Input
                     value={(form[key] as string) ?? ""}
                     onChange={(e) => set(key, e.target.value)}
-                    className="w-full rounded-md border bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                   />
                 )
               ) : (

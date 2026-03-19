@@ -1,4 +1,3 @@
-import React from "react";
 import logo from "@/assets/logo.png";
 import {
   Phone,
@@ -11,8 +10,10 @@ import {
   User,
   ChevronDown,
   Kanban,
+  LayoutDashboard,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,13 +48,15 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-14 bg-background/95 backdrop-blur border-b flex items-center px-4 gap-4">
       {/* Mobile hamburger */}
-      <button
+      <Button
+        size="icon-sm"
+        variant="ghost"
         onClick={handleDrawerToggle}
-        className="sm:hidden p-1.5 rounded-md hover:bg-accent transition-colors text-foreground"
+        className="sm:hidden"
         aria-label="open menu"
       >
         <Menu className="h-5 w-5" />
-      </button>
+      </Button>
 
       {/* Brand */}
       <div className="flex items-center gap-2 shrink-0">
@@ -105,6 +108,12 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
 export default Topbar;
 
 export const menuContents = [
+  {
+    title: "Dashboard",
+    link: "/dashboard",
+    icon: <LayoutDashboard className="h-4 w-4" />,
+    permission: "dashboard",
+  },
   {
     title: "Contacts",
     link: "/dashboard/contacts",

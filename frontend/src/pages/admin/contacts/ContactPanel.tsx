@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { apiProvider } from "@/services/utilities/provider";
 import { apiContacts } from "@/services/models/contactsModel";
 import { getDealsByContact } from "@/services/models/dealsModel";
@@ -199,7 +202,7 @@ const NotesTab = ({
             );
           })}
         </div>
-        <textarea
+        <Textarea
           ref={textareaRef}
           rows={3}
           value={body}
@@ -208,7 +211,6 @@ const NotesTab = ({
             if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) submit();
           }}
           placeholder={`Add a ${type}…`}
-          className="w-full resize-none rounded-md border bg-card px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         />
         <div className="flex justify-end">
           <Button size="sm" onClick={submit} loading={saving} disabled={!body.trim()}>
@@ -239,12 +241,14 @@ const NotesTab = ({
                     {meta.icon}
                     {meta.label}
                   </span>
-                  <button
+                  <Button
+                    size="icon-sm"
+                    variant="ghost"
                     onClick={() => handleDelete(note._id)}
-                    className="text-muted-foreground hover:text-destructive transition-colors"
+                    className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
-                  </button>
+                  </Button>
                 </div>
                 <p className="text-sm text-foreground leading-relaxed">{note.body}</p>
                 <div className="flex items-center justify-between mt-2">
@@ -397,27 +401,23 @@ const EditTab = ({
   const field = (label: string, key: keyof typeof form, type = "text") => (
     <div className="flex flex-col gap-1">
       <label className="text-xs font-medium text-muted-foreground">{label}</label>
-      <input
-        type={type}
-        value={form[key]}
-        onChange={(e) => set(key, e.target.value)}
-        className="rounded-md border bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-      />
+      <Input type={type} value={form[key]} onChange={(e) => set(key, e.target.value)} />
     </div>
   );
 
   const select = (label: string, key: keyof typeof form, items: { val: string; label: string }[]) => (
     <div className="flex flex-col gap-1">
       <label className="text-xs font-medium text-muted-foreground">{label}</label>
-      <select
-        value={form[key]}
-        onChange={(e) => set(key, e.target.value)}
-        className="rounded-md border bg-background px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-      >
-        {items.map((i) => (
-          <option key={i.val} value={i.val}>{i.label}</option>
-        ))}
-      </select>
+      <Select value={form[key]} onValueChange={(v) => set(key, v)}>
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {items.map((i) => (
+            <SelectItem key={i.val} value={i.val}>{i.label}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 
@@ -486,13 +486,12 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete }: ContactPan
           <p className="text-sm font-medium">Delete <strong>{contact.name}</strong>?</p>
           <p className="text-xs text-muted-foreground">This cannot be undone.</p>
           <div className="flex gap-2 justify-end">
-            <button
-              onClick={() => toast.dismiss(t.id)}
-              className="px-3 py-1 text-xs rounded-md border hover:bg-muted transition-colors"
-            >
+            <Button size="sm" variant="outline" onClick={() => toast.dismiss(t.id)}>
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
+              size="sm"
+              variant="destructive"
               onClick={async () => {
                 toast.dismiss(t.id);
                 setDeleting(true);
@@ -506,10 +505,9 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete }: ContactPan
                   toast.error("Failed to delete contact");
                 }
               }}
-              className="px-3 py-1 text-xs rounded-md bg-destructive text-white hover:bg-destructive/90 transition-colors"
             >
               Delete
-            </button>
+            </Button>
           </div>
         </div>
       ),
@@ -536,23 +534,26 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete }: ContactPan
             </div>
             <div className="flex items-center gap-1 shrink-0">
               {has("contacts-edit") && (
-                <button
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
                   onClick={() => setTab("edit")}
-                  className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   title="Edit contact"
                 >
                   <Pencil className="h-3.5 w-3.5" />
-                </button>
+                </Button>
               )}
               {has("contacts-delete") && (
-                <button
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
                   onClick={handleDelete}
                   disabled={deleting}
-                  className="p-1.5 rounded-md text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                  className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                   title="Delete contact"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
-                </button>
+                </Button>
               )}
             </div>
           </div>

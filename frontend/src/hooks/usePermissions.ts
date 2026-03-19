@@ -3,7 +3,7 @@ const usePermissions = () => {
   const permissions: string[] = raw ? JSON.parse(raw) : [];
 
   const has = (key: string) =>
-    permissions.includes("admin") || permissions.includes(key);
+    key === "dashboard" || permissions.includes("admin") || permissions.includes(key);
 
   const isAdmin = permissions.includes("admin");
 

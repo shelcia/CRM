@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { CustomTextAreaField, CustomTextField } from "@/components/CustomInputs";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -261,13 +262,14 @@ const Projects = () => {
             />
           </div>
         ) : (
-          <button
+          <Button
+            variant="ghost"
             onClick={() => setShowAddColumn(true)}
-            className="w-full flex items-center gap-2 rounded-xl border border-dashed px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
+            className="w-full justify-start gap-2 rounded-xl border border-dashed px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 h-auto"
           >
             <Plus className="h-4 w-4" />
             Add column
-          </button>
+          </Button>
         )}
       </div>
     </div>
@@ -301,9 +303,9 @@ const ColumnHeader = ({
     <div className="px-3 py-2.5 flex items-center gap-2">
       {editing ? (
         <>
-          <input
+          <Input
             autoFocus
-            className="flex-1 text-sm font-semibold bg-transparent border-b border-primary outline-none"
+            className="flex-1 h-7 text-sm font-semibold bg-transparent border-0 border-b border-primary rounded-none shadow-none focus-visible:ring-0 px-0"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => {
@@ -311,12 +313,12 @@ const ColumnHeader = ({
               if (e.key === "Escape") setEditing(false);
             }}
           />
-          <button onClick={save} className="text-primary">
+          <Button size="icon-sm" variant="ghost" onClick={save} className="text-primary hover:text-primary">
             <Check className="h-3.5 w-3.5" />
-          </button>
-          <button onClick={() => setEditing(false)} className="text-muted-foreground">
+          </Button>
+          <Button size="icon-sm" variant="ghost" onClick={() => setEditing(false)}>
             <X className="h-3.5 w-3.5" />
-          </button>
+          </Button>
         </>
       ) : (
         <>
@@ -324,18 +326,14 @@ const ColumnHeader = ({
           <span className="text-xs text-muted-foreground tabular-nums bg-muted rounded-full px-1.5 py-0.5">
             {column.todos.length}
           </span>
-          <button
-            className="text-muted-foreground hover:text-foreground transition-colors"
-            onClick={onAddTodo}
-            title="Add card"
-          >
+          <Button size="icon-sm" variant="ghost" onClick={onAddTodo} title="Add card">
             <Plus className="h-4 w-4" />
-          </button>
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="text-muted-foreground hover:text-foreground transition-colors">
+              <Button size="icon-sm" variant="ghost">
                 <Pencil className="h-3.5 w-3.5" />
-              </button>
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => setEditing(true)}>

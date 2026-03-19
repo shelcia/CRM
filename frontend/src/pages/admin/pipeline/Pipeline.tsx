@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { CustomTextField, CustomSelectField } from "@/components/CustomInputs";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { apiDeals } from "@/services/models/dealsModel";
@@ -234,13 +235,12 @@ const AddDealDialog = ({
           />
           <div className="space-y-1">
             <Label htmlFor="expectedClose">Expected Close</Label>
-            <input
+            <Input
               id="expectedClose"
               name="expectedClose"
               type="date"
               value={values.expectedClose}
               onChange={handleChange}
-              className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
             />
           </div>
           <CustomTextField

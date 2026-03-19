@@ -1,5 +1,6 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -81,16 +82,13 @@ export const CustomTextAreaField = ({
 }: FieldProps & { rows?: number }) => {
   return (
     <div className="w-full">
-      <textarea
+      <Textarea
         name={name}
         placeholder={placeholder}
         value={values[name]}
         onChange={handleChange}
         rows={rows}
-        className={cn(
-          "flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none",
-          touched[name] && errors[name] && "border-destructive",
-        )}
+        className={cn(touched[name] && errors[name] && "border-destructive")}
       />
       {touched[name] && errors[name] && (
         <p className="text-xs text-destructive mt-1">{errors[name]}</p>
