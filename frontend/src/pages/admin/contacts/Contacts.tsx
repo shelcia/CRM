@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import CustomTable from "@/components/CustomTable";
-import TableSkeleton from "@/components/TableSkeleton";
+import { CustomTable, TableSkeleton, StatusBadge, PageHeader } from "@/components/custom";
 import { convertDateToDateWithoutTime } from "@/utils/calendarHelpers";
 import { Button } from "@/components/ui/button";
 import { Plus, Upload, FileDown, Pencil, Trash2 } from "lucide-react";
@@ -11,7 +10,6 @@ import {
 } from "@/services/models/contactsModel";
 import { Link } from "react-router-dom";
 import ContactPanel from "./ContactPanel";
-import { StatusBadge } from "@/components/StatusBadge";
 import toast from "react-hot-toast";
 import usePermissions from "@/hooks/usePermissions";
 import { confirmToast } from "@/utils/confirmToast";
@@ -41,7 +39,9 @@ const Contacts = () => {
 
   const [panelContact, setPanelContact] = useState<any>(null);
   const [panelOpen, setPanelOpen] = useState(false);
-  const [panelDefaultTab, setPanelDefaultTab] = useState<"activity" | "edit">("activity");
+  const [panelDefaultTab, setPanelDefaultTab] = useState<"activity" | "edit">(
+    "activity",
+  );
   const [importing, setImporting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -59,7 +59,10 @@ const Contacts = () => {
       }
       setIsLoading(false);
     });
-    return () => { cancelled = true; ctrl.abort(); };
+    return () => {
+      cancelled = true;
+      ctrl.abort();
+    };
   }, [page, search]);
 
   const openPanel = (contact: any, tab: "activity" | "edit" = "activity") => {
@@ -75,7 +78,9 @@ const Contacts = () => {
     importContacts(file)
       .then((res) => {
         if (res.imported > 0) {
-          toast.success(`Imported ${res.imported} contact${res.imported !== 1 ? "s" : ""}`);
+          toast.success(
+            `Imported ${res.imported} contact${res.imported !== 1 ? "s" : ""}`,
+          );
           setPage(1);
           setSearch("");
         }
@@ -84,7 +89,10 @@ const Contacts = () => {
         }
       })
       .catch(() => toast.error("Import failed"))
-      .finally(() => { setImporting(false); e.target.value = ""; });
+      .finally(() => {
+        setImporting(false);
+        e.target.value = "";
+      });
   };
 
   const columns = [
@@ -97,20 +105,27 @@ const Contacts = () => {
       name: "lastActivity",
       options: {
         sortable: true,
-        customBodyRender: (data: string) => <span>{convertDateToDateWithoutTime(data)}</span>,
+        customBodyRender: (data: string) => (
+          <span>{convertDateToDateWithoutTime(data)}</span>
+        ),
       },
     },
     {
       label: "Lead Status",
       name: "status",
-      options: { customBodyRender: (val: string) => <StatusBadge value={val} /> },
+      options: {
+        sortable: true,
+        customBodyRender: (val: string) => <StatusBadge value={val} />,
+      },
     },
     {
       label: "Created At",
       name: "createdAt",
       options: {
         sortable: true,
-        customBodyRender: (data: string) => <span>{convertDateToDateWithoutTime(data)}</span>,
+        customBodyRender: (data: string) => (
+          <span>{convertDateToDateWithoutTime(data)}</span>
+        ),
       },
     },
     {
@@ -122,7 +137,11 @@ const Contacts = () => {
           return (
             <div className="flex items-center gap-1">
               {has("contacts-edit") && (
-                <Button size="icon-sm" variant="outline" onClick={() => openPanel(contact, "edit")}>
+                <Button
+                  size="icon-sm"
+                  variant="outline"
+                  onClick={() => openPanel(contact, "edit")}
+                >
                   <Pencil className="h-3.5 w-3.5" />
                 </Button>
               )}
@@ -134,14 +153,23 @@ const Contacts = () => {
                     confirmToast({
                       title: `Delete "${contact?.name}"?`,
                       onConfirm: async () => {
-                        const res = await apiContacts.remove!(contact._id, "", true);
+                        const res = await apiContacts.remove!(
+                          contact._id,
+                          "",
+                          true,
+                        );
                         if (res?.message === "Contact deleted" || !res?.error) {
-                          setContacts((prev) => prev.filter((c) => c._id !== contact._id));
+                          setContacts((prev) =>
+                            prev.filter((c) => c._id !== contact._id),
+                          );
                           setTotal((t) => t - 1);
-                          if (panelContact?._id === contact._id) setPanelOpen(false);
+                          if (panelContact?._id === contact._id)
+                            setPanelOpen(false);
                           toast.success("Contact deleted");
                         } else {
-                          toast.error(res?.message ?? "Failed to delete contact");
+                          toast.error(
+                            res?.message ?? "Failed to delete contact",
+                          );
                         }
                       },
                     })
@@ -159,36 +187,40 @@ const Contacts = () => {
 
   return (
     <section className="space-y-6">
-      <input ref={fileInputRef} type="file" accept=".csv" className="hidden" onChange={handleImportFile} />
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".csv"
+        className="hidden"
+        onChange={handleImportFile}
+      />
 
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-bold">Contacts</h1>
-          <p className="text-sm text-muted-foreground">Manage and track your leads and customers</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {has("contacts-edit") && (
+      <PageHeader
+        title="Contacts"
+        description="Manage and track your leads and customers"
+        actions={
+          has("contacts-edit") && (
             <>
               <Button variant="outline" size="sm" onClick={downloadTemplate}>
                 <FileDown className="h-4 w-4" /> Template
               </Button>
-              <Button variant="outline" size="sm" loading={importing} onClick={() => fileInputRef.current?.click()}>
+              <Button
+                variant="outline"
+                size="sm"
+                loading={importing}
+                onClick={() => fileInputRef.current?.click()}
+              >
                 <Upload className="h-4 w-4" /> Import CSV
               </Button>
-              <Button variant="outline" size="sm" onClick={() => exportContacts()}>
-                Export CSV
-              </Button>
+              <Link to="/dashboard/contacts/add-contact">
+                <Button size="sm">
+                  <Plus className="h-4 w-4" /> Add Contact
+                </Button>
+              </Link>
             </>
-          )}
-          {has("contacts-edit") && (
-            <Link to="/dashboard/contacts/add-contact">
-              <Button size="sm">
-                <Plus className="h-4 w-4" /> Add Contact
-              </Button>
-            </Link>
-          )}
-        </div>
-      </div>
+          )
+        }
+      />
 
       {isLoading && contacts.length === 0 ? (
         <TableSkeleton rows={6} cols={8} />
@@ -202,7 +234,10 @@ const Contacts = () => {
             page,
             pageSize: PAGE_SIZE,
             onPageChange: setPage,
-            onSearchChange: (s) => { setSearch(s); setPage(1); },
+            onSearchChange: (s) => {
+              setSearch(s);
+              setPage(1);
+            },
             loading: isLoading,
           }}
         />
@@ -214,7 +249,9 @@ const Contacts = () => {
         defaultTab={panelDefaultTab}
         onClose={() => setPanelOpen(false)}
         onUpdate={(updated) => {
-          setContacts((prev) => prev.map((c) => (c._id === updated._id ? updated : c)));
+          setContacts((prev) =>
+            prev.map((c) => (c._id === updated._id ? updated : c)),
+          );
           setPanelContact(updated);
         }}
         onDelete={(id) => {

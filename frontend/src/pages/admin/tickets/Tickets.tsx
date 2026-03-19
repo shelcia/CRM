@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import CustomTable from "@/components/CustomTable";
-import TableSkeleton from "@/components/TableSkeleton";
+import { CustomTable, TableSkeleton, StatusBadge, PriorityIndicator, AuthorAvatar, PageHeader } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { Plus, TicketCheck, Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -8,9 +7,6 @@ import { convertDateToDateWithoutTime } from "@/utils/calendarHelpers";
 import { apiTickets } from "@/services/models/ticketsModel";
 import { confirmToast } from "@/utils/confirmToast";
 import toast from "react-hot-toast";
-import { StatusBadge } from "@/components/StatusBadge";
-import { PriorityIndicator } from "@/components/PriorityIndicator";
-import AuthorAvatar from "@/components/AuthorAvatar";
 import TicketPanel from "./TicketPanel";
 import usePermissions from "@/hooks/usePermissions";
 
@@ -25,11 +21,8 @@ const Tickets = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [panelTicket, setPanelTicket] = useState<any>(null);
   const [panelOpen, setPanelOpen] = useState(false);
-  const [panelDefaultEditing, setPanelDefaultEditing] = useState(false);
-
-  const openPanel = (ticket: any, editing = false) => {
+  const openPanel = (ticket: any) => {
     setPanelTicket(ticket);
-    setPanelDefaultEditing(editing);
     setPanelOpen(true);
   };
 
@@ -47,7 +40,10 @@ const Tickets = () => {
       }
       setIsLoading(false);
     });
-    return () => { cancelled = true; ctrl.abort(); };
+    return () => {
+      cancelled = true;
+      ctrl.abort();
+    };
   }, [page, search]);
 
   const columns = [
@@ -58,18 +54,27 @@ const Tickets = () => {
       name: "category",
       options: {
         customBodyRender: (val: string) =>
-          val ? <StatusBadge value={val} /> : <span className="text-muted-foreground">—</span>,
+          val ? (
+            <StatusBadge value={val} />
+          ) : (
+            <span className="text-muted-foreground">—</span>
+          ),
       },
     },
     {
       label: "Priority",
       name: "priority",
-      options: { customBodyRender: (val: string) => <PriorityIndicator value={val} /> },
+      options: {
+        customBodyRender: (val: string) => <PriorityIndicator value={val} />,
+      },
     },
     {
       label: "Status",
       name: "status",
-      options: { customBodyRender: (val: string) => <StatusBadge value={val} /> },
+      options: {
+        sortable: true,
+        customBodyRender: (val: string) => <StatusBadge value={val} />,
+      },
     },
     {
       label: "Assigned To",
@@ -91,7 +96,9 @@ const Tickets = () => {
       name: "createdAt",
       options: {
         sortable: true,
-        customBodyRender: (data: string) => <span>{convertDateToDateWithoutTime(data)}</span>,
+        customBodyRender: (data: string) => (
+          <span>{convertDateToDateWithoutTime(data)}</span>
+        ),
       },
     },
     {
@@ -103,7 +110,11 @@ const Tickets = () => {
           return (
             <div className="flex items-center gap-1">
               {has("tickets-edit") && (
-                <Button size="icon-sm" variant="outline" onClick={() => openPanel(ticket, true)}>
+                <Button
+                  size="icon-sm"
+                  variant="outline"
+                  onClick={() => openPanel(ticket)}
+                >
                   <Pencil className="h-3.5 w-3.5" />
                 </Button>
               )}
@@ -115,14 +126,23 @@ const Tickets = () => {
                     confirmToast({
                       title: `Delete "${ticket?.title}"?`,
                       onConfirm: async () => {
-                        const res = await apiTickets.remove!(ticket._id, "", true);
+                        const res = await apiTickets.remove!(
+                          ticket._id,
+                          "",
+                          true,
+                        );
                         if (res?.message === "Ticket deleted" || !res?.error) {
-                          setTickets((prev) => prev.filter((t) => t._id !== ticket._id));
+                          setTickets((prev) =>
+                            prev.filter((t) => t._id !== ticket._id),
+                          );
                           setTotal((t) => t - 1);
-                          if (panelTicket?._id === ticket._id) setPanelOpen(false);
+                          if (panelTicket?._id === ticket._id)
+                            setPanelOpen(false);
                           toast.success("Ticket deleted");
                         } else {
-                          toast.error(res?.message ?? "Failed to delete ticket");
+                          toast.error(
+                            res?.message ?? "Failed to delete ticket",
+                          );
                         }
                       },
                     })
@@ -140,19 +160,19 @@ const Tickets = () => {
 
   return (
     <section className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Tickets</h1>
-          <p className="text-sm text-muted-foreground">Track and resolve customer support requests</p>
-        </div>
-        {has("tickets-edit") && (
-          <Link to="/dashboard/tickets/add-ticket">
-            <Button>
-              <Plus className="h-4 w-4" /> Add Ticket
-            </Button>
-          </Link>
-        )}
-      </div>
+      <PageHeader
+        title="Tickets"
+        description="Track and resolve customer support requests"
+        actions={
+          has("tickets-edit") && (
+            <Link to="/dashboard/tickets/add-ticket">
+              <Button>
+                <Plus className="h-4 w-4" /> Add Ticket
+              </Button>
+            </Link>
+          )
+        }
+      />
 
       {isLoading && tickets.length === 0 ? (
         <TableSkeleton rows={6} cols={8} />
@@ -185,7 +205,10 @@ const Tickets = () => {
             page,
             pageSize: PAGE_SIZE,
             onPageChange: setPage,
-            onSearchChange: (s) => { setSearch(s); setPage(1); },
+            onSearchChange: (s) => {
+              setSearch(s);
+              setPage(1);
+            },
             loading: isLoading,
           }}
         />
@@ -194,10 +217,11 @@ const Tickets = () => {
       <TicketPanel
         ticket={panelTicket}
         open={panelOpen}
-        defaultEditing={panelDefaultEditing}
         onClose={() => setPanelOpen(false)}
         onUpdate={(updated) => {
-          setTickets((prev) => prev.map((t) => t._id === updated._id ? updated : t));
+          setTickets((prev) =>
+            prev.map((t) => (t._id === updated._id ? updated : t)),
+          );
           setPanelTicket(updated);
         }}
         onDelete={(id) => {

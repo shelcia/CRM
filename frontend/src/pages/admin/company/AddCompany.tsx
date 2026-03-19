@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CustomTextField } from "@/components/CustomInputs";
+import { CustomTextField } from "@/components/custom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
@@ -48,7 +48,6 @@ const AddCompany = () => {
   return (
     <div className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center p-4">
       <div className="w-full max-w-lg space-y-8">
-
         {/* Header */}
         <div className="text-center space-y-3">
           <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 mb-1">
@@ -62,7 +61,6 @@ const AddCompany = () => {
 
         {/* Form card */}
         <div className="rounded-xl border bg-card shadow-sm p-6 space-y-5">
-
           {/* Required */}
           <div className="space-y-1.5">
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">

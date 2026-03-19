@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Pencil, Trash2, Check } from "lucide-react";
-import DragHandle from "@/components/DragHandle";
-import AuthorAvatar from "@/components/AuthorAvatar";
+import { DragHandle, AuthorAvatar } from "@/components/custom";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -27,10 +26,21 @@ interface TodoCardProps {
   isDragging: boolean;
   users: { _id: string; name: string }[];
   onDelete: () => void;
-  onEdit: (updates: { title: string; description: string; author: TodoAuthor }) => void;
+  onEdit: (updates: {
+    title: string;
+    description: string;
+    author: TodoAuthor;
+  }) => void;
 }
 
-const TodoCard = ({ todo, provided, isDragging, users, onDelete, onEdit }: TodoCardProps) => {
+const TodoCard = ({
+  todo,
+  provided,
+  isDragging,
+  users,
+  onDelete,
+  onEdit,
+}: TodoCardProps) => {
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description);
@@ -58,7 +68,10 @@ const TodoCard = ({ todo, provided, isDragging, users, onDelete, onEdit }: TodoC
       ref={provided.innerRef}
       {...provided.draggableProps}
       style={{ ...provided.draggableProps.style }}
-      className={cn("p-3 group transition-shadow", isDragging && "shadow-lg ring-1 ring-primary/20")}
+      className={cn(
+        "p-3 group transition-shadow",
+        isDragging && "shadow-lg ring-1 ring-primary/20",
+      )}
     >
       {editing ? (
         <div className="space-y-2">
@@ -98,7 +111,12 @@ const TodoCard = ({ todo, provided, isDragging, users, onDelete, onEdit }: TodoC
             <Button size="sm" className="flex-1 h-7 text-xs" onClick={save}>
               <Check className="h-3 w-3 mr-1" /> Save
             </Button>
-            <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={cancel}>
+            <Button
+              size="sm"
+              variant="ghost"
+              className="h-7 text-xs"
+              onClick={cancel}
+            >
               Cancel
             </Button>
           </div>
@@ -106,8 +124,13 @@ const TodoCard = ({ todo, provided, isDragging, users, onDelete, onEdit }: TodoC
       ) : (
         <>
           <div className="flex items-start justify-between gap-2 mb-2">
-            <DragHandle dragHandleProps={provided.dragHandleProps} className="mt-0.5" />
-            <p className="text-sm font-medium leading-snug flex-1">{todo.title}</p>
+            <DragHandle
+              dragHandleProps={provided.dragHandleProps}
+              className="mt-0.5"
+            />
+            <p className="text-sm font-medium leading-snug flex-1">
+              {todo.title}
+            </p>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-all flex-shrink-0">
@@ -118,7 +141,10 @@ const TodoCard = ({ todo, provided, isDragging, users, onDelete, onEdit }: TodoC
                 <DropdownMenuItem onClick={() => setEditing(true)}>
                   <Pencil className="h-3.5 w-3.5 mr-2" /> Edit
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={onDelete}>
+                <DropdownMenuItem
+                  className="text-destructive focus:text-destructive"
+                  onClick={onDelete}
+                >
                   <Trash2 className="h-3.5 w-3.5 mr-2" /> Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -126,16 +152,27 @@ const TodoCard = ({ todo, provided, isDragging, users, onDelete, onEdit }: TodoC
           </div>
 
           {todo.description && (
-            <p className="text-xs text-muted-foreground line-clamp-2 ml-5 mb-2">{todo.description}</p>
+            <p className="text-xs text-muted-foreground line-clamp-2 ml-5 mb-2">
+              {todo.description}
+            </p>
           )}
 
           <div className="flex items-center justify-between ml-5">
             <div className="flex items-center gap-1.5">
-              <AuthorAvatar name={todo.author.name} image={todo.author.image} className="h-5 w-5 text-[9px]" />
-              <span className="text-xs text-muted-foreground truncate max-w-[80px]">{todo.author.name}</span>
+              <AuthorAvatar
+                name={todo.author.name}
+                image={todo.author.image}
+                className="h-5 w-5 text-[9px]"
+              />
+              <span className="text-xs text-muted-foreground truncate max-w-[80px]">
+                {todo.author.name}
+              </span>
             </div>
             <span className="text-xs text-muted-foreground">
-              {new Date(todo.date).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+              {new Date(todo.date).toLocaleDateString(undefined, {
+                month: "short",
+                day: "numeric",
+              })}
             </span>
           </div>
         </>

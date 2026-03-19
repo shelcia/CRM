@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-import { CustomTextField } from "@/components/CustomInputs";
+import { CustomTextField } from "@/components/custom";
 import { apiProvider } from "@/services/utilities/provider";
 import usePermissions from "@/hooks/usePermissions";
 
@@ -63,7 +63,9 @@ const Todos = () => {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Projects</h1>
-          <p className="text-sm text-muted-foreground">Organise work with Kanban boards</p>
+          <p className="text-sm text-muted-foreground">
+            Organise work with Kanban boards
+          </p>
         </div>
         {has("todos-edit") && (
           <Button size="sm" onClick={() => setShowForm((v) => !v)}>
@@ -93,13 +95,23 @@ const Todos = () => {
         ) : (
           <>
             {projects.map((project) => (
-              <Card key={project._id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={project._id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardContent className="pt-5 pb-4 flex flex-col gap-3">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <h2 className="font-semibold text-base leading-tight">{project.name}</h2>
+                      <h2 className="font-semibold text-base leading-tight">
+                        {project.name}
+                      </h2>
                       <p className="text-xs text-muted-foreground mt-1">
-                        Created {new Date(project.date).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+                        Created{" "}
+                        {new Date(project.date).toLocaleDateString(undefined, {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
                       </p>
                     </div>
                     {has("todos-delete") && (
@@ -114,10 +126,14 @@ const Todos = () => {
                     )}
                   </div>
                   <p className="text-xs text-muted-foreground">
-                    {project.totalTasks} task{project.totalTasks !== 1 ? "s" : ""} · {project.doneTasks} done
+                    {project.totalTasks} task
+                    {project.totalTasks !== 1 ? "s" : ""} · {project.doneTasks}{" "}
+                    done
                   </p>
                   <NavLink to={`${project._id}`}>
-                    <Button size="sm" className="w-full">Open Board</Button>
+                    <Button size="sm" className="w-full">
+                      Open Board
+                    </Button>
                   </NavLink>
                 </CardContent>
               </Card>
@@ -129,7 +145,10 @@ const Todos = () => {
                 </div>
                 <div>
                   <p className="font-semibold">No projects yet</p>
-                  <p className="text-sm text-muted-foreground mt-1">Create a project to start organizing work with a Kanban board.</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Create a project to start organizing work with a Kanban
+                    board.
+                  </p>
                 </div>
                 {has("todos-edit") && (
                   <Button size="sm" onClick={() => setShowForm(true)}>

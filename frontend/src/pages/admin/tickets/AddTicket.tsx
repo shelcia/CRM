@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
-import { CustomSelectField, CustomTextField, CustomTextAreaField } from "@/components/CustomInputs";
+import { CustomSelectField, CustomTextField, CustomTextAreaField } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Ticket, SlidersHorizontal } from "lucide-react";
@@ -18,41 +18,42 @@ const AddTicket = () => {
   const { ticketStatuses, ticketPriorities, ticketCategories } = useEnums();
   const { userItems } = useUsers();
 
-  const { errors, values, handleChange, handleSubmit, touched, resetForm } = useFormik({
-    initialValues: {
-      title: "",
-      contact: "",
-      email: "",
-      category: "technical",
-      priority: "medium",
-      status: "open",
-      assignedTo: "",
-      description: "",
-    },
-    validationSchema: Yup.object().shape({
-      title: Yup.string().required("Ticket title is required"),
-      contact: Yup.string().required("Contact name is required"),
-      email: Yup.string().email("Enter a valid email"),
-      category: Yup.string().required("Category is required"),
-      priority: Yup.string().required("Priority is required"),
-      status: Yup.string().required("Status is required"),
-      assignedTo: Yup.string(),
-      description: Yup.string(),
-    }),
-    onSubmit: (vals) => {
-      setIsLoading(true);
-      apiTickets.post!(vals, "", true).then((res) => {
-        if (res && res._id) {
-          toast.success("Ticket created successfully");
-          resetForm();
-          navigate("/dashboard/tickets");
-        } else {
-          toast.error(res?.message ?? "Failed to create ticket");
-        }
-        setIsLoading(false);
-      });
-    },
-  });
+  const { errors, values, handleChange, handleSubmit, touched, resetForm } =
+    useFormik({
+      initialValues: {
+        title: "",
+        contact: "",
+        email: "",
+        category: "technical",
+        priority: "medium",
+        status: "open",
+        assignedTo: "",
+        description: "",
+      },
+      validationSchema: Yup.object().shape({
+        title: Yup.string().required("Ticket title is required"),
+        contact: Yup.string().required("Contact name is required"),
+        email: Yup.string().email("Enter a valid email"),
+        category: Yup.string().required("Category is required"),
+        priority: Yup.string().required("Priority is required"),
+        status: Yup.string().required("Status is required"),
+        assignedTo: Yup.string(),
+        description: Yup.string(),
+      }),
+      onSubmit: (vals) => {
+        setIsLoading(true);
+        apiTickets.post!(vals, "", true).then((res) => {
+          if (res && res._id) {
+            toast.success("Ticket created successfully");
+            resetForm();
+            navigate("/dashboard/tickets");
+          } else {
+            toast.error(res?.message ?? "Failed to create ticket");
+          }
+          setIsLoading(false);
+        });
+      },
+    });
 
   return (
     <section className="max-w-3xl space-y-6">
@@ -65,7 +66,9 @@ const AddTicket = () => {
         </Link>
         <div>
           <h1 className="text-2xl font-bold">Create Ticket</h1>
-          <p className="text-sm text-muted-foreground">Log a new support or issue ticket</p>
+          <p className="text-sm text-muted-foreground">
+            Log a new support or issue ticket
+          </p>
         </div>
       </div>
 

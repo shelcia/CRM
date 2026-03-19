@@ -1,6 +1,6 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { CustomTextField } from "@/components/CustomInputs";
+import { CustomTextField } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 
 interface AddColumnFormProps {
@@ -28,8 +28,12 @@ const AddColumnForm = ({ onSubmit, onCancel }: AddColumnFormProps) => {
         errors={errors}
       />
       <div className="flex gap-2">
-        <Button type="submit" size="sm" className="flex-1">Add</Button>
-        <Button type="button" variant="ghost" size="sm" onClick={onCancel}>Cancel</Button>
+        <Button type="submit" size="sm" className="flex-1">
+          Add
+        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
+          Cancel
+        </Button>
       </div>
     </form>
   );

@@ -1,8 +1,7 @@
 /* eslint-disable react/display-name */
 import { lazy, Suspense, ComponentType } from "react";
 import Layout from "./layout/admin/Layout";
-import HomeLayout from "./layout/home/Layout";
-import AuthLayout from "./layout/auth/Layout";
+import PublicLayout from "./layout/public/Layout";
 import { Navigate, Outlet } from "react-router-dom";
 import usePermissions from "./hooks/usePermissions";
 
@@ -19,7 +18,7 @@ const Loadable =
     </Suspense>
   );
 
-// LANDING PAGEll
+// LANDING PAGE
 const Home = Loadable(lazy(() => import("./pages/home/Homepage")));
 
 const Signup = Loadable(lazy(() => import("./pages/auth/Signup")));
@@ -48,13 +47,17 @@ const AddContact = Loadable(
   lazy(() => import("./pages/admin/contacts/AddContact")),
 );
 const Tickets = Loadable(lazy(() => import("./pages/admin/tickets/Tickets")));
-const AddTicket = Loadable(lazy(() => import("./pages/admin/tickets/AddTicket")));
+const AddTicket = Loadable(
+  lazy(() => import("./pages/admin/tickets/AddTicket")),
+);
 
 const Projects = Loadable(lazy(() => import("./pages/admin/todos/Projects")));
 const Todos = Loadable(lazy(() => import("./pages/admin/todos/Todos")));
 
 const Emails = Loadable(lazy(() => import("./pages/admin/emails/Emails")));
-const Pipeline = Loadable(lazy(() => import("./pages/admin/pipeline/Pipeline")));
+const Pipeline = Loadable(
+  lazy(() => import("./pages/admin/pipeline/Pipeline")),
+);
 const Dashboard = Loadable(lazy(() => import("./pages/admin/Dashboard")));
 
 const ErrorPage = Loadable(lazy(() => import("./pages/others/ErrorPage")));
@@ -63,17 +66,17 @@ const routes = [
   {
     path: "",
     element: (
-      <HomeLayout>
+      <PublicLayout>
         <Home />
-      </HomeLayout>
+      </PublicLayout>
     ),
   },
   {
     path: "",
     element: (
-      <AuthLayout>
+      <PublicLayout card>
         <Outlet />
-      </AuthLayout>
+      </PublicLayout>
     ),
     children: [
       {

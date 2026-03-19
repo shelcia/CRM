@@ -15,7 +15,13 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { apiProvider } from "@/services/utilities/provider";
 import { apiContacts } from "@/services/models/contactsModel";
 import { getDealsByContact } from "@/services/models/dealsModel";
@@ -24,6 +30,8 @@ import { cn } from "@/lib/utils";
 import { useEnums } from "@/hooks/useEnums";
 import { toLabelItems } from "@/utils/enumLabel";
 import toast from "react-hot-toast";
+import { convertDateToDateWithTime } from "@/utils/calendarHelpers";
+import { StatusBadge } from "@/components/custom";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -54,7 +62,10 @@ interface Contact {
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
-const NOTE_TYPE_META: Record<NoteType, { icon: React.ReactNode; label: string; color: string }> = {
+const NOTE_TYPE_META: Record<
+  NoteType,
+  { icon: React.ReactNode; label: string; color: string }
+> = {
   note: {
     icon: <MessageSquare className="h-3.5 w-3.5" />,
     label: "Note",
@@ -81,17 +92,6 @@ const NOTE_TYPE_META: Record<NoteType, { icon: React.ReactNode; label: string; c
     color: "bg-orange-500/10 text-orange-600 border-orange-500/20",
   },
 };
-
-function fmt(dateStr: string) {
-  const d = new Date(dateStr);
-  return d.toLocaleString(undefined, {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
 
 // ── Activity Timeline ──────────────────────────────────────────────────────────
 
@@ -124,11 +124,17 @@ const ActivityTimeline = ({ notes }: { notes: Note[] }) => {
                 {meta.icon}
                 {meta.label}
               </span>
-              <time className="text-xs text-muted-foreground mt-0.5">{fmt(note.createdAt)}</time>
+              <time className="text-xs text-muted-foreground mt-0.5">
+                {convertDateToDateWithTime(note.createdAt)}
+              </time>
             </div>
-            <p className="mt-1.5 text-sm text-foreground leading-relaxed">{note.body}</p>
+            <p className="mt-1.5 text-sm text-foreground leading-relaxed">
+              {note.body}
+            </p>
             {note.author && (
-              <p className="mt-0.5 text-xs text-muted-foreground">by {note.author}</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">
+                by {note.author}
+              </p>
             )}
           </li>
         );
@@ -192,7 +198,9 @@ const NotesTab = ({
                 onClick={() => setType(t)}
                 className={cn(
                   "inline-flex items-center gap-1 px-2.5 py-1 rounded-full border text-xs font-medium transition-colors",
-                  type === t ? meta.color : "border-border text-muted-foreground hover:border-primary/40",
+                  type === t
+                    ? meta.color
+                    : "border-border text-muted-foreground hover:border-primary/40",
                 )}
               >
                 {meta.icon}
@@ -212,7 +220,12 @@ const NotesTab = ({
           placeholder={`Add a ${type}…`}
         />
         <div className="flex justify-end">
-          <Button size="sm" onClick={submit} loading={saving} disabled={!body.trim()}>
+          <Button
+            size="sm"
+            onClick={submit}
+            loading={saving}
+            disabled={!body.trim()}
+          >
             <Send className="h-3.5 w-3.5 mr-1" />
             Save
           </Button>
@@ -249,12 +262,18 @@ const NotesTab = ({
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
                 </div>
-                <p className="text-sm text-foreground leading-relaxed">{note.body}</p>
+                <p className="text-sm text-foreground leading-relaxed">
+                  {note.body}
+                </p>
                 <div className="flex items-center justify-between mt-2">
                   {note.author && (
-                    <span className="text-xs text-muted-foreground">by {note.author}</span>
+                    <span className="text-xs text-muted-foreground">
+                      by {note.author}
+                    </span>
                   )}
-                  <span className="text-xs text-muted-foreground ml-auto">{fmt(note.createdAt)}</span>
+                  <span className="text-xs text-muted-foreground ml-auto">
+                    {convertDateToDateWithTime(note.createdAt)}
+                  </span>
                 </div>
               </li>
             );
@@ -266,15 +285,6 @@ const NotesTab = ({
 };
 
 // ── Deals Tab ─────────────────────────────────────────────────────────────────
-
-const STAGE_DOT: Record<string, string> = {
-  lead: "bg-slate-400",
-  qualified: "bg-blue-500",
-  proposal: "bg-amber-500",
-  negotiation: "bg-orange-500",
-  won: "bg-primary",
-  lost: "bg-red-500",
-};
 
 const DealsTab = ({ contact }: { contact: Contact }) => {
   const [deals, setDeals] = useState<Deal[]>([]);
@@ -293,10 +303,16 @@ const DealsTab = ({ contact }: { contact: Contact }) => {
     .reduce((sum, d) => sum + d.value, 0);
 
   const fmtVal = (v: number, c: string) =>
-    new Intl.NumberFormat(undefined, { style: "currency", currency: c, maximumFractionDigits: 0 }).format(v);
+    new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: c,
+      maximumFractionDigits: 0,
+    }).format(v);
 
   if (loading) {
-    return <p className="text-sm text-muted-foreground py-8 text-center">Loading…</p>;
+    return (
+      <p className="text-sm text-muted-foreground py-8 text-center">Loading…</p>
+    );
   }
 
   return (
@@ -304,7 +320,8 @@ const DealsTab = ({ contact }: { contact: Contact }) => {
       <div className="flex items-center justify-between">
         {deals.length > 0 && (
           <p className="text-xs text-muted-foreground">
-            {deals.length} deal{deals.length !== 1 ? "s" : ""} · {fmtVal(totalValue, "USD")} pipeline
+            {deals.length} deal{deals.length !== 1 ? "s" : ""} ·{" "}
+            {fmtVal(totalValue, "USD")} pipeline
           </p>
         )}
         <AddDealDialog
@@ -336,13 +353,15 @@ const DealsTab = ({ contact }: { contact: Contact }) => {
                 </span>
               </div>
               <div className="flex items-center gap-2 mt-1.5">
-                <span className={cn("h-2 w-2 rounded-full shrink-0", STAGE_DOT[deal.stage] ?? "bg-muted")} />
-                <span className="text-xs text-muted-foreground capitalize">{deal.stage}</span>
+                <StatusBadge value={deal.stage} />
                 {deal.expectedClose && (
                   <>
                     <span className="text-muted-foreground/40 text-xs">·</span>
                     <span className="text-xs text-muted-foreground">
-                      {new Date(deal.expectedClose).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })}
+                      {new Date(deal.expectedClose).toLocaleDateString(
+                        undefined,
+                        { month: "short", day: "numeric", year: "numeric" },
+                      )}
                     </span>
                   </>
                 )}
@@ -358,9 +377,15 @@ const DealsTab = ({ contact }: { contact: Contact }) => {
 // ── Edit Tab ───────────────────────────────────────────────────────────────────
 
 type EditForm = {
-  name: string; email: string; number: string; company: string;
-  jobTitle: string; companySize: string; probability: string;
-  status: string; priority: string;
+  name: string;
+  email: string;
+  number: string;
+  company: string;
+  jobTitle: string;
+  companySize: string;
+  probability: string;
+  status: string;
+  priority: string;
 };
 
 const EditTab = ({
@@ -374,18 +399,36 @@ const EditTab = ({
 
   const field = (label: string, key: keyof EditForm, type = "text") => (
     <div className="flex flex-col gap-1">
-      <label className="text-xs font-medium text-muted-foreground">{label}</label>
-      <Input type={type} value={form[key]} onChange={(e) => set(key, e.target.value)} />
+      <label className="text-xs font-medium text-muted-foreground">
+        {label}
+      </label>
+      <Input
+        type={type}
+        value={form[key]}
+        onChange={(e) => set(key, e.target.value)}
+      />
     </div>
   );
 
-  const select = (label: string, key: keyof EditForm, items: { val: string; label: string }[]) => (
+  const select = (
+    label: string,
+    key: keyof EditForm,
+    items: { val: string; label: string }[],
+  ) => (
     <div className="flex flex-col gap-1">
-      <label className="text-xs font-medium text-muted-foreground">{label}</label>
+      <label className="text-xs font-medium text-muted-foreground">
+        {label}
+      </label>
       <Select value={form[key]} onValueChange={(v) => set(key, v)}>
-        <SelectTrigger><SelectValue /></SelectTrigger>
+        <SelectTrigger>
+          <SelectValue />
+        </SelectTrigger>
         <SelectContent>
-          {items.map((i) => <SelectItem key={i.val} value={i.val}>{i.label}</SelectItem>)}
+          {items.map((i) => (
+            <SelectItem key={i.val} value={i.val}>
+              {i.label}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
     </div>
@@ -431,7 +474,14 @@ const initForm = (c: Contact) => ({
   priority: c.priority ?? "",
 });
 
-const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete, defaultTab = "edit" }: ContactPanelProps) => {
+const ContactPanel = ({
+  contact,
+  open,
+  onClose,
+  onUpdate,
+  onDelete,
+  defaultTab = "edit",
+}: ContactPanelProps) => {
   const { has } = usePermissions();
   const [tab, setTab] = useState<Tab>(defaultTab);
   const [notes, setNotes] = useState<Note[]>([]);
@@ -450,7 +500,9 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete, defaultTab =
     const controller = new AbortController();
     apiProvider
       .getAll(`contacts/${contact._id}/notes`, controller.signal, true)
-      .then((res) => { if (Array.isArray(res)) setNotes(res); })
+      .then((res) => {
+        if (Array.isArray(res)) setNotes(res);
+      })
       .finally(() => setLoading(false));
     return () => controller.abort();
   }, [contact?._id, open]);
@@ -460,9 +512,18 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete, defaultTab =
 
   const handleSave = async () => {
     if (!contact) return;
-    if (!form.name.trim()) { toast.error("Name is required"); return; }
+    if (!form.name.trim()) {
+      toast.error("Name is required");
+      return;
+    }
     setSaving(true);
-    const res = await apiContacts.putById!(contact._id, form, new AbortController().signal, "", true);
+    const res = await apiContacts.putById!(
+      contact._id,
+      form,
+      new AbortController().signal,
+      "",
+      true,
+    );
     setSaving(false);
     if (res?._id) {
       toast.success("Contact updated");
@@ -489,8 +550,12 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete, defaultTab =
         <div className="px-5 pt-5 pb-4 border-b shrink-0">
           <div className="flex items-start pr-6">
             <div>
-              <h2 className="text-base font-semibold truncate">{contact.name}</h2>
-              <p className="text-sm text-muted-foreground truncate">{contact.jobTitle || contact.company}</p>
+              <h2 className="text-base font-semibold truncate">
+                {contact.name}
+              </h2>
+              <p className="text-sm text-muted-foreground truncate">
+                {contact.jobTitle || contact.company}
+              </p>
             </div>
           </div>
           <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-xs text-muted-foreground">
@@ -533,7 +598,9 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete, defaultTab =
         {/* Tab content */}
         <div className="flex-1 overflow-y-auto px-5 py-4">
           {loading ? (
-            <div className="flex items-center justify-center py-16 text-muted-foreground text-sm">Loading…</div>
+            <div className="flex items-center justify-center py-16 text-muted-foreground text-sm">
+              Loading…
+            </div>
           ) : tab === "activity" ? (
             <ActivityTimeline notes={notes} />
           ) : tab === "notes" ? (
@@ -541,7 +608,9 @@ const ContactPanel = ({ contact, open, onClose, onUpdate, onDelete, defaultTab =
               contactId={contact._id}
               notes={notes}
               onAdd={(note) => setNotes((prev) => [note, ...prev])}
-              onDelete={(id) => setNotes((prev) => prev.filter((n) => n._id !== id))}
+              onDelete={(id) =>
+                setNotes((prev) => prev.filter((n) => n._id !== id))
+              }
             />
           ) : tab === "deals" ? (
             <DealsTab contact={contact} />

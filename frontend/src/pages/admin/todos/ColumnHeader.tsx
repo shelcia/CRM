@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Plus, Pencil, Check, X } from "lucide-react";
-import DragHandle from "@/components/DragHandle";
+import { DragHandle } from "@/components/custom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +19,13 @@ interface ColumnHeaderProps {
   onAddTodo: () => void;
 }
 
-const ColumnHeader = ({ column, dragHandleProps, onRename, onDelete, onAddTodo }: ColumnHeaderProps) => {
+const ColumnHeader = ({
+  column,
+  dragHandleProps,
+  onRename,
+  onDelete,
+  onAddTodo,
+}: ColumnHeaderProps) => {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(column.name);
 
@@ -44,20 +50,36 @@ const ColumnHeader = ({ column, dragHandleProps, onRename, onDelete, onAddTodo }
               if (e.key === "Escape") setEditing(false);
             }}
           />
-          <Button size="icon-sm" variant="ghost" onClick={save} className="text-primary hover:text-primary">
+          <Button
+            size="icon-sm"
+            variant="ghost"
+            onClick={save}
+            className="text-primary hover:text-primary"
+          >
             <Check className="h-3.5 w-3.5" />
           </Button>
-          <Button size="icon-sm" variant="ghost" onClick={() => setEditing(false)}>
+          <Button
+            size="icon-sm"
+            variant="ghost"
+            onClick={() => setEditing(false)}
+          >
             <X className="h-3.5 w-3.5" />
           </Button>
         </>
       ) : (
         <>
-          <h5 className="flex-1 font-semibold text-sm truncate">{column.name}</h5>
+          <h5 className="flex-1 font-semibold text-sm truncate">
+            {column.name}
+          </h5>
           <span className="text-xs text-muted-foreground tabular-nums bg-muted rounded-full px-1.5 py-0.5">
             {column.todos.length}
           </span>
-          <Button size="icon-sm" variant="ghost" onClick={onAddTodo} title="Add card">
+          <Button
+            size="icon-sm"
+            variant="ghost"
+            onClick={onAddTodo}
+            title="Add card"
+          >
             <Plus className="h-4 w-4" />
           </Button>
           <DropdownMenu>
@@ -67,8 +89,13 @@ const ColumnHeader = ({ column, dragHandleProps, onRename, onDelete, onAddTodo }
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setEditing(true)}>Rename</DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={onDelete}>
+              <DropdownMenuItem onClick={() => setEditing(true)}>
+                Rename
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive"
+                onClick={onDelete}
+              >
                 Delete column
               </DropdownMenuItem>
             </DropdownMenuContent>

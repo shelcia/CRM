@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
-import { CustomSelectField, CustomTextField } from "@/components/CustomInputs";
+import { CustomSelectField, CustomTextField } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { apiContacts } from "@/services/models/contactsModel";
@@ -16,44 +16,45 @@ const AddContact = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { contactStatuses, contactPriorities } = useEnums();
 
-  const { errors, values, handleChange, handleSubmit, touched, resetForm } = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      number: "",
-      company: "",
-      jobTitle: "",
-      priority: "low",
-      companySize: "",
-      probability: "0.5",
-      status: "new",
-      lastActivity: new Date().toISOString(),
-    },
-    validationSchema: Yup.object().shape({
-      name: Yup.string().required("Contact name is required"),
-      email: Yup.string().email("Enter a valid email"),
-      number: Yup.string(),
-      company: Yup.string(),
-      jobTitle: Yup.string(),
-      priority: Yup.string(),
-      companySize: Yup.number().min(0).nullable(),
-      probability: Yup.string(),
-      status: Yup.string().required("Status is required"),
-    }),
-    onSubmit: (vals) => {
-      setIsLoading(true);
-      apiContacts.post!(vals, "", true).then((res) => {
-        if (res && res._id) {
-          toast.success("Contact added successfully");
-          resetForm();
-          navigate("/dashboard/contacts");
-        } else {
-          toast.error(res?.message ?? "Failed to add contact");
-        }
-        setIsLoading(false);
-      });
-    },
-  });
+  const { errors, values, handleChange, handleSubmit, touched, resetForm } =
+    useFormik({
+      initialValues: {
+        name: "",
+        email: "",
+        number: "",
+        company: "",
+        jobTitle: "",
+        priority: "low",
+        companySize: "",
+        probability: "0.5",
+        status: "new",
+        lastActivity: new Date().toISOString(),
+      },
+      validationSchema: Yup.object().shape({
+        name: Yup.string().required("Contact name is required"),
+        email: Yup.string().email("Enter a valid email"),
+        number: Yup.string(),
+        company: Yup.string(),
+        jobTitle: Yup.string(),
+        priority: Yup.string(),
+        companySize: Yup.number().min(0).nullable(),
+        probability: Yup.string(),
+        status: Yup.string().required("Status is required"),
+      }),
+      onSubmit: (vals) => {
+        setIsLoading(true);
+        apiContacts.post!(vals, "", true).then((res) => {
+          if (res && res._id) {
+            toast.success("Contact added successfully");
+            resetForm();
+            navigate("/dashboard/contacts");
+          } else {
+            toast.error(res?.message ?? "Failed to add contact");
+          }
+          setIsLoading(false);
+        });
+      },
+    });
 
   return (
     <section className="max-w-3xl space-y-6">
@@ -66,7 +67,9 @@ const AddContact = () => {
         </Link>
         <div>
           <h1 className="text-2xl font-bold">Add Contact</h1>
-          <p className="text-sm text-muted-foreground">Create a new contact in your CRM</p>
+          <p className="text-sm text-muted-foreground">
+            Create a new contact in your CRM
+          </p>
         </div>
       </div>
 

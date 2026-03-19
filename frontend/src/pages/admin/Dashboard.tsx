@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, Phone, TicketCheck, CheckSquare, TrendingUp, Clock } from "lucide-react";
+import {
+  Users,
+  Phone,
+  TicketCheck,
+  CheckSquare,
+  TrendingUp,
+  Clock,
+} from "lucide-react";
 import { apiProvider } from "@/services/utilities/provider";
-import { StatusBadge } from "@/components/StatusBadge";
-import { PriorityIndicator } from "@/components/PriorityIndicator";
+import { StatusBadge, PriorityIndicator } from "@/components/custom";
 import { convertDateToDateWithoutTime } from "@/utils/calendarHelpers";
 import { Link } from "react-router-dom";
 import usePermissions from "@/hooks/usePermissions";
@@ -29,11 +35,19 @@ interface Metric {
   permission: string;
 }
 
-const MetricCard = ({ label, value, icon, href, color }: Omit<Metric, "permission">) => (
+const MetricCard = ({
+  label,
+  value,
+  icon,
+  href,
+  color,
+}: Omit<Metric, "permission">) => (
   <Link to={href}>
     <Card className="hover:shadow-md transition-shadow cursor-pointer">
       <CardContent className="pt-6 flex items-center gap-4">
-        <div className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 ${color}`}>
+        <div
+          className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 ${color}`}
+        >
           {icon}
         </div>
         <div>
@@ -131,24 +145,35 @@ const Dashboard = () => {
                 <TrendingUp className="h-4 w-4 text-primary" />
                 <span className="font-semibold text-sm">Recent Contacts</span>
               </div>
-              <Link to="/dashboard/contacts" className="text-xs text-primary hover:underline">
+              <Link
+                to="/dashboard/contacts"
+                className="text-xs text-primary hover:underline"
+              >
                 View all
               </Link>
             </div>
             <CardContent className="pt-4 pb-2">
               {loading ? (
-                <p className="text-sm text-muted-foreground py-4 text-center">Loading…</p>
+                <p className="text-sm text-muted-foreground py-4 text-center">
+                  Loading…
+                </p>
               ) : !stats?.recentContacts?.length ? (
                 <div className="py-8 text-center text-muted-foreground text-sm">
                   No contacts yet.{" "}
-                  <Link to="/dashboard/contacts/add-contact" className="text-primary hover:underline">
+                  <Link
+                    to="/dashboard/contacts/add-contact"
+                    className="text-primary hover:underline"
+                  >
                     Add one
                   </Link>
                 </div>
               ) : (
                 <ul className="divide-y">
                   {stats.recentContacts.map((c) => (
-                    <li key={c._id} className="py-2.5 flex items-center justify-between gap-3">
+                    <li
+                      key={c._id}
+                      className="py-2.5 flex items-center justify-between gap-3"
+                    >
                       <div className="min-w-0">
                         <p className="text-sm font-medium truncate">{c.name}</p>
                         <p className="text-xs text-muted-foreground truncate">
@@ -174,32 +199,48 @@ const Dashboard = () => {
                 <Clock className="h-4 w-4 text-primary" />
                 <span className="font-semibold text-sm">Recent Tickets</span>
               </div>
-              <Link to="/dashboard/tickets" className="text-xs text-primary hover:underline">
+              <Link
+                to="/dashboard/tickets"
+                className="text-xs text-primary hover:underline"
+              >
                 View all
               </Link>
             </div>
             <CardContent className="pt-4 pb-2">
               {loading ? (
-                <p className="text-sm text-muted-foreground py-4 text-center">Loading…</p>
+                <p className="text-sm text-muted-foreground py-4 text-center">
+                  Loading…
+                </p>
               ) : !stats?.recentTickets?.length ? (
                 <div className="py-8 text-center text-muted-foreground text-sm">
                   No tickets yet.{" "}
-                  <Link to="/dashboard/tickets/add-ticket" className="text-primary hover:underline">
+                  <Link
+                    to="/dashboard/tickets/add-ticket"
+                    className="text-primary hover:underline"
+                  >
                     Create one
                   </Link>
                 </div>
               ) : (
                 <ul className="divide-y">
                   {stats.recentTickets.map((t) => (
-                    <li key={t._id} className="py-2.5 flex items-center justify-between gap-3">
+                    <li
+                      key={t._id}
+                      className="py-2.5 flex items-center justify-between gap-3"
+                    >
                       <div className="min-w-0">
-                        <p className="text-sm font-medium truncate">{t.title}</p>
+                        <p className="text-sm font-medium truncate">
+                          {t.title}
+                        </p>
                         <p className="text-xs text-muted-foreground">
                           {convertDateToDateWithoutTime(t.createdAt)}
                         </p>
                       </div>
                       <div className="flex items-center gap-1.5 shrink-0">
-                        <PriorityIndicator value={t.priority} showLabel={false} />
+                        <PriorityIndicator
+                          value={t.priority}
+                          showLabel={false}
+                        />
                         <StatusBadge value={t.status} />
                       </div>
                     </li>

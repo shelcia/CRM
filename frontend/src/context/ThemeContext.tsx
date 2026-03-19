@@ -5,26 +5,14 @@ type ThemeContextType = [boolean, Dispatch<SetStateAction<boolean>>];
 export const ThemeContext = createContext<ThemeContextType>([false, () => {}]);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [darkTheme, setDarkTheme] = useState(false);
-
-  const darkThemeLocal = localStorage.getItem("mockapi-theme");
+  const [isDark, setIsDark] = useState(() => localStorage.getItem("mockapi-theme") === "true");
 
   useEffect(() => {
-    if (darkThemeLocal === "true") {
-      setDarkTheme(true);
-    }
-  }, [darkThemeLocal]);
-
-  useEffect(() => {
-    if (darkTheme) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkTheme]);
+    document.documentElement.classList.toggle("dark", isDark);
+  }, [isDark]);
 
   return (
-    <ThemeContext.Provider value={[darkTheme, setDarkTheme]}>
+    <ThemeContext.Provider value={[isDark, setIsDark]}>
       {children}
     </ThemeContext.Provider>
   );

@@ -22,7 +22,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import CustomToggle from "@/components/CustomToggle";
+import { CustomToggle } from "@/components/custom";
 
 interface TopbarProps {
   handleDrawerToggle: () => void;
@@ -44,8 +44,16 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
   const logout = () => {
     localStorage.clear();
     // Clear all cached API data so the next user starts fresh
-    ["dashboard/stats", "users", "contacts", "tickets", "projects", "email-templates", "email-groups", "deals"]
-      .forEach(invalidateCache);
+    [
+      "dashboard/stats",
+      "users",
+      "contacts",
+      "tickets",
+      "projects",
+      "email-templates",
+      "email-groups",
+      "deals",
+    ].forEach(invalidateCache);
     navigate("/");
   };
 
@@ -76,7 +84,9 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
             <button className="flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded-md hover:bg-accent transition-colors text-foreground">
               <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
                 {initials ? (
-                  <span className="text-primary text-xs font-bold">{initials}</span>
+                  <span className="text-primary text-xs font-bold">
+                    {initials}
+                  </span>
                 ) : (
                   <User className="h-4 w-4 text-primary" />
                 )}
@@ -86,7 +96,9 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
             <div className="px-2 py-1.5">
-              <p className="text-sm font-medium truncate">{userName || "User"}</p>
+              <p className="text-sm font-medium truncate">
+                {userName || "User"}
+              </p>
             </div>
             <DropdownMenuSeparator />
             {isAdmin && (

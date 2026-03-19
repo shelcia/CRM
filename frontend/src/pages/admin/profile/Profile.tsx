@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CustomTextField } from "@/components/CustomInputs";
+import { CustomTextField } from "@/components/custom";
 import { Building2, ImagePlus, UserRound } from "lucide-react";
 import { apiCompany } from "@/services/models/companyModel";
 import { BASE_URL } from "@/services/api";
@@ -29,35 +29,36 @@ const Profile = () => {
     .toUpperCase()
     .slice(0, 2);
 
-  const { errors, values, handleChange, handleSubmit, touched, setValues } = useFormik({
-    initialValues: {
-      name: "",
-      number: "",
-      cmail: "",
-      address: "",
-      website: "",
-      companySize: "",
-    },
-    validationSchema: Yup.object().shape({
-      name: Yup.string().required("Company name is required"),
-      number: Yup.string(),
-      cmail: Yup.string().email("Enter a valid email"),
-      address: Yup.string(),
-      website: Yup.string(),
-      companySize: Yup.number().min(0).nullable(),
-    }),
-    onSubmit: (vals) => {
-      setIsLoading(true);
-      apiCompany.put!(vals, "", true).then((res) => {
-        if (res && res._id) {
-          toast.success("Company details updated");
-        } else {
-          toast.error(res?.error ?? "Failed to update company");
-        }
-        setIsLoading(false);
-      });
-    },
-  });
+  const { errors, values, handleChange, handleSubmit, touched, setValues } =
+    useFormik({
+      initialValues: {
+        name: "",
+        number: "",
+        cmail: "",
+        address: "",
+        website: "",
+        companySize: "",
+      },
+      validationSchema: Yup.object().shape({
+        name: Yup.string().required("Company name is required"),
+        number: Yup.string(),
+        cmail: Yup.string().email("Enter a valid email"),
+        address: Yup.string(),
+        website: Yup.string(),
+        companySize: Yup.number().min(0).nullable(),
+      }),
+      onSubmit: (vals) => {
+        setIsLoading(true);
+        apiCompany.put!(vals, "", true).then((res) => {
+          if (res && res._id) {
+            toast.success("Company details updated");
+          } else {
+            toast.error(res?.error ?? "Failed to update company");
+          }
+          setIsLoading(false);
+        });
+      },
+    });
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -104,7 +105,9 @@ const Profile = () => {
     <section className="max-w-3xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Profile</h1>
-        <p className="text-sm text-muted-foreground">View your account and manage company settings</p>
+        <p className="text-sm text-muted-foreground">
+          View your account and manage company settings
+        </p>
       </div>
 
       {/* Account Info (read-only) */}
@@ -116,7 +119,9 @@ const Profile = () => {
         <CardContent className="pt-6">
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-              <span className="text-primary font-bold text-lg">{initials || <UserRound className="h-7 w-7 text-primary/60" />}</span>
+              <span className="text-primary font-bold text-lg">
+                {initials || <UserRound className="h-7 w-7 text-primary/60" />}
+              </span>
             </div>
             <div className="space-y-0.5">
               <p className="font-semibold">{name}</p>
@@ -151,7 +156,9 @@ const Profile = () => {
             </div>
             <div className="space-y-2">
               <p className="text-sm font-medium">Company Logo</p>
-              <p className="text-xs text-muted-foreground">JPG, PNG, WebP or GIF — max 5 MB</p>
+              <p className="text-xs text-muted-foreground">
+                JPG, PNG, WebP or GIF — max 5 MB
+              </p>
               <div className="flex gap-2">
                 <Button
                   type="button"

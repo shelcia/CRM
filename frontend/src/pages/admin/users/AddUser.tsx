@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  CustomMultipleCheckBoxField,
-  CustomTextField,
-} from "@/components/CustomInputs";
+import { CustomMultipleCheckBoxField, CustomTextField } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFormik } from "formik";
@@ -13,15 +10,33 @@ import { ArrowLeft, UserRound, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const PERMISSION_GROUPS = [
-  { label: "Users",    keys: ["users-view",    "users-edit",    "users-delete"],    labels: ["View", "Edit", "Delete"] },
-  { label: "Contacts", keys: ["contacts-view", "contacts-edit", "contacts-delete"], labels: ["View", "Edit", "Delete"] },
-  { label: "Tickets",  keys: ["tickets-view",  "tickets-edit",  "tickets-delete"],  labels: ["View", "Edit", "Delete"] },
-  { label: "Todos",    keys: ["todos-view",    "todos-edit",    "todos-delete"],    labels: ["View", "Edit", "Delete"] },
-  { label: "Admin",    keys: ["admin"],                                              labels: ["Admin"]                  },
+  {
+    label: "Users",
+    keys: ["users-view", "users-edit", "users-delete"],
+    labels: ["View", "Edit", "Delete"],
+  },
+  {
+    label: "Contacts",
+    keys: ["contacts-view", "contacts-edit", "contacts-delete"],
+    labels: ["View", "Edit", "Delete"],
+  },
+  {
+    label: "Tickets",
+    keys: ["tickets-view", "tickets-edit", "tickets-delete"],
+    labels: ["View", "Edit", "Delete"],
+  },
+  {
+    label: "Todos",
+    keys: ["todos-view", "todos-edit", "todos-delete"],
+    labels: ["View", "Edit", "Delete"],
+  },
+  { label: "Admin", keys: ["admin"], labels: ["Admin"] },
 ];
 
 const checkedToPermissions = (checked: boolean[][]) =>
-  PERMISSION_GROUPS.flatMap((g, gi) => g.keys.filter((_, ki) => checked[gi][ki]));
+  PERMISSION_GROUPS.flatMap((g, gi) =>
+    g.keys.filter((_, ki) => checked[gi][ki]),
+  );
 
 const AddUser = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +48,9 @@ const AddUser = () => {
     initialValues: { name: "", email: "", password: "" },
     validationSchema: Yup.object().shape({
       name: Yup.string().required("Name is required"),
-      email: Yup.string().email("Enter a valid email").required("Email is required"),
+      email: Yup.string()
+        .email("Enter a valid email")
+        .required("Email is required"),
       password: Yup.string().required("Password is required"),
     }),
     onSubmit: (vals) => {
@@ -61,7 +78,9 @@ const AddUser = () => {
         </Link>
         <div>
           <h1 className="text-2xl font-bold">Add User</h1>
-          <p className="text-sm text-muted-foreground">Invite a new member to your workspace</p>
+          <p className="text-sm text-muted-foreground">
+            Invite a new member to your workspace
+          </p>
         </div>
       </div>
 

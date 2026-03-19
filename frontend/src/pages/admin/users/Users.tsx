@@ -1,7 +1,6 @@
 import {} from "react";
-import CustomTable from "@/components/CustomTable";
+import { PageHeader, CustomTable, TableSkeleton } from "@/components/custom";
 import { useListData } from "@/hooks/useListData";
-import TableSkeleton from "@/components/TableSkeleton";
 import { convertDateToDateWithoutTime } from "@/utils/calendarHelpers";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,7 +11,9 @@ import usePermissions from "@/hooks/usePermissions";
 
 const Users = () => {
   const { has } = usePermissions();
-  const { data, isLoading, setData } = useListData<any>((signal) => apiUsers.getAll!(signal, true));
+  const { data, isLoading, setData } = useListData<any>((signal) =>
+    apiUsers.getAll!(signal, true),
+  );
   const navigate = useNavigate();
 
   const handleDelete = (id: string) => {
@@ -33,7 +34,12 @@ const Users = () => {
     {
       label: "Joined",
       name: "date",
-      options: { sortable: true, customBodyRender: (val: string) => <span>{convertDateToDateWithoutTime(val)}</span> },
+      options: {
+        sortable: true,
+        customBodyRender: (val: string) => (
+          <span>{convertDateToDateWithoutTime(val)}</span>
+        ),
+      },
     },
     {
       label: "Actions",
@@ -73,23 +79,28 @@ const Users = () => {
 
   return (
     <section className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Users</h1>
-          <p className="text-sm text-muted-foreground">Manage team members and their roles</p>
-        </div>
-        {has("users-edit") && (
-          <Link to="add-user">
-            <Button>
-              <Plus className="h-4 w-4" /> Add User
-            </Button>
-          </Link>
-        )}
-      </div>
+      <PageHeader
+        title="Users"
+        description="Manage team members and their roles"
+        actions={
+          has("users-edit") && (
+            <Link to="add-user">
+              <Button>
+                <Plus className="h-4 w-4" /> Add User
+              </Button>
+            </Link>
+          )
+        }
+      />
       {isLoading ? (
         <TableSkeleton rows={6} cols={6} />
       ) : (
-        <CustomTable columns={columns} data={data} title="Users" downloadName="users" />
+        <CustomTable
+          columns={columns}
+          data={data}
+          title="Users"
+          downloadName="users"
+        />
       )}
     </section>
   );

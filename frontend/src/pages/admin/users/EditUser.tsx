@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  CustomMultipleCheckBoxField,
-  CustomTextField,
-} from "@/components/CustomInputs";
+import { CustomMultipleCheckBoxField, CustomTextField } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFormik } from "formik";
@@ -13,20 +10,40 @@ import { ArrowLeft, UserRound, ShieldCheck } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 const PERMISSION_GROUPS = [
-  { label: "Users",    keys: ["users-view",    "users-edit",    "users-delete"],    labels: ["View", "Edit", "Delete"] },
-  { label: "Contacts", keys: ["contacts-view", "contacts-edit", "contacts-delete"], labels: ["View", "Edit", "Delete"] },
-  { label: "Tickets",  keys: ["tickets-view",  "tickets-edit",  "tickets-delete"],  labels: ["View", "Edit", "Delete"] },
-  { label: "Todos",    keys: ["todos-view",    "todos-edit",    "todos-delete"],    labels: ["View", "Edit", "Delete"] },
-  { label: "Admin",    keys: ["admin"],                                              labels: ["Admin"]                  },
+  {
+    label: "Users",
+    keys: ["users-view", "users-edit", "users-delete"],
+    labels: ["View", "Edit", "Delete"],
+  },
+  {
+    label: "Contacts",
+    keys: ["contacts-view", "contacts-edit", "contacts-delete"],
+    labels: ["View", "Edit", "Delete"],
+  },
+  {
+    label: "Tickets",
+    keys: ["tickets-view", "tickets-edit", "tickets-delete"],
+    labels: ["View", "Edit", "Delete"],
+  },
+  {
+    label: "Todos",
+    keys: ["todos-view", "todos-edit", "todos-delete"],
+    labels: ["View", "Edit", "Delete"],
+  },
+  { label: "Admin", keys: ["admin"], labels: ["Admin"] },
 ];
 
 const permissionsToChecked = (permissions: string[]) => {
   const isAdmin = permissions.includes("admin");
-  return PERMISSION_GROUPS.map((g) => g.keys.map((k) => isAdmin || permissions.includes(k)));
+  return PERMISSION_GROUPS.map((g) =>
+    g.keys.map((k) => isAdmin || permissions.includes(k)),
+  );
 };
 
 const checkedToPermissions = (checked: boolean[][]) =>
-  PERMISSION_GROUPS.flatMap((g, gi) => g.keys.filter((_, ki) => checked[gi][ki]));
+  PERMISSION_GROUPS.flatMap((g, gi) =>
+    g.keys.filter((_, ki) => checked[gi][ki]),
+  );
 
 const EditUser = () => {
   const { id } = useParams<{ id: string }>();
@@ -43,23 +60,29 @@ const EditUser = () => {
       initialValues: { name: "", email: "" },
       validationSchema: Yup.object().shape({
         name: Yup.string().required("Name is required"),
-        email: Yup.string().email("Enter a valid email").required("Email is required"),
+        email: Yup.string()
+          .email("Enter a valid email")
+          .required("Email is required"),
       }),
       onSubmit: (vals) => {
         setIsLoading(true);
         const permissions = checkedToPermissions(checked);
         const controller = new AbortController();
-        apiUsers
-          .putById!(id!, { ...vals, permissions }, controller.signal, "", true)
-          .then((res) => {
-            if (res?._id || res?.status === "200") {
-              toast.success("User updated");
-              navigate("/dashboard/users");
-            } else {
-              toast.error(res?.message ?? "Failed to update user");
-            }
-            setIsLoading(false);
-          });
+        apiUsers.putById!(
+          id!,
+          { ...vals, permissions },
+          controller.signal,
+          "",
+          true,
+        ).then((res) => {
+          if (res?._id || res?.status === "200") {
+            toast.success("User updated");
+            navigate("/dashboard/users");
+          } else {
+            toast.error(res?.message ?? "Failed to update user");
+          }
+          setIsLoading(false);
+        });
       },
     });
 
@@ -100,7 +123,9 @@ const EditUser = () => {
         </Link>
         <div>
           <h1 className="text-2xl font-bold">Edit User</h1>
-          <p className="text-sm text-muted-foreground">Update profile and permissions</p>
+          <p className="text-sm text-muted-foreground">
+            Update profile and permissions
+          </p>
         </div>
       </div>
 
