@@ -19,46 +19,36 @@ const Loadable =
   );
 
 // LANDING PAGE
-const Home = Loadable(lazy(() => import("./pages/home/Homepage")));
+const Home = Loadable(lazy(() => import("./pages/home")));
 
-const Signup = Loadable(lazy(() => import("./pages/auth/Signup")));
-const Login = Loadable(lazy(() => import("./pages/auth/Login")));
-const Verification = Loadable(lazy(() => import("./pages/auth/Verification")));
-const EmailVerify = Loadable(lazy(() => import("./pages/auth/EmailVerify")));
-const ForgetPassword = Loadable(
-  lazy(() => import("./pages/auth/ForgetPassword")),
-);
-const ResetPwd = Loadable(lazy(() => import("./pages/auth/ResetPwd")));
+const Signup = Loadable(lazy(() => import("./pages/auth/signup")));
+const Login = Loadable(lazy(() => import("./pages/auth/login")));
+const Verification = Loadable(lazy(() => import("./pages/auth/verification")));
+const EmailVerify = Loadable(lazy(() => import("./pages/auth/email-verify")));
+const ForgetPassword = Loadable(lazy(() => import("./pages/auth/forget-pwd")));
+const ResetPwd = Loadable(lazy(() => import("./pages/auth/reset-pwd")));
 
 // ADMIN PAGE
-const AddCompany = Loadable(
-  lazy(() => import("./pages/admin/company/AddCompany")),
-);
-const Users = Loadable(lazy(() => import("./pages/admin/users/Users")));
-const AddUser = Loadable(lazy(() => import("./pages/admin/users/AddUser")));
-const EditUser = Loadable(lazy(() => import("./pages/admin/users/EditUser")));
+const AddCompany = Loadable(lazy(() => import("./pages/admin/add-company")));
+const Users = Loadable(lazy(() => import("./pages/admin/users")));
+const AddUser = Loadable(lazy(() => import("./pages/admin/users/add")));
+const EditUser = Loadable(lazy(() => import("./pages/admin/users/edit")));
 
-const Profile = Loadable(lazy(() => import("./pages/admin/profile/Profile")));
+const Profile = Loadable(lazy(() => import("./pages/admin/profile")));
 
-const Contacts = Loadable(
-  lazy(() => import("./pages/admin/contacts/Contacts")),
-);
-const AddContact = Loadable(
-  lazy(() => import("./pages/admin/contacts/AddContact")),
-);
-const Tickets = Loadable(lazy(() => import("./pages/admin/tickets/Tickets")));
-const AddTicket = Loadable(
-  lazy(() => import("./pages/admin/tickets/AddTicket")),
-);
+const Contacts = Loadable(lazy(() => import("./pages/admin/contacts")));
+const AddContact = Loadable(lazy(() => import("./pages/admin/contacts/add")));
+const Tickets = Loadable(lazy(() => import("./pages/admin/tickets")));
+const AddTicket = Loadable(lazy(() => import("./pages/admin/tickets/add")));
 
-const Projects = Loadable(lazy(() => import("./pages/admin/todos/Projects")));
-const Todos = Loadable(lazy(() => import("./pages/admin/todos/Todos")));
+const Projects = Loadable(lazy(() => import("./pages/admin/projects")));
+const Todos = Loadable(lazy(() => import("./pages/admin/projects/tasks")));
 
-const Emails = Loadable(lazy(() => import("./pages/admin/emails/Emails")));
+const Emails = Loadable(lazy(() => import("./pages/admin/emails")));
 const Pipeline = Loadable(
   lazy(() => import("./pages/admin/pipeline/Pipeline")),
 );
-const Dashboard = Loadable(lazy(() => import("./pages/admin/Dashboard")));
+const Dashboard = Loadable(lazy(() => import("./pages/admin/dashboard")));
 
 const ErrorPage = Loadable(lazy(() => import("./pages/others/ErrorPage")));
 

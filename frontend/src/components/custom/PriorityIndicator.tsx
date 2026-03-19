@@ -1,6 +1,6 @@
 import { ArrowDown, ArrowRight, ArrowUp, ChevronsUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { toLabel } from "@/utils/enumLabel";
+import { toLabel } from "@/utils";
 
 const CONFIG: Record<string, { icon: React.ReactNode; className: string }> = {
   low: {
@@ -39,7 +39,13 @@ export const PriorityIndicator = ({
   const cfg = CONFIG[value] ?? CONFIG.medium;
 
   return (
-    <span className={cn("inline-flex items-center gap-1 text-xs font-medium", cfg.className, className)}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 text-xs font-medium",
+        cfg.className,
+        className,
+      )}
+    >
       {cfg.icon}
       {showLabel && <span>{toLabel(value)}</span>}
     </span>

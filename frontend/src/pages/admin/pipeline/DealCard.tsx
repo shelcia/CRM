@@ -2,8 +2,9 @@ import { Pencil, Trash2 } from "lucide-react";
 import AuthorAvatar from "@/components/custom/AuthorAvatar";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Deal, fmt, fmtDate } from "./pipelineTypes";
-import AddDealDialog from "./AddDealDialog";
+import AddDealDialog from "./components/AddDealDialog";
+import { IDeal } from "./types";
+import { convertDateToDateWithoutTime, getFmtCurrencyVal } from "@/utils";
 
 const DealCard = ({
   deal,
@@ -12,11 +13,11 @@ const DealCard = ({
   onDelete,
   onUpdated,
 }: {
-  deal: Deal;
+  deal: IDeal;
   provided: any;
   isDragging: boolean;
   onDelete: () => void;
-  onUpdated: (deal: Deal) => void;
+  onUpdated: (deal: IDeal) => void;
 }) => {
   return (
     <div
@@ -36,7 +37,11 @@ const DealCard = ({
             deal={deal}
             onUpdated={onUpdated}
             trigger={
-              <Button size="icon-sm" variant="ghost" onClick={(e) => e.stopPropagation()}>
+              <Button
+                size="icon-sm"
+                variant="ghost"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <Pencil className="h-3.5 w-3.5" />
               </Button>
             }
@@ -44,7 +49,10 @@ const DealCard = ({
           <Button
             size="icon-sm"
             variant="ghost"
-            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
             className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
           >
             <Trash2 className="h-3.5 w-3.5" />
@@ -53,22 +61,28 @@ const DealCard = ({
       </div>
 
       {deal.contactName && (
-        <p className="text-xs text-muted-foreground mt-1 truncate">{deal.contactName}</p>
+        <p className="text-xs text-muted-foreground mt-1 truncate">
+          {deal.contactName}
+        </p>
       )}
 
       <div className="flex items-center justify-between mt-3">
         <span className="text-sm font-semibold text-primary">
-          {fmt(deal.value, deal.currency)}
+          {getFmtCurrencyVal(deal.value, deal.currency)}
         </span>
         {deal.expectedClose && (
-          <span className="text-xs text-muted-foreground">{fmtDate(deal.expectedClose)}</span>
+          <span className="text-xs text-muted-foreground">
+            {convertDateToDateWithoutTime(deal.expectedClose)}
+          </span>
         )}
       </div>
 
       {deal.assignedTo && (
         <div className="flex items-center gap-1.5 mt-2">
           <AuthorAvatar name={deal.assignedTo} className="h-5 w-5 text-[9px]" />
-          <span className="text-xs text-muted-foreground truncate">{deal.assignedTo}</span>
+          <span className="text-xs text-muted-foreground truncate">
+            {deal.assignedTo}
+          </span>
         </div>
       )}
     </div>

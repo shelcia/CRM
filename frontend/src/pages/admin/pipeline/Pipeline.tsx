@@ -15,12 +15,14 @@ import {
 import { cn } from "@/lib/utils";
 import { apiDeals } from "@/services/models/dealsModel";
 import PageHeader from "@/components/custom/PageHeader";
-import { Deal, STAGES, fmt } from "./pipelineTypes";
-import AddDealDialog from "./AddDealDialog";
+import AddDealDialog from "./components/AddDealDialog";
 import DealCard from "./DealCard";
+import { STAGES } from "./constants";
+import { getFmtCurrencyVal } from "@/utils/calendarHelpers";
+import { IDeal } from "./types";
 
 const Pipeline = () => {
-  const [deals, setDeals] = useState<Deal[]>([]);
+  const [deals, setDeals] = useState<IDeal[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterAssignedTo, setFilterAssignedTo] = useState("all");
@@ -35,19 +37,34 @@ const Pipeline = () => {
   }, []);
 
   const filteredDeals = deals.filter((d) => {
-    if (search && !d.title.toLowerCase().includes(search.toLowerCase()) &&
-        !d.contactName?.toLowerCase().includes(search.toLowerCase())) return false;
-    if (filterAssignedTo !== "all" && d.assignedTo !== filterAssignedTo) return false;
+    if (
+      search &&
+      !d.title.toLowerCase().includes(search.toLowerCase()) &&
+      !d.contactName?.toLowerCase().includes(search.toLowerCase())
+    )
+      return false;
+    if (filterAssignedTo !== "all" && d.assignedTo !== filterAssignedTo)
+      return false;
     return true;
   });
 
-  const assignees = Array.from(new Set(deals.map((d) => d.assignedTo).filter(Boolean))) as string[];
-  const dealsByStage = (stage: string) => filteredDeals.filter((d) => d.stage === stage);
+  const assignees = Array.from(
+    new Set(deals.map((d) => d.assignedTo).filter(Boolean)),
+  ) as string[];
+  const dealsByStage = (stage: string) =>
+    filteredDeals.filter((d) => d.stage === stage);
 
-  const totalValue = deals.filter((d) => d.stage !== "lost").reduce((sum, d) => sum + d.value, 0);
+  const totalValue = deals
+    .filter((d) => d.stage !== "lost")
+    .reduce((sum, d) => sum + d.value, 0);
   const wonDeals = deals.filter((d) => d.stage === "won");
-  const closedDeals = deals.filter((d) => d.stage === "won" || d.stage === "lost");
-  const winRate = closedDeals.length > 0 ? Math.round((wonDeals.length / closedDeals.length) * 100) : 0;
+  const closedDeals = deals.filter(
+    (d) => d.stage === "won" || d.stage === "lost",
+  );
+  const winRate =
+    closedDeals.length > 0
+      ? Math.round((wonDeals.length / closedDeals.length) * 100)
+      : 0;
 
   const onDragEnd = (result: any) => {
     const { draggableId, destination } = result;
@@ -55,17 +72,28 @@ const Pipeline = () => {
     const deal = deals.find((d) => d._id === draggableId);
     if (!deal || deal.stage === destination.droppableId) return;
     const newStage = destination.droppableId;
-    setDeals((prev) => prev.map((d) => (d._id === draggableId ? { ...d, stage: newStage } : d)));
-    apiDeals.putById!(draggableId, { ...deal, stage: newStage }, new AbortController().signal, "", true)
-      .then((res) => {
-        if (!res?._id) {
-          setDeals((prev) => prev.map((d) => (d._id === draggableId ? { ...d, stage: deal.stage } : d)));
-          toast.error("Failed to move deal");
-        }
-      });
+    setDeals((prev) =>
+      prev.map((d) => (d._id === draggableId ? { ...d, stage: newStage } : d)),
+    );
+    apiDeals.putById!(
+      draggableId,
+      { ...deal, stage: newStage },
+      new AbortController().signal,
+      "",
+      true,
+    ).then((res) => {
+      if (!res?._id) {
+        setDeals((prev) =>
+          prev.map((d) =>
+            d._id === draggableId ? { ...d, stage: deal.stage } : d,
+          ),
+        );
+        toast.error("Failed to move deal");
+      }
+    });
   };
 
-  const handleUpdate = (updated: Deal) =>
+  const handleUpdate = (updated: IDeal) =>
     setDeals((prev) => prev.map((d) => (d._id === updated._id ? updated : d)));
 
   const handleDelete = (id: string) => {
@@ -87,14 +115,22 @@ const Pipeline = () => {
         actions={
           <AddDealDialog
             onCreated={(deal) => setDeals((prev) => [deal, ...prev])}
-            trigger={<Button><Plus className="h-4 w-4" /> New Deal</Button>}
+            trigger={
+              <Button>
+                <Plus className="h-4 w-4" /> New Deal
+              </Button>
+            }
           />
         }
       />
 
       {/* Summary stats */}
       <div className="grid grid-cols-3 gap-4">
-        <StatCard label="Pipeline Value" value={fmt(totalValue, "USD")} icon={DollarSign} />
+        <StatCard
+          label="Pipeline Value"
+          value={getFmtCurrencyVal(totalValue, "USD")}
+          icon={DollarSign}
+        />
         <StatCard label="Total Deals" value={deals.length} icon={Target} />
         <StatCard label="Win Rate" value={`${winRate}%`} icon={TrendingUp} />
       </div>
@@ -117,13 +153,22 @@ const Pipeline = () => {
           <SelectContent>
             <SelectItem value="all">All assignees</SelectItem>
             {assignees.map((a) => (
-              <SelectItem key={a} value={a}>{a}</SelectItem>
+              <SelectItem key={a} value={a}>
+                {a}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
         {(search || filterAssignedTo !== "all") && (
-          <Button size="sm" variant="ghost" className="h-8 px-2 text-muted-foreground"
-            onClick={() => { setSearch(""); setFilterAssignedTo("all"); }}>
+          <Button
+            size="sm"
+            variant="ghost"
+            className="h-8 px-2 text-muted-foreground"
+            onClick={() => {
+              setSearch("");
+              setFilterAssignedTo("all");
+            }}
+          >
             <X className="h-3.5 w-3.5 mr-1" /> Clear
           </Button>
         )}
@@ -133,7 +178,10 @@ const Pipeline = () => {
       {isLoading ? (
         <div className="flex gap-3 overflow-x-auto pb-4">
           {STAGES.map((s) => (
-            <div key={s.key} className="flex-shrink-0 w-60 h-48 rounded-xl bg-muted animate-pulse" />
+            <div
+              key={s.key}
+              className="flex-shrink-0 w-60 h-48 rounded-xl bg-muted animate-pulse"
+            />
           ))}
         </div>
       ) : (
@@ -144,17 +192,31 @@ const Pipeline = () => {
               const stageValue = stageDeals.reduce((s, d) => s + d.value, 0);
               return (
                 <div key={stage.key} className="flex-shrink-0 w-60">
-                  <div className={cn("rounded-xl border flex flex-col max-h-[calc(100vh-18rem)]", stage.color)}>
+                  <div
+                    className={cn(
+                      "rounded-xl border flex flex-col max-h-[calc(100vh-18rem)]",
+                      stage.color,
+                    )}
+                  >
                     {/* Column header */}
                     <div className="px-3 py-2.5 flex items-center gap-2">
-                      <span className={cn("h-2 w-2 rounded-full shrink-0", stage.dot)} />
-                      <span className="text-sm font-semibold flex-1">{stage.label}</span>
+                      <span
+                        className={cn(
+                          "h-2 w-2 rounded-full shrink-0",
+                          stage.dot,
+                        )}
+                      />
+                      <span className="text-sm font-semibold flex-1">
+                        {stage.label}
+                      </span>
                       <span className="text-xs text-muted-foreground tabular-nums bg-background/60 rounded-full px-1.5 py-0.5">
                         {stageDeals.length}
                       </span>
                       <AddDealDialog
                         defaultStage={stage.key}
-                        onCreated={(deal) => setDeals((prev) => [deal, ...prev])}
+                        onCreated={(deal) =>
+                          setDeals((prev) => [deal, ...prev])
+                        }
                         trigger={
                           <button className="text-muted-foreground hover:text-foreground transition-colors">
                             <Plus className="h-3.5 w-3.5" />
@@ -166,7 +228,9 @@ const Pipeline = () => {
                     {/* Stage value */}
                     {stageDeals.length > 0 && (
                       <div className="px-3 pb-2">
-                        <p className="text-xs text-muted-foreground font-medium">{fmt(stageValue, "USD")}</p>
+                        <p className="text-xs text-muted-foreground font-medium">
+                          {getFmtCurrencyVal(stageValue, "USD")}
+                        </p>
                       </div>
                     )}
 
@@ -182,7 +246,11 @@ const Pipeline = () => {
                           )}
                         >
                           {stageDeals.map((deal, idx) => (
-                            <Draggable key={deal._id} draggableId={deal._id} index={idx}>
+                            <Draggable
+                              key={deal._id}
+                              draggableId={deal._id}
+                              index={idx}
+                            >
                               {(provided, snapshot) => (
                                 <DealCard
                                   deal={deal}
@@ -196,7 +264,9 @@ const Pipeline = () => {
                           ))}
                           {provided.placeholder}
                           {stageDeals.length === 0 && (
-                            <p className="text-xs text-muted-foreground text-center py-4">No deals</p>
+                            <p className="text-xs text-muted-foreground text-center py-4">
+                              No deals
+                            </p>
                           )}
                         </div>
                       )}
@@ -213,7 +283,3 @@ const Pipeline = () => {
 };
 
 export default Pipeline;
-
-// Exported for ContactPanel use
-export { AddDealDialog };
-export type { Deal };

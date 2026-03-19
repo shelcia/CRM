@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { toLabel } from "@/utils/enumLabel";
+import { toLabel } from "@/utils";
 
 const COLORS: Record<string, string> = {
   // Contact statuses
