@@ -6,10 +6,11 @@ import {
   PriorityIndicator,
   PageHeader,
   CustomEmptyState,
+  DeleteIconButton,
 } from "@/components/custom";
 import { AssignedToDisplay } from "@/components/common";
 import { Button } from "@/components/ui/button";
-import { Plus, TicketCheck, Pencil, Trash2 } from "lucide-react";
+import { Plus, TicketCheck, Pencil } from "lucide-react";
 import { Link } from "react-router-dom";
 import { convertDateToDateWithoutTime } from "@/utils";
 import { apiTickets } from "@/services/models/ticketsModel";
@@ -119,9 +120,8 @@ const Tickets = () => {
                 </Button>
               )}
               {has("tickets-delete") && (
-                <Button
+                <DeleteIconButton
                   size="icon-sm"
-                  variant="destructive"
                   onClick={() =>
                     confirmToast({
                       title: `Delete "${ticket?.title}"?`,
@@ -147,9 +147,7 @@ const Tickets = () => {
                       },
                     })
                   }
-                >
-                  <Trash2 className="size-4" />
-                </Button>
+                />
               )}
             </div>
           );

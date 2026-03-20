@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import usePermissions from "@/hooks/usePermissions";
 import { Phone, Mail } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { StatusBadge } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { apiProvider } from "@/services/utilities/provider";
 import { apiContacts } from "@/services/models/contactsModel";
@@ -131,9 +132,7 @@ const ContactPanel = ({
             )}
           </div>
           <div className="mt-2">
-            <span className="inline-block px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-medium border border-primary/20">
-              {contact.status}
-            </span>
+            <StatusBadge value={contact.status} />
           </div>
         </div>
 
