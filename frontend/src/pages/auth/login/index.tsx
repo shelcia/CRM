@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button } from "@/components/ui/button";
 import { CustomTextField } from "@/components/custom";
+import { AuthHeader } from "@/components/common";
 import { apiAuth } from "@/services/models/authModel";
 
 const Login = () => {
@@ -49,12 +50,7 @@ const Login = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-1 mb-2">
-        <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
-        <p className="text-sm text-muted-foreground">
-          Sign in to your Tiny CRM account
-        </p>
-      </div>
+      <AuthHeader title="Welcome back" description="Sign in to your Tiny CRM account" />
 
       <div className="flex flex-col gap-4">
         <CustomTextField

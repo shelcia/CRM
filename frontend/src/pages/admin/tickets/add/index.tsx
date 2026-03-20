@@ -7,9 +7,9 @@ import {
   CustomTextField,
   CustomTextAreaField,
   PageHeader,
+  CardSection,
 } from "@/components/custom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Ticket, SlidersHorizontal } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { apiTickets } from "@/services/models/ticketsModel";
@@ -76,105 +76,90 @@ const AddTicket = () => {
       />
 
       <div className="flex gap-2 w-full">
-        {/* Ticket Info Card */}
-        <Card className="w-full">
-          <div className="flex items-center gap-3 px-6 py-4 border-b">
-            <Ticket className="h-4 w-4 text-primary" />
-            <span className="font-semibold text-sm">Ticket Information</span>
+        <CardSection
+          icon={<Ticket className="h-4 w-4 text-primary" />}
+          title="Ticket Information"
+          className="w-full"
+          contentClassName="space-y-4"
+        >
+          <CustomTextField
+            label="Ticket Title"
+            name="title"
+            placeholder="ex: Login page throws 500 error"
+            values={values}
+            handleChange={handleChange}
+            touched={touched}
+            errors={errors}
+          />
+          <div className="space-y-1.5">
+            <Label className="text-sm font-medium">Contact Name</Label>
+            <ContactSelect
+              value={values.contact}
+              onChange={(name, _id, email) => {
+                setFieldValue("contact", name);
+                if (email) setFieldValue("email", email);
+              }}
+            />
+            {touched.contact && errors.contact && (
+              <p className="text-xs text-destructive">{errors.contact}</p>
+            )}
           </div>
-          <CardContent className="pt-6 space-y-4">
-            <CustomTextField
-              label="Ticket Title"
-              name="title"
-              placeholder="ex: Login page throws 500 error"
+          <CustomTextAreaField
+            name="description"
+            placeholder="Describe the issue in detail..."
+            values={values}
+            handleChange={handleChange}
+            touched={touched}
+            errors={errors}
+            rows={4}
+          />
+        </CardSection>
+
+        <CardSection
+          icon={<SlidersHorizontal className="h-4 w-4 text-primary" />}
+          title="Ticket Details"
+          className="w-full"
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <CustomSelectField
+              label="Category"
+              name="category"
+              placeholder="category"
               values={values}
               handleChange={handleChange}
               touched={touched}
               errors={errors}
+              labelItms={toLabelItems(ticketCategories)}
             />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <Label className="text-sm font-medium">Contact Name</Label>
-                <ContactSelect
-                  value={values.contact}
-                  onChange={(name, _id, email) => {
-                    setFieldValue("contact", name);
-                    if (email) setFieldValue("email", email);
-                  }}
-                />
-                {touched.contact && errors.contact && (
-                  <p className="text-xs text-destructive">{errors.contact}</p>
-                )}
-              </div>
-              <CustomTextField
-                label="Contact Email"
-                name="email"
-                placeholder="ex: jane@company.com"
-                values={values}
-                handleChange={handleChange}
-                touched={touched}
-                errors={errors}
-              />
-            </div>
-            <CustomTextAreaField
-              name="description"
-              placeholder="Describe the issue in detail..."
+            <CustomSelectField
+              label="Priority"
+              name="priority"
+              placeholder="priority"
               values={values}
               handleChange={handleChange}
               touched={touched}
               errors={errors}
-              rows={4}
+              labelItms={toLabelItems(ticketPriorities)}
             />
-          </CardContent>
-        </Card>
-        {/* Details Card */}
-        <Card className="w-full">
-          <div className="flex items-center gap-3 px-6 py-4 border-b">
-            <SlidersHorizontal className="h-4 w-4 text-primary" />
-            <span className="font-semibold text-sm">Ticket Details</span>
-          </div>
-          <CardContent className="pt-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <CustomSelectField
-                label="Category"
-                name="category"
-                placeholder="category"
-                values={values}
-                handleChange={handleChange}
-                touched={touched}
-                errors={errors}
-                labelItms={toLabelItems(ticketCategories)}
+            <CustomSelectField
+              label="Status"
+              name="status"
+              placeholder="status"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+              labelItms={toLabelItems(ticketStatuses)}
+            />
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium">Assigned To</Label>
+              <AssignedToSelect
+                value={values.assignedTo}
+                onChange={(v) => setFieldValue("assignedTo", v)}
               />
-              <CustomSelectField
-                label="Priority"
-                name="priority"
-                placeholder="priority"
-                values={values}
-                handleChange={handleChange}
-                touched={touched}
-                errors={errors}
-                labelItms={toLabelItems(ticketPriorities)}
-              />
-              <CustomSelectField
-                label="Status"
-                name="status"
-                placeholder="status"
-                values={values}
-                handleChange={handleChange}
-                touched={touched}
-                errors={errors}
-                labelItms={toLabelItems(ticketStatuses)}
-              />
-              <div className="space-y-1.5">
-                <Label className="text-sm font-medium">Assigned To</Label>
-                <AssignedToSelect
-                  value={values.assignedTo}
-                  onChange={(v) => setFieldValue("assignedTo", v)}
-                />
-              </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardSection>
       </div>
 
       {/* Actions */}

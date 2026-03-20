@@ -11,18 +11,17 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type DashboardStats struct {
-	TotalContacts     int64          `json:"totalContacts"`
-	TotalTickets      int64          `json:"totalTickets"`
-	OpenTickets       int64          `json:"openTickets"`
-	InProgressTickets int64          `json:"inProgressTickets"`
-	ResolvedTickets   int64          `json:"resolvedTickets"`
-	TotalProjects     int64          `json:"totalProjects"`
-	TotalUsers        int64          `json:"totalUsers"`
+	TotalContacts     int64            `json:"totalContacts"`
+	TotalTickets      int64            `json:"totalTickets"`
+	OpenTickets       int64            `json:"openTickets"`
+	InProgressTickets int64            `json:"inProgressTickets"`
+	ResolvedTickets   int64            `json:"resolvedTickets"`
+	TotalProjects     int64            `json:"totalProjects"`
+	TotalUsers        int64            `json:"totalUsers"`
 	RecentContacts    []models.Contact `json:"recentContacts"`
 	RecentTickets     []models.Ticket  `json:"recentTickets"`
 }
@@ -36,16 +35,10 @@ func GetDashboardStats(c *gin.Context) {
 		return
 	}
 
-	companyID, err := primitive.ObjectIDFromHex(currentUser.CompanyID)
-	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid company ID")
-		return
-	}
-
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
-	companyIDFilter := bson.M{"companyId": companyID}
+	companyIDFilter := bson.M{"companyId": currentUser.CompanyID}
 
 	var stats DashboardStats
 

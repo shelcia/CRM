@@ -135,27 +135,17 @@ const TicketPanel = ({ ticket, open, onClose, onUpdate }: TicketPanelProps) => {
               </div>
             </div>
 
-            {/* Contact / Email */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1.5">
-                <Label className="text-xs">Contact</Label>
-                <ContactSelect
-                  value={(form.contact as string) ?? ""}
-                  onChange={(name, _id, email) => {
-                    set("contact", name);
-                    if (email) set("email", email);
-                  }}
-                  triggerClassName="h-8 text-xs"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs">Email</Label>
-                <Input
-                  className="h-8 text-sm"
-                  value={(form.email as string) ?? ""}
-                  onChange={(e) => set("email", e.target.value)}
-                />
-              </div>
+            {/* Contact */}
+            <div className="space-y-1.5">
+              <Label className="text-xs">Contact</Label>
+              <ContactSelect
+                value={(form.contact as string) ?? ""}
+                onChange={(name, _id, email) => {
+                  set("contact", name);
+                  if (email) set("email", email);
+                }}
+                triggerClassName="h-8 text-xs"
+              />
             </div>
 
             {/* Assigned To */}

@@ -7,6 +7,7 @@ import {
   EditIconButton,
   AddPrimaryButton,
 } from "@/components/custom";
+import { useEnums } from "@/hooks/useEnums";
 import { convertDateToDateWithoutTime } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Plus, Upload, FileDown } from "lucide-react";
@@ -31,10 +32,17 @@ const downloadTemplate = () => {
 
 const Contacts = () => {
   const { has } = usePermissions();
+  const { contactStatuses, contactPriorities } = useEnums();
   const [contacts, setContacts] = useState<any[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
+  const [filters, setFilters] = useState<Record<string, string>>({});
+
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setPage(1);
+  };
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [panelContact, setPanelContact] = useState<any>(null);
@@ -50,7 +58,9 @@ const Contacts = () => {
     const ctrl = new AbortController();
     setIsLoading(true);
     const params: Record<string, unknown> = { page, limit: PAGE_SIZE };
-    if (search) params.search = search;
+    if (search)           params.search   = search;
+    if (filters.status)   params.status   = filters.status;
+    if (filters.priority) params.priority = filters.priority;
     apiContacts.getByParams!(params, ctrl.signal, "", true).then((res) => {
       if (cancelled) return;
       if (res?.data) {
@@ -63,7 +73,7 @@ const Contacts = () => {
       cancelled = true;
       ctrl.abort();
     };
-  }, [page, search]);
+  }, [page, search, filters]);
 
   const openPanel = (contact: any, tab: "activity" | "edit" = "activity") => {
     setPanelContact(contact);
@@ -225,6 +235,10 @@ const Contacts = () => {
               setPage(1);
             },
             loading: isLoading,
+            columnFilters: {
+              status:   { options: contactStatuses,   value: filters.status   ?? "", onChange: (v) => handleFilterChange("status",   v) },
+              priority: { options: contactPriorities, value: filters.priority ?? "", onChange: (v) => handleFilterChange("priority", v) },
+            },
           }}
         />
       )}

@@ -25,6 +25,14 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toLabel } from "@/utils";
 
 import {
   DropdownMenu,
@@ -41,7 +49,14 @@ export interface TableColumn {
   options?: {
     customBodyRender?: (value: any, rowIndex?: number) => React.ReactNode;
     sortable?: boolean;
+    sortValue?: (row: any) => string | number;
   };
+}
+
+export interface ServerSideColumnFilter {
+  options: string[];
+  value: string;
+  onChange: (value: string) => void;
 }
 
 export interface ServerSideProps {
@@ -51,6 +66,7 @@ export interface ServerSideProps {
   onPageChange: (page: number) => void;
   onSearchChange: (search: string) => void;
   loading?: boolean;
+  columnFilters?: Record<string, ServerSideColumnFilter>;
 }
 
 interface CustomTableProps<
@@ -94,6 +110,13 @@ const CustomTable = <TData extends Record<string, any>>({
         header: col.label,
         enableSorting: col.options?.sortable ?? !col.options?.customBodyRender,
         enableColumnFilter: !col.options?.customBodyRender,
+        ...(col.options?.sortValue && {
+          sortingFn: (rowA: any, rowB: any) => {
+            const a = col.options!.sortValue!(rowA.original);
+            const b = col.options!.sortValue!(rowB.original);
+            return a < b ? -1 : a > b ? 1 : 0;
+          },
+        }),
         cell: col.options?.customBodyRender
           ? ({ getValue, row }) =>
               col.options!.customBodyRender!(getValue(), row.index)
@@ -126,7 +149,9 @@ const CustomTable = <TData extends Record<string, any>>({
         }),
   });
 
-  const activeFilterCount = columnFilters.length;
+  const activeFilterCount = serverSide?.columnFilters
+    ? Object.values(serverSide.columnFilters).filter((f) => f.value).length
+    : columnFilters.length;
 
   const downloadCSV = () => {
     const visibleCols = colDefs.filter(
@@ -190,8 +215,8 @@ const CustomTable = <TData extends Record<string, any>>({
             )}
           </div>
 
-          {/* Toggle column filters — hidden in server mode */}
-          {!serverSide && (
+          {/* Toggle column filters */}
+          {(!serverSide || serverSide.columnFilters) && (
             <Button
               variant={showColumnFilters ? "secondary" : "outline"}
               size="sm"
@@ -295,36 +320,60 @@ const CustomTable = <TData extends Record<string, any>>({
                 {/* Per-column filter inputs */}
                 {showColumnFilters && (
                   <tr className="border-b bg-muted/20">
-                    {headerGroup.headers.map((header) => (
-                      <th key={`filter-${header.id}`} className="px-3 py-2">
-                        {header.column.getCanFilter() ? (
-                          <div className="relative">
-                            <Input
-                              value={
-                                (header.column.getFilterValue() as string) ?? ""
+                    {headerGroup.headers.map((header) => {
+                      const serverFilter =
+                        serverSide?.columnFilters?.[header.id];
+                      return (
+                        <th key={`filter-${header.id}`} className="px-3 py-2">
+                          {serverFilter ? (
+                            <Select
+                              value={serverFilter.value || "all"}
+                              onValueChange={(v) =>
+                                serverFilter.onChange(v === "all" ? "" : v)
                               }
-                              onChange={(e) =>
-                                header.column.setFilterValue(
-                                  e.target.value || undefined,
-                                )
-                              }
-                              placeholder={`Filter…`}
-                              className="h-7 text-xs pr-6"
-                            />
-                            {header.column.getFilterValue() && (
-                              <button
-                                onClick={() =>
-                                  header.column.setFilterValue(undefined)
+                            >
+                              <SelectTrigger className="h-7 text-xs">
+                                <SelectValue placeholder="All" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="all">All</SelectItem>
+                                {serverFilter.options.map((opt) => (
+                                  <SelectItem key={opt} value={opt}>
+                                    {toLabel(opt)}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          ) : !serverSide && header.column.getCanFilter() ? (
+                            <div className="relative">
+                              <Input
+                                value={
+                                  (header.column.getFilterValue() as string) ??
+                                  ""
                                 }
-                                className="absolute right-1.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                              >
-                                <X className="h-3 w-3" />
-                              </button>
-                            )}
-                          </div>
-                        ) : null}
-                      </th>
-                    ))}
+                                onChange={(e) =>
+                                  header.column.setFilterValue(
+                                    e.target.value || undefined,
+                                  )
+                                }
+                                placeholder={`Filter…`}
+                                className="h-7 text-xs pr-6"
+                              />
+                              {header.column.getFilterValue() && (
+                                <button
+                                  onClick={() =>
+                                    header.column.setFilterValue(undefined)
+                                  }
+                                  className="absolute right-1.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                >
+                                  <X className="h-3 w-3" />
+                                </button>
+                              )}
+                            </div>
+                          ) : null}
+                        </th>
+                      );
+                    })}
                   </tr>
                 )}
               </React.Fragment>

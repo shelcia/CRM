@@ -8,6 +8,7 @@ import {
   EditIconButton,
   AddPrimaryButton,
 } from "@/components/custom";
+import { useEnums } from "@/hooks/useEnums";
 import {
   AssignedToDisplay,
   PriorityIndicator,
@@ -25,12 +26,21 @@ import usePermissions from "@/hooks/usePermissions";
 
 const PAGE_SIZE = 50;
 
+const PRIORITY_ORDER: Record<string, number> = { low: 1, medium: 2, high: 3, critical: 4 };
+
 const Tickets = () => {
   const { has } = usePermissions();
+  const { ticketStatuses, ticketPriorities, ticketCategories } = useEnums();
   const [tickets, setTickets] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState<Record<string, string>>({});
+
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setPage(1);
+  };
   const [isLoading, setIsLoading] = useState(true);
   const [panelTicket, setPanelTicket] = useState<any>(null);
   const [panelOpen, setPanelOpen] = useState(false);
@@ -44,7 +54,10 @@ const Tickets = () => {
     const ctrl = new AbortController();
     setIsLoading(true);
     const params: Record<string, unknown> = { page, limit: PAGE_SIZE };
-    if (search) params.search = search;
+    if (search)           params.search   = search;
+    if (filters.status)   params.status   = filters.status;
+    if (filters.priority) params.priority = filters.priority;
+    if (filters.category) params.category = filters.category;
     apiTickets.getByParams!(params, ctrl.signal, "", true).then((res) => {
       if (cancelled) return;
       if (res?.data) {
@@ -57,7 +70,7 @@ const Tickets = () => {
       cancelled = true;
       ctrl.abort();
     };
-  }, [page, search]);
+  }, [page, search, filters]);
 
   const columns = [
     { label: "Title", name: "title" },
@@ -66,6 +79,7 @@ const Tickets = () => {
       label: "Category",
       name: "category",
       options: {
+        sortable: true,
         customBodyRender: (val: string) =>
           val ? (
             <StatusBadge value={val} />
@@ -78,6 +92,8 @@ const Tickets = () => {
       label: "Priority",
       name: "priority",
       options: {
+        sortable: true,
+        sortValue: (row: any) => PRIORITY_ORDER[row.priority] ?? 0,
         customBodyRender: (val: string) => <PriorityIndicator value={val} />,
       },
     },
@@ -93,6 +109,7 @@ const Tickets = () => {
       label: "Assigned To",
       name: "assignedTo",
       options: {
+        sortable: true,
         customBodyRender: (val: string) => <AssignedToDisplay name={val} />,
       },
     },
@@ -204,6 +221,11 @@ const Tickets = () => {
               setPage(1);
             },
             loading: isLoading,
+            columnFilters: {
+              status:   { options: ticketStatuses,   value: filters.status   ?? "", onChange: (v) => handleFilterChange("status",   v) },
+              priority: { options: ticketPriorities, value: filters.priority ?? "", onChange: (v) => handleFilterChange("priority", v) },
+              category: { options: ticketCategories, value: filters.category ?? "", onChange: (v) => handleFilterChange("category", v) },
+            },
           }}
         />
       )}

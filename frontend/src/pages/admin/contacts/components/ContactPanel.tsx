@@ -109,30 +109,26 @@ const ContactPanel = ({
       <SheetContent title={contact.name} className="flex flex-col">
         {/* Header */}
         <div className="px-5 pt-5 pb-4 border-b shrink-0">
-          <div className="flex items-start pr-6">
+          <div className="flex items-start gap-2">
             <div>
-              <h2 className="text-base font-semibold truncate">
-                {contact.name}
-              </h2>
+              <h2 className="font-semibold truncate">{contact.name}</h2>
               <p className="text-sm text-muted-foreground truncate">
                 {contact.jobTitle || contact.company}
               </p>
             </div>
+            <StatusBadge value={contact.status} />
           </div>
-          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-xs text-muted-foreground">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-3 text-sm text-muted-foreground">
             {contact.email && (
               <span className="flex items-center gap-1">
-                <Mail className="h-3 w-3" /> {contact.email}
+                <Mail className="size-3" /> {contact.email}
               </span>
             )}
             {contact.number && (
               <span className="flex items-center gap-1">
-                <Phone className="h-3 w-3" /> {contact.number}
+                <Phone className="size-3" /> {contact.number}
               </span>
             )}
-          </div>
-          <div className="mt-2">
-            <StatusBadge value={contact.status} />
           </div>
         </div>
 

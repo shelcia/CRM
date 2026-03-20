@@ -3,9 +3,9 @@ import {
   CustomMultipleCheckBoxField,
   CustomTextField,
   PageHeader,
+  CardSection,
 } from "@/components/custom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { apiUsers } from "@/services/models/usersModel";
@@ -13,11 +13,7 @@ import toast from "react-hot-toast";
 import { UserRound, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PERMISSION_GROUPS } from "../constants";
-
-const checkedToPermissions = (checked: boolean[][]) =>
-  PERMISSION_GROUPS.flatMap((g, gi) =>
-    g.keys.filter((_, ki) => checked[gi][ki]),
-  );
+import { checkedToPermissions } from "../helpers";
 
 const AddUser = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -49,20 +45,19 @@ const AddUser = () => {
   });
 
   return (
-    <section className="max-w-3xl space-y-6">
+    <section className="space-y-6">
       {/* Header */}
       <PageHeader
         title="Add User"
         description="Invite a new member to your workspace"
         isBackButton
       />
-      {/* Profile + Basic Info Card */}
-      <Card>
-        <div className="flex items-center gap-3 px-6 py-4 border-b">
-          <UserRound className="h-4 w-4 text-primary" />
-          <span className="font-semibold text-sm">Profile Information</span>
-        </div>
-        <CardContent className="pt-6">
+      <div className="flex gap-2">
+        <CardSection
+          icon={<UserRound className="h-4 w-4 text-primary" />}
+          title="Profile Information"
+          className="w-full"
+        >
           <div className="flex gap-6 items-start">
             <div className="shrink-0 flex flex-col items-center gap-2">
               <div className="h-20 w-20 rounded-full bg-primary/10 flex items-center justify-center">
@@ -101,16 +96,13 @@ const AddUser = () => {
               />
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </CardSection>
 
-      {/* Permissions Card */}
-      <Card>
-        <div className="flex items-center gap-3 px-6 py-4 border-b">
-          <ShieldCheck className="h-4 w-4 text-primary" />
-          <span className="font-semibold text-sm">Permissions</span>
-        </div>
-        <CardContent className="pt-6">
+        <CardSection
+          icon={<ShieldCheck className="h-4 w-4 text-primary" />}
+          title="Permissions"
+          className="w-full"
+        >
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
             {PERMISSION_GROUPS.map((group, gi) => (
               <CustomMultipleCheckBoxField
@@ -128,8 +120,8 @@ const AddUser = () => {
               />
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </CardSection>
+      </div>
 
       {/* Actions */}
       <div className="flex items-center justify-end gap-3">

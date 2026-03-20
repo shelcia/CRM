@@ -23,6 +23,8 @@ func GetContacts(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
 	search := strings.TrimSpace(c.Query("search"))
+	status := strings.TrimSpace(c.Query("status"))
+	priority := strings.TrimSpace(c.Query("priority"))
 
 	if page < 1 {
 		page = 1
@@ -39,6 +41,12 @@ func GetContacts(c *gin.Context) {
 			bson.M{"company": bson.M{"$regex": search, "$options": "i"}},
 		}
 	}
+	if status != "" {
+		filter["status"] = status
+	}
+	if priority != "" {
+		filter["priority"] = priority
+	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -46,7 +54,7 @@ func GetContacts(c *gin.Context) {
 	total, _ := db.Collection("contacts").CountDocuments(ctx, filter)
 
 	opts := options.Find().
-		SetSkip(int64((page-1)*limit)).
+		SetSkip(int64((page - 1) * limit)).
 		SetLimit(int64(limit)).
 		SetSort(bson.D{{Key: "date", Value: -1}})
 

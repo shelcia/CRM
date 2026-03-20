@@ -2,9 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CustomTextField, PageHeader } from "@/components/custom";
+import { CustomTextField, PageHeader, CardSection } from "@/components/custom";
 import { Building2, ImagePlus, UserRound } from "lucide-react";
 import { apiCompany } from "@/services/models/companyModel";
 import { BASE_URL } from "@/services/api";
@@ -107,36 +106,29 @@ const Profile = () => {
         title="Profile"
         description="View your account and manage company settings"
       />
-      <Card>
-        <div className="flex items-center gap-3 px-6 py-4 border-b">
-          <UserRound className="h-4 w-4 text-primary" />
-          <span className="font-semibold text-sm">Account</span>
-        </div>
-        <CardContent className="pt-6">
-          <div className="flex items-center gap-4">
-            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-              <span className="text-primary font-bold text-lg">
-                {initials || <UserRound className="h-7 w-7 text-primary/60" />}
-              </span>
-            </div>
-            <div className="space-y-0.5">
-              <p className="font-semibold">{name}</p>
-              <p className="text-sm text-muted-foreground">{email}</p>
-              <span className="inline-block text-xs font-medium bg-primary/10 text-primary rounded px-2 py-0.5 capitalize">
-                {role}
-              </span>
-            </div>
+      <CardSection icon={<UserRound className="h-4 w-4 text-primary" />} title="Account">
+        <div className="flex items-center gap-4">
+          <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+            <span className="text-primary font-bold text-lg">
+              {initials || <UserRound className="h-7 w-7 text-primary/60" />}
+            </span>
           </div>
-        </CardContent>
-      </Card>
+          <div className="space-y-0.5">
+            <p className="font-semibold">{name}</p>
+            <p className="text-sm text-muted-foreground">{email}</p>
+            <span className="inline-block text-xs font-medium bg-primary/10 text-primary rounded px-2 py-0.5 capitalize">
+              {role}
+            </span>
+          </div>
+        </div>
+      </CardSection>
 
       {/* Company Details (editable) */}
-      <Card>
-        <div className="flex items-center gap-3 px-6 py-4 border-b">
-          <Building2 className="h-4 w-4 text-primary" />
-          <span className="font-semibold text-sm">Company Details</span>
-        </div>
-        <CardContent className="pt-6 space-y-6">
+      <CardSection
+        icon={<Building2 className="h-4 w-4 text-primary" />}
+        title="Company Details"
+        contentClassName="space-y-6"
+      >
           {/* Logo upload */}
           <div className="flex items-center gap-5">
             <div className="h-20 w-20 rounded-lg border bg-muted flex items-center justify-center overflow-hidden shrink-0">
@@ -243,8 +235,7 @@ const Profile = () => {
               type="number"
             />
           </div>
-        </CardContent>
-      </Card>
+      </CardSection>
 
       <div className="flex justify-end">
         <Button loading={isLoading} onClick={() => handleSubmit()}>

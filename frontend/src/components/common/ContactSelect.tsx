@@ -39,7 +39,8 @@ export const ContactSelect = ({
   useEffect(() => {
     const sig = new AbortController().signal;
     apiProvider.getAll("contacts", sig, true).then((res: any) => {
-      if (Array.isArray(res)) setContacts(res);
+      const list = Array.isArray(res) ? res : res?.data;
+      if (Array.isArray(list)) setContacts(list);
     });
   }, []);
 

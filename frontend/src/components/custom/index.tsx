@@ -15,3 +15,6 @@ export {
 } from "./CustomInputs";
 export * from "./CustomLoaders";
 export * from "./CustomButtons";
+export { CardSection } from "./CardSection";
+export { TableFilters } from "./TableFilters";
+export type { FilterConfig } from "./TableFilters";

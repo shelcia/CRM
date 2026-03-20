@@ -70,6 +70,8 @@ const EmailGroups = () => {
       label: "Contacts",
       name: "contactIds",
       options: {
+        sortable: true,
+        sortValue: (row: any) => row.contactIds?.length ?? 0,
         customBodyRender: (val: string[]) => (
           <span className="inline-flex items-center gap-1 text-xs bg-muted px-2 py-0.5 rounded-full">
             <Users className="h-3 w-3" /> {val?.length ?? 0}

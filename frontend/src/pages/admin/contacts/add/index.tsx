@@ -6,9 +6,9 @@ import {
   CustomSelectField,
   CustomTextField,
   PageHeader,
+  CardSection,
 } from "@/components/custom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { apiContacts } from "@/services/models/contactsModel";
 import { UserRound, TrendingUp } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -61,7 +61,7 @@ const AddContact = () => {
     });
 
   return (
-    <section className="max-w-3xl space-y-6">
+    <section className="space-y-6">
       {/* Header */}
       <PageHeader
         title="Add Contact"
@@ -69,13 +69,12 @@ const AddContact = () => {
         isBackButton
       />
 
-      {/* Basic Info Card */}
-      <Card>
-        <div className="flex items-center gap-3 px-6 py-4 border-b">
-          <UserRound className="h-4 w-4 text-primary" />
-          <span className="font-semibold text-sm">Basic Information</span>
-        </div>
-        <CardContent className="pt-6">
+      <div className="flex gap-2">
+        <CardSection
+          icon={<UserRound className="h-4 w-4 text-primary" />}
+          title="Basic Information"
+          className="w-full"
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <CustomTextField
               label="Full Name"
@@ -133,16 +132,13 @@ const AddContact = () => {
               type="number"
             />
           </div>
-        </CardContent>
-      </Card>
+        </CardSection>
 
-      {/* Lead Details Card */}
-      <Card>
-        <div className="flex items-center gap-3 px-6 py-4 border-b">
-          <TrendingUp className="h-4 w-4 text-primary" />
-          <span className="font-semibold text-sm">Lead Details</span>
-        </div>
-        <CardContent className="pt-6">
+        <CardSection
+          icon={<TrendingUp className="h-4 w-4 text-primary" />}
+          title="Lead Details"
+          className="w-full"
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <CustomSelectField
               label="Lead Status"
@@ -174,8 +170,8 @@ const AddContact = () => {
               errors={errors}
             />
           </div>
-        </CardContent>
-      </Card>
+        </CardSection>
+      </div>
 
       {/* Actions */}
       <div className="flex items-center justify-end gap-3">

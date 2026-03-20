@@ -1,4 +1,5 @@
 export * from "./AssignedTo";
+export * from "./AuthHeader";
 export * from "./ContactSelect";
 export * from "./FormFields";
 export * from "./AuthCard";
