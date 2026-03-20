@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import usePermissions from "@/hooks/usePermissions";
 import { Phone, Mail } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { StatusBadge } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { apiProvider } from "@/services/utilities/provider";
 import { apiContacts } from "@/services/models/contactsModel";
@@ -13,6 +12,7 @@ import ActivityTimeline from "./ActivityTimeline";
 import Notes from "./Notes";
 import DealsTab from "./Deals";
 import Edit from "./Edit";
+import { StatusBadge } from "@/components/common";
 
 interface ContactPanelProps {
   contact: IContact | null;

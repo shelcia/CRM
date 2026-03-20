@@ -9,18 +9,14 @@ import {
   PhoneCall,
 } from "lucide-react";
 import { apiProvider } from "@/services/utilities/provider";
-import {
-  StatusBadge,
-  PriorityIndicator,
-  CustomEmptyState,
-  PageHeader,
-} from "@/components/custom";
+import { CustomEmptyState, PageHeader } from "@/components/custom";
 import { convertDateToDateWithoutTime, getTimeOfDay } from "@/utils";
 import { Link } from "react-router-dom";
 import usePermissions from "@/hooks/usePermissions";
 import type { LucideIcon } from "lucide-react";
 import { DashboardStats, Metric } from "./types";
 import MetricCard from "./components/MetricCard";
+import { PriorityIndicator, StatusBadge } from "@/components/common";
 
 const Dashboard = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);

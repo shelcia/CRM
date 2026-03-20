@@ -8,11 +8,18 @@ interface DeleteIconButtonProps {
   className?: string;
 }
 
-export const DeleteIconButton = ({ onClick, size = "icon", className }: DeleteIconButtonProps) => (
+export const DeleteIconButton = ({
+  onClick,
+  size = "icon",
+  className,
+}: DeleteIconButtonProps) => (
   <Button
     variant="ghost"
     size={size}
-    className={cn("text-muted-foreground hover:text-destructive hover:bg-destructive/10", className)}
+    className={cn(
+      "text-destructive hover:text-destructive hover:bg-destructive/10",
+      className,
+    )}
     onClick={onClick}
   >
     <Trash2 className="size-4" />

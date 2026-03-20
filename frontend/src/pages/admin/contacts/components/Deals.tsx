@@ -4,9 +4,10 @@ import { getDealsByContact } from "@/services/models/dealsModel";
 import AddDealDialog from "../../pipeline/components/AddDealDialog";
 import { Button } from "@/components/ui/button";
 import { Kanban, Plus } from "lucide-react";
-import { PageSpinner, StatusBadge, CustomEmptyState } from "@/components/custom";
+import { PageSpinner, CustomEmptyState } from "@/components/custom";
 import { IDeal } from "../../pipeline/types";
 import { getFmtCurrencyVal } from "@/utils";
+import { StatusBadge } from "@/components/common";
 
 const DealsTab = ({ contact }: { contact: IContact }) => {
   const [deals, setDeals] = useState<IDeal[]>([]);

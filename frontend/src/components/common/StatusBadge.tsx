@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { toLabel } from "@/utils";
-import CustomBadge, { badgeVariants } from "./CustomBadge";
+import CustomBadge, { badgeVariants } from "../custom/CustomBadge";
 import { type VariantProps } from "class-variance-authority";
 
 type BadgeVariant = NonNullable<VariantProps<typeof badgeVariants>["variant"]>;

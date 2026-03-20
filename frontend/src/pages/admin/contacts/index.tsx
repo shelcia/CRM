@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   CustomTable,
   TableSkeleton,
-  StatusBadge,
   PageHeader,
   DeleteIconButton,
 } from "@/components/custom";
@@ -16,6 +15,7 @@ import toast from "react-hot-toast";
 import usePermissions from "@/hooks/usePermissions";
 import { confirmToast } from "@/utils/confirmToast";
 import { CSV_TEMPLATE, PAGE_SIZE } from "./constants";
+import { StatusBadge } from "@/components/common";
 
 const downloadTemplate = () => {
   const blob = new Blob([CSV_TEMPLATE], { type: "text/csv" });

@@ -6,7 +6,6 @@ import {
   TableSkeleton,
   StatCard,
   PageHeader,
-  StatusBadge,
   DeleteIconButton,
 } from "@/components/custom";
 import { Button } from "@/components/ui/button";
@@ -18,6 +17,7 @@ import { EmailGroup, EmailTemplate } from "../types";
 import TemplateDialog from "../components/TemplateDialog";
 import { frequencyLabel } from "../constants";
 import { scheduleLabel } from "../helpers";
+import { StatusBadge } from "@/components/common";
 
 const EmailTemplates = () => {
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
