@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { CustomMultipleCheckBoxField, CustomTextField } from "@/components/custom";
+import {
+  CustomMultipleCheckBoxField,
+  CustomTextField,
+} from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFormik } from "formik";
@@ -200,7 +203,7 @@ const EditUser = () => {
           <Button variant="outline">Cancel</Button>
         </Link>
         <Button loading={isLoading} onClick={() => handleSubmit()}>
-          Save Changes
+          Save
         </Button>
       </div>
     </section>

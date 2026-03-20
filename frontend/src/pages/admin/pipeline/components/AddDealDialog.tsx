@@ -10,7 +10,7 @@ import {
 } from "@/components/custom/CustomInputs";
 import { Label } from "@/components/ui/label";
 import { apiDeals } from "@/services/models/dealsModel";
-import { AssignedToSelect } from "@/components/common/AssignedTo";
+import { AssignedToSelect, ContactSelect } from "@/components/common";
 import { IDeal } from "../types";
 import { CURRENCIES, STAGE_ITEMS } from "../helpers";
 import { DatePicker } from "@/components/custom";
@@ -125,15 +125,16 @@ const AddDealDialog = ({
             touched={touched}
             errors={errors}
           />
-          <CustomTextField
-            label="Contact"
-            name="contactName"
-            placeholder="Contact name"
-            values={values}
-            handleChange={handleChange}
-            touched={touched}
-            errors={errors}
-          />
+          <div className="space-y-1">
+            <Label>Contact</Label>
+            <ContactSelect
+              value={values.contactName}
+              onChange={(name, id) => {
+                handleChange({ target: { name: "contactName", value: name } });
+                handleChange({ target: { name: "contactId", value: id } });
+              }}
+            />
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <CustomTextField
               label="Value"

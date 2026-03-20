@@ -14,7 +14,7 @@ import {
 import { apiTickets } from "@/services/models/ticketsModel";
 import { useEnums } from "@/hooks/useEnums";
 import { toLabelItems } from "@/utils";
-import { AssignedToSelect } from "@/components/common";
+import { AssignedToSelect, ContactSelect } from "@/components/common";
 import toast from "react-hot-toast";
 import { ITicket } from "../types";
 
@@ -139,10 +139,13 @@ const TicketPanel = ({ ticket, open, onClose, onUpdate }: TicketPanelProps) => {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label className="text-xs">Contact</Label>
-                <Input
-                  className="h-8 text-sm"
+                <ContactSelect
                   value={(form.contact as string) ?? ""}
-                  onChange={(e) => set("contact", e.target.value)}
+                  onChange={(name, _id, email) => {
+                    set("contact", name);
+                    if (email) set("email", email);
+                  }}
+                  triggerClassName="h-8 text-xs"
                 />
               </div>
               <div className="space-y-1.5">
@@ -180,11 +183,11 @@ const TicketPanel = ({ ticket, open, onClose, onUpdate }: TicketPanelProps) => {
 
         {/* ── Footer ─────────────────────────────────────────────────── */}
         <div className="px-5 py-4 border-t shrink-0 flex items-center justify-end gap-2">
-          <Button variant="outline" size="sm" onClick={onClose}>
+          <Button variant="outline" onClick={onClose}>
             Cancel
           </Button>
-          <Button size="sm" onClick={handleSave} loading={saving}>
-            Save Changes
+          <Button onClick={handleSave} loading={saving}>
+            Save
           </Button>
         </div>
       </SheetContent>

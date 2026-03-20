@@ -181,10 +181,10 @@ const ContactPanel = ({
         {/* Footer — only shown on edit tab */}
         {tab === "edit" && (
           <div className="px-5 py-4 border-t shrink-0 flex items-center justify-end gap-2">
-            <Button variant="outline" size="sm" onClick={onClose}>
+            <Button variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button size="sm" onClick={handleSave} loading={saving}>
+            <Button onClick={handleSave} loading={saving}>
               Save Changes
             </Button>
           </div>

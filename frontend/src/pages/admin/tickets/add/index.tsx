@@ -15,7 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { apiTickets } from "@/services/models/ticketsModel";
 import { useEnums } from "@/hooks/useEnums";
 import { toLabelItems } from "@/utils";
-import { AssignedToSelect } from "@/components/common";
+import { AssignedToSelect, ContactSelect } from "@/components/common";
 import { Label } from "@/components/ui/label";
 
 const AddTicket = () => {
@@ -67,7 +67,7 @@ const AddTicket = () => {
   });
 
   return (
-    <section className="max-w-3xl space-y-6">
+    <section className="space-y-6">
       {/* Header */}
       <PageHeader
         title="Create Ticket"
@@ -75,105 +75,110 @@ const AddTicket = () => {
         isBackButton
       />
 
-      {/* Ticket Info Card */}
-      <Card>
-        <div className="flex items-center gap-3 px-6 py-4 border-b">
-          <Ticket className="h-4 w-4 text-primary" />
-          <span className="font-semibold text-sm">Ticket Information</span>
-        </div>
-        <CardContent className="pt-6 space-y-4">
-          <CustomTextField
-            label="Ticket Title"
-            name="title"
-            placeholder="ex: Login page throws 500 error"
-            values={values}
-            handleChange={handleChange}
-            touched={touched}
-            errors={errors}
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <CustomTextField
-              label="Contact Name"
-              name="contact"
-              placeholder="ex: Jane Smith"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-            />
-            <CustomTextField
-              label="Contact Email"
-              name="email"
-              placeholder="ex: jane@company.com"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-            />
+      <div className="flex gap-2 w-full">
+        {/* Ticket Info Card */}
+        <Card className="w-full">
+          <div className="flex items-center gap-3 px-6 py-4 border-b">
+            <Ticket className="h-4 w-4 text-primary" />
+            <span className="font-semibold text-sm">Ticket Information</span>
           </div>
-          <CustomTextAreaField
-            name="description"
-            placeholder="Describe the issue in detail..."
-            values={values}
-            handleChange={handleChange}
-            touched={touched}
-            errors={errors}
-            rows={4}
-          />
-        </CardContent>
-      </Card>
-
-      {/* Details Card */}
-      <Card>
-        <div className="flex items-center gap-3 px-6 py-4 border-b">
-          <SlidersHorizontal className="h-4 w-4 text-primary" />
-          <span className="font-semibold text-sm">Ticket Details</span>
-        </div>
-        <CardContent className="pt-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <CustomSelectField
-              label="Category"
-              name="category"
-              placeholder="category"
+          <CardContent className="pt-6 space-y-4">
+            <CustomTextField
+              label="Ticket Title"
+              name="title"
+              placeholder="ex: Login page throws 500 error"
               values={values}
               handleChange={handleChange}
               touched={touched}
               errors={errors}
-              labelItms={toLabelItems(ticketCategories)}
             />
-            <CustomSelectField
-              label="Priority"
-              name="priority"
-              placeholder="priority"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-              labelItms={toLabelItems(ticketPriorities)}
-            />
-            <CustomSelectField
-              label="Status"
-              name="status"
-              placeholder="status"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-              labelItms={toLabelItems(ticketStatuses)}
-            />
-            <div className="space-y-1.5">
-              <Label className="text-sm font-medium">Assigned To</Label>
-              <AssignedToSelect
-                value={values.assignedTo}
-                onChange={(v) => setFieldValue("assignedTo", v)}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label className="text-sm font-medium">Contact Name</Label>
+                <ContactSelect
+                  value={values.contact}
+                  onChange={(name, _id, email) => {
+                    setFieldValue("contact", name);
+                    if (email) setFieldValue("email", email);
+                  }}
+                />
+                {touched.contact && errors.contact && (
+                  <p className="text-xs text-destructive">{errors.contact}</p>
+                )}
+              </div>
+              <CustomTextField
+                label="Contact Email"
+                name="email"
+                placeholder="ex: jane@company.com"
+                values={values}
+                handleChange={handleChange}
+                touched={touched}
+                errors={errors}
               />
             </div>
+            <CustomTextAreaField
+              name="description"
+              placeholder="Describe the issue in detail..."
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+              rows={4}
+            />
+          </CardContent>
+        </Card>
+        {/* Details Card */}
+        <Card className="w-full">
+          <div className="flex items-center gap-3 px-6 py-4 border-b">
+            <SlidersHorizontal className="h-4 w-4 text-primary" />
+            <span className="font-semibold text-sm">Ticket Details</span>
           </div>
-        </CardContent>
-      </Card>
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <CustomSelectField
+                label="Category"
+                name="category"
+                placeholder="category"
+                values={values}
+                handleChange={handleChange}
+                touched={touched}
+                errors={errors}
+                labelItms={toLabelItems(ticketCategories)}
+              />
+              <CustomSelectField
+                label="Priority"
+                name="priority"
+                placeholder="priority"
+                values={values}
+                handleChange={handleChange}
+                touched={touched}
+                errors={errors}
+                labelItms={toLabelItems(ticketPriorities)}
+              />
+              <CustomSelectField
+                label="Status"
+                name="status"
+                placeholder="status"
+                values={values}
+                handleChange={handleChange}
+                touched={touched}
+                errors={errors}
+                labelItms={toLabelItems(ticketStatuses)}
+              />
+              <div className="space-y-1.5">
+                <Label className="text-sm font-medium">Assigned To</Label>
+                <AssignedToSelect
+                  value={values.assignedTo}
+                  onChange={(v) => setFieldValue("assignedTo", v)}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-end gap-3">
+      <div className="flex items-center justify-end gap-2">
         <Link to="/dashboard/tickets">
           <Button variant="outline">Cancel</Button>
         </Link>

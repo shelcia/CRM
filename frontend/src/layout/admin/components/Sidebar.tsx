@@ -36,7 +36,7 @@ const Sidebar = () => {
               </button>
               <div
                 className={`overflow-hidden transition-[max-height] duration-200 ease-in-out ${
-                  openGroups[item.link] ? "max-h-24" : "max-h-0"
+                  openGroups[item.link] ? "max-h-0 group-hover:max-h-24" : "max-h-0"
                 }`}
               >
                 {item.children
