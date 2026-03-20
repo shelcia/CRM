@@ -6,6 +6,7 @@ import {
   CustomSelectField,
   CustomTextField,
   CustomTextAreaField,
+  PageHeader,
 } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -68,19 +69,11 @@ const AddTicket = () => {
   return (
     <section className="max-w-3xl space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <Link to="/dashboard/tickets">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold">Create Ticket</h1>
-          <p className="text-sm text-muted-foreground">
-            Log a new support or issue ticket
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        title="Create Ticket"
+        description=" Log a new support or issue ticket"
+        isBackButton
+      />
 
       {/* Ticket Info Card */}
       <Card>

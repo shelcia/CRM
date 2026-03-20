@@ -25,6 +25,8 @@ import { Editor } from "@/components/blocks/editor-00/editor";
 import { apiEmailTemplates } from "@/services/models/emailTemplatesModel";
 import { EmailGroup, EmailTemplate } from "../types";
 import { emptyTemplate, isGroupName, makeValidationSchema } from "../helpers";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { toLabel } from "@/utils";
 
 interface TemplateDialogProps {
   template?: EmailTemplate;
@@ -48,12 +50,12 @@ const TemplateDialog = ({
 
   const initialRecipientType =
     template && isGroupName(template.recipient, groups)
-      ? "group"
-      : ("custom" as "group" | "custom");
+      ? "email-group"
+      : ("custom-emails" as "email-group" | "custom-emails");
 
-  const [recipientType, setRecipientType] = useState<"group" | "custom">(
-    initialRecipientType,
-  );
+  const [recipientType, setRecipientType] = useState<
+    "email-group" | "custom-emails"
+  >(initialRecipientType);
 
   const {
     values,
@@ -129,248 +131,225 @@ const TemplateDialog = ({
       size="xl"
       contentClassName="max-h-[90vh] overflow-y-auto"
     >
-        <form onSubmit={handleSubmit} className="space-y-5 pt-1">
-          <div className="grid grid-cols-2 gap-4">
-            <CustomTextField
-              label="Template Name"
-              name="name"
-              placeholder="ex: Weekly Digest"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-            />
-            <CustomSelectField
-              label="Status"
-              name="status"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-              labelItms={statusItems}
-            />
-          </div>
-
+      <form onSubmit={handleSubmit} className="space-y-5 pt-1">
+        <div className="grid grid-cols-2 gap-4">
           <CustomTextField
-            label="Subject"
-            name="subject"
-            placeholder="ex: Your weekly summary"
+            label="Template Name"
+            name="name"
+            placeholder="ex: Weekly Digest"
             values={values}
             handleChange={handleChange}
             touched={touched}
             errors={errors}
           />
+          <CustomSelectField
+            label="Status"
+            name="status"
+            values={values}
+            handleChange={handleChange}
+            touched={touched}
+            errors={errors}
+            labelItms={statusItems}
+          />
+        </div>
 
-          {/* Recipient */}
-          <div className="space-y-2">
-            <Label>Recipients</Label>
-            <div className="flex rounded-md border overflow-hidden w-fit text-xs">
-              <button
-                type="button"
-                onClick={() => {
-                  setRecipientType("group");
-                  setFieldValue("recipient", "");
-                }}
-                className={cn(
-                  "px-3 py-1.5 font-medium transition-colors",
-                  recipientType === "group"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-background text-muted-foreground hover:bg-muted",
-                )}
-              >
-                Email Group
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setRecipientType("custom");
-                  setFieldValue("recipient", "");
-                }}
-                className={cn(
-                  "px-3 py-1.5 font-medium transition-colors",
-                  recipientType === "custom"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-background text-muted-foreground hover:bg-muted",
-                )}
-              >
-                Custom Email
-              </button>
-            </div>
+        <CustomTextField
+          label="Subject"
+          name="subject"
+          placeholder="ex: Your weekly summary"
+          values={values}
+          handleChange={handleChange}
+          touched={touched}
+          errors={errors}
+        />
 
-            {recipientType === "group" ? (
-              <div className="space-y-1">
-                <Select
-                  value={values.recipient}
-                  onValueChange={(v) => setFieldValue("recipient", v)}
-                >
-                  <SelectTrigger
-                    className={cn(
-                      touched.recipient &&
-                        errors.recipient &&
-                        "border-destructive",
-                    )}
-                  >
-                    <SelectValue placeholder="Select a group…" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {groups.map((g) => (
-                      <SelectItem key={g._id} value={g.name}>
-                        <span className="font-medium">{g.name}</span>
-                        {g.description && (
-                          <span className="text-muted-foreground ml-1.5 text-xs">
-                            — {g.description}
-                          </span>
-                        )}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {touched.recipient && errors.recipient && (
-                  <p className="text-xs text-destructive">{errors.recipient}</p>
-                )}
+        {/* Recipient */}
+        <div className="space-y-4">
+          <Label>Recipients</Label>
+          <RadioGroup
+            defaultValue={recipientType}
+            className="w-fit flex gap-4"
+            onValueChange={(v) =>
+              setRecipientType(v as "email-group" | "custom-emails")
+            }
+          >
+            {["email-group", "custom-emails"].map((type) => (
+              <div className="flex items-center gap-3" key={type}>
+                <RadioGroupItem value={type} id={`r${Math.random()}`} />
+                <Label htmlFor={type}>{toLabel(type)}</Label>
               </div>
-            ) : (
-              <div className="space-y-1">
-                <Input
-                  name="recipient"
-                  placeholder="user@company.com, another@company.com"
-                  value={values.recipient}
-                  onChange={handleChange}
+            ))}
+          </RadioGroup>
+          {recipientType === "email-group" ? (
+            <div className="space-y-1">
+              <Select
+                value={values.recipient}
+                onValueChange={(v) => setFieldValue("recipient", v)}
+              >
+                <SelectTrigger
                   className={cn(
                     touched.recipient &&
                       errors.recipient &&
                       "border-destructive",
                   )}
-                />
-                {touched.recipient && errors.recipient && (
-                  <p className="text-xs text-destructive">{errors.recipient}</p>
-                )}
-                <p className="text-xs text-muted-foreground">
-                  Separate multiple emails with a comma
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Body */}
-          <div className="space-y-1">
-            <Label>Email Body</Label>
-            <Editor
-              key={template?._id ?? "new"}
-              editorSerializedState={(() => {
-                try {
-                  return values.body
-                    ? (JSON.parse(values.body) as SerializedEditorState)
-                    : undefined;
-                } catch {
-                  return undefined;
-                }
-              })()}
-              onSerializedChange={(s) =>
-                setFieldValue("body", JSON.stringify(s))
-              }
-            />
-            {touched.body && errors.body && (
-              <p className="text-xs text-destructive">{errors.body}</p>
-            )}
-            <p className="text-xs text-muted-foreground pl-0.5">
-              Dynamic variables: {"{{name}}"}, {"{{email}}"}, {"{{date}}"}
-            </p>
-          </div>
-
-          {/* Schedule */}
-          <div className="rounded-lg border bg-muted/30 p-4 space-y-4">
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <CalendarClock className="h-4 w-4 text-primary" /> Schedule
+                >
+                  <SelectValue placeholder="Select a group…" />
+                </SelectTrigger>
+                <SelectContent>
+                  {groups.map((g) => (
+                    <SelectItem key={g._id} value={g.name}>
+                      <span className="font-medium">{g.name}</span>
+                      {g.description && (
+                        <span className="text-muted-foreground ml-1.5 text-xs">
+                          — {g.description}
+                        </span>
+                      )}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {touched.recipient && errors.recipient && (
+                <p className="text-xs text-destructive">{errors.recipient}</p>
+              )}
             </div>
-            <div className="grid grid-cols-2 gap-4">
+          ) : (
+            <div className="space-y-1">
+              <Input
+                name="recipient"
+                placeholder="user@company.com, another@company.com"
+                value={values.recipient}
+                onChange={handleChange}
+                className={cn(
+                  touched.recipient && errors.recipient && "border-destructive",
+                )}
+              />
+              {touched.recipient && errors.recipient && (
+                <p className="text-xs text-destructive">{errors.recipient}</p>
+              )}
+              <p className="text-xs text-muted-foreground">
+                Separate multiple emails with a comma
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Body */}
+        <div className="space-y-1">
+          <Label>Email Body</Label>
+          <Editor
+            key={template?._id ?? "new"}
+            editorSerializedState={(() => {
+              try {
+                return values.body
+                  ? (JSON.parse(values.body) as SerializedEditorState)
+                  : undefined;
+              } catch {
+                return undefined;
+              }
+            })()}
+            onSerializedChange={(s) => setFieldValue("body", JSON.stringify(s))}
+          />
+          {touched.body && errors.body && (
+            <p className="text-xs text-destructive">{errors.body}</p>
+          )}
+          <p className="text-xs text-muted-foreground pl-0.5">
+            Dynamic variables: {"{{name}}"}, {"{{email}}"}, {"{{date}}"}
+          </p>
+        </div>
+
+        {/* Schedule */}
+        <div className="rounded-lg border bg-muted/30 p-4 space-y-4">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <CalendarClock className="h-4 w-4 text-primary" /> Schedule
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <CustomSelectField
+              label="Frequency"
+              name="frequency"
+              values={values}
+              handleChange={handleChange}
+              touched={touched}
+              errors={errors}
+              labelItms={frequencyItems}
+            />
+            <div className="space-y-1">
+              <Label>Send Time</Label>
+              <TimePicker
+                value={values.sendTime}
+                onChange={(v) => setFieldValue("sendTime", v)}
+                error={!!(touched.sendTime && errors.sendTime)}
+              />
+              {touched.sendTime && errors.sendTime && (
+                <p className="text-xs text-destructive">{errors.sendTime}</p>
+              )}
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <Label>
+                {values.frequency === "one-time" ? "Send Date" : "Start Date"}
+              </Label>
+              <DatePicker
+                value={values.sendDate}
+                onChange={(v) => setFieldValue("sendDate", v)}
+                error={!!(touched.sendDate && errors.sendDate)}
+              />
+              {touched.sendDate && errors.sendDate && (
+                <p className="text-xs text-destructive">{errors.sendDate}</p>
+              )}
+            </div>
+            {values.frequency === "weekly" && (
               <CustomSelectField
-                label="Frequency"
-                name="frequency"
+                label="Day of Week"
+                name="dayOfWeek"
                 values={values}
                 handleChange={handleChange}
                 touched={touched}
                 errors={errors}
-                labelItms={frequencyItems}
+                labelItms={[
+                  { val: "monday", label: "Monday" },
+                  { val: "tuesday", label: "Tuesday" },
+                  { val: "wednesday", label: "Wednesday" },
+                  { val: "thursday", label: "Thursday" },
+                  { val: "friday", label: "Friday" },
+                  { val: "saturday", label: "Saturday" },
+                  { val: "sunday", label: "Sunday" },
+                ]}
               />
-              <div className="space-y-1">
-                <Label>Send Time</Label>
-                <TimePicker
-                  value={values.sendTime}
-                  onChange={(v) => setFieldValue("sendTime", v)}
-                  error={!!(touched.sendTime && errors.sendTime)}
-                />
-                {touched.sendTime && errors.sendTime && (
-                  <p className="text-xs text-destructive">{errors.sendTime}</p>
-                )}
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <Label>
-                  {values.frequency === "one-time" ? "Send Date" : "Start Date"}
-                </Label>
-                <DatePicker
-                  value={values.sendDate}
-                  onChange={(v) => setFieldValue("sendDate", v)}
-                  error={!!(touched.sendDate && errors.sendDate)}
-                />
-                {touched.sendDate && errors.sendDate && (
-                  <p className="text-xs text-destructive">{errors.sendDate}</p>
-                )}
-              </div>
-              {values.frequency === "weekly" && (
-                <CustomSelectField
-                  label="Day of Week"
-                  name="dayOfWeek"
-                  values={values}
-                  handleChange={handleChange}
-                  touched={touched}
-                  errors={errors}
-                  labelItms={[
-                    { val: "monday", label: "Monday" },
-                    { val: "tuesday", label: "Tuesday" },
-                    { val: "wednesday", label: "Wednesday" },
-                    { val: "thursday", label: "Thursday" },
-                    { val: "friday", label: "Friday" },
-                    { val: "saturday", label: "Saturday" },
-                    { val: "sunday", label: "Sunday" },
-                  ]}
-                />
-              )}
-              {values.frequency === "monthly" && (
-                <CustomSelectField
-                  label="Day of Month"
-                  name="dayOfMonth"
-                  values={values}
-                  handleChange={handleChange}
-                  touched={touched}
-                  errors={errors}
-                  labelItms={Array.from({ length: 28 }, (_, i) => ({
-                    val: String(i + 1),
-                    label: String(i + 1),
-                  }))}
-                />
-              )}
-            </div>
+            )}
+            {values.frequency === "monthly" && (
+              <CustomSelectField
+                label="Day of Month"
+                name="dayOfMonth"
+                values={values}
+                handleChange={handleChange}
+                touched={touched}
+                errors={errors}
+                labelItms={Array.from({ length: 28 }, (_, i) => ({
+                  val: String(i + 1),
+                  label: String(i + 1),
+                }))}
+              />
+            )}
           </div>
+        </div>
 
-          <div className="flex justify-end gap-3 pt-1">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                setOpen(false);
-                resetForm();
-              }}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" loading={isLoading}>
-              {template ? "Save Changes" : "Create Template"}
-            </Button>
-          </div>
-        </form>
+        <div className="flex justify-end gap-3 pt-1">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setOpen(false);
+              resetForm();
+            }}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" loading={isLoading}>
+            {template ? "Save Changes" : "Create Template"}
+          </Button>
+        </div>
+      </form>
     </CustomModal>
   );
 };

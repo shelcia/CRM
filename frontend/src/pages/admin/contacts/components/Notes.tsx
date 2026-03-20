@@ -3,7 +3,8 @@ import { INote, NoteType } from "../types";
 import { apiProvider } from "@/services/utilities/provider";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Send, Trash2 } from "lucide-react";
+import { MessageSquare, Send } from "lucide-react";
+import { CustomEmptyState, DeleteIconButton } from "@/components/custom";
 import { convertDateToDateWithTime } from "@/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { NOTE_TYPE_META, NOTE_TYPES } from "../constants";
@@ -91,10 +92,7 @@ const Notes = ({ contactId, notes, onAdd, onDelete }: NotesProps) => {
       </div>
 
       {manualNotes.length === 0 ? (
-        <div className="flex flex-col items-center py-10 text-muted-foreground gap-2">
-          <MessageSquare className="h-8 w-8 opacity-30" />
-          <p className="text-sm">No notes yet</p>
-        </div>
+        <CustomEmptyState compact icon={MessageSquare} title="No notes yet" />
       ) : (
         <ul className="space-y-3">
           {manualNotes.map((note) => {
@@ -111,14 +109,7 @@ const Notes = ({ contactId, notes, onAdd, onDelete }: NotesProps) => {
                     {meta.icon}
                     {meta.label}
                   </span>
-                  <Button
-                    size="icon-sm"
-                    variant="ghost"
-                    onClick={() => handleDelete(note._id)}
-                    className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                  >
-                    <Trash2 className="size-4" />
-                  </Button>
+                  <DeleteIconButton onClick={() => handleDelete(note._id)} />
                 </div>
                 <p className="text-sm text-foreground leading-relaxed">
                   {note.body}

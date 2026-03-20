@@ -1,5 +1,6 @@
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { AuthorAvatar } from "@/components/common";
+import { DeleteIconButton } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import AddDealDialog from "./AddDealDialog";
@@ -46,17 +47,9 @@ const DealCard = ({
               </Button>
             }
           />
-          <Button
-            size="icon-sm"
-            variant="ghost"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
-            }}
-            className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-          >
-            <Trash2 className="size-4" />
-          </Button>
+          <span onClick={(e) => e.stopPropagation()}>
+            <DeleteIconButton size="icon-sm" onClick={onDelete} />
+          </span>
         </div>
       </div>
 

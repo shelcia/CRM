@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Plus, Mail, Clock, Pencil, Trash2 } from "lucide-react";
+import { Plus, Mail, Clock, Pencil } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   CustomTable,
@@ -7,6 +7,7 @@ import {
   StatCard,
   PageHeader,
   StatusBadge,
+  DeleteIconButton,
 } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { apiEmailTemplates } from "@/services/models/emailTemplatesModel";
@@ -130,14 +131,7 @@ const EmailTemplates = () => {
                   </Button>
                 }
               />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                onClick={() => handleDelete(t._id)}
-              >
-                <Trash2 className="size-4" />
-              </Button>
+              <DeleteIconButton onClick={() => handleDelete(t._id)} />
             </div>
           );
         },
@@ -158,7 +152,7 @@ const EmailTemplates = () => {
             groups={groups}
             trigger={
               <Button>
-                <Plus className="h-4 w-4" /> New Template
+                <Plus className="size-4" /> New Template
               </Button>
             }
           />

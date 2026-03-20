@@ -5,13 +5,6 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -19,13 +12,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { Todo, TodoAuthor } from "../types";
-import { AuthorAvatar } from "@/components/common";
+import { AssignedToSelect, AuthorAvatar } from "@/components/common";
+import { Textarea } from "@/components/ui/textarea";
 
 interface TaskCardProps {
   todo: Todo;
   provided: any;
   isDragging: boolean;
-  users: { _id: string; name: string }[];
   onDelete: () => void;
   onEdit: (updates: {
     title: string;
@@ -38,7 +31,6 @@ const TaskCard = ({
   todo,
   provided,
   isDragging,
-  users,
   onDelete,
   onEdit,
 }: TaskCardProps) => {
@@ -87,27 +79,18 @@ const TaskCard = ({
             className="h-7 text-sm"
             placeholder="Card title"
           />
-          <textarea
+          <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={2}
             placeholder="Description (optional)"
             className="w-full rounded-md border border-input bg-transparent px-3 py-1.5 text-xs shadow-sm resize-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           />
-          {users.length > 0 && (
-            <Select value={assignee} onValueChange={setAssignee}>
-              <SelectTrigger className="h-7 text-xs">
-                <SelectValue placeholder="Assignee" />
-              </SelectTrigger>
-              <SelectContent>
-                {users.map((u) => (
-                  <SelectItem key={u._id} value={u.name} className="text-xs">
-                    {u.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
+          <AssignedToSelect
+            value={assignee}
+            onChange={setAssignee}
+            triggerClassName="h-7 text-xs"
+          />
           <div className="flex gap-1.5">
             <Button size="sm" className="flex-1 h-7 text-xs" onClick={save}>
               <Check className="h-3 w-3 mr-1" /> Save

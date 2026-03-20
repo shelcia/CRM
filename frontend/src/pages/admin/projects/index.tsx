@@ -6,7 +6,6 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { apiProvider } from "@/services/utilities/provider";
-import { apiUsers } from "@/services/models/usersModel";
 import { type Column, type Todo, type TodoAuthor } from "./types";
 import reorder from "@/utils/reorder";
 import ColumnHeader from "./components/ColumnHeader";
@@ -17,7 +16,6 @@ import AddColumnForm from "./components/AddColumnForm";
 const Projects = () => {
   const { id: projectId } = useParams<{ id: string }>();
   const [columns, setColumns] = useState<Column[]>([]);
-  const [users, setUsers] = useState<{ _id: string; name: string }[]>([]);
   const [addingColId, setAddingColId] = useState<string | null>(null);
   const [showAddColumn, setShowAddColumn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,18 +23,12 @@ const Projects = () => {
   useEffect(() => {
     if (!projectId) return;
     const controller = new AbortController();
-    Promise.all([
-      apiProvider.getAll(
-        `projects/${projectId}/board`,
-        controller.signal,
-        true,
-      ),
-      apiUsers.getAll!(controller.signal, true),
-    ]).then(([boardRes, usersRes]) => {
-      if (Array.isArray(boardRes)) setColumns(boardRes);
-      if (Array.isArray(usersRes)) setUsers(usersRes);
-      setIsLoading(false);
-    });
+    apiProvider
+      .getAll(`projects/${projectId}/board`, controller.signal, true)
+      .then((boardRes) => {
+        if (Array.isArray(boardRes)) setColumns(boardRes);
+        setIsLoading(false);
+      });
     return () => controller.abort();
   }, [projectId]);
 
@@ -260,7 +252,6 @@ const Projects = () => {
                                       todo={todo}
                                       provided={provided}
                                       isDragging={snapshot.isDragging}
-                                      users={users}
                                       onDelete={() =>
                                         handleDeleteTodo(col._id, todo._id)
                                       }

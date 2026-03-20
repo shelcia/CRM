@@ -31,13 +31,15 @@ export const emptyTemplate = {
 export const isGroupName = (recipient: string, groups: EmailGroup[]) =>
   groups.some((g) => g.name === recipient);
 
-export const makeValidationSchema = (recipientType: "group" | "custom") =>
+export const makeValidationSchema = (
+  recipientType: "email-group" | "custom-emails",
+) =>
   Yup.object().shape({
     name: Yup.string().required("Template name is required"),
     subject: Yup.string().required("Subject is required"),
     body: Yup.string().required("Email body is required"),
     recipient:
-      recipientType === "group"
+      recipientType === "email-group"
         ? Yup.string().required("Select a recipient group")
         : Yup.string()
             .required("Recipient email is required")

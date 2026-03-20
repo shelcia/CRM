@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CustomTextField } from "@/components/custom";
+import { CustomTextField, PageHeader } from "@/components/custom";
 import { Building2, ImagePlus, UserRound } from "lucide-react";
 import { apiCompany } from "@/services/models/companyModel";
 import { BASE_URL } from "@/services/api";
@@ -103,14 +103,10 @@ const Profile = () => {
 
   return (
     <section className="max-w-3xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Profile</h1>
-        <p className="text-sm text-muted-foreground">
-          View your account and manage company settings
-        </p>
-      </div>
-
-      {/* Account Info (read-only) */}
+      <PageHeader
+        title="Profile"
+        description="View your account and manage company settings"
+      />
       <Card>
         <div className="flex items-center gap-3 px-6 py-4 border-b">
           <UserRound className="h-4 w-4 text-primary" />

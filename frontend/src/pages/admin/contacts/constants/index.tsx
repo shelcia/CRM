@@ -5,7 +5,6 @@ import {
   MessageSquare,
   Phone,
 } from "lucide-react";
-import { Activity } from "react";
 import { NoteType } from "../types";
 
 export const PAGE_SIZE = 50;

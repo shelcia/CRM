@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, Users } from "lucide-react";
+import { Plus, Pencil, Users } from "lucide-react";
 import toast from "react-hot-toast";
-import { CustomTable, TableSkeleton, PageHeader } from "@/components/custom";
+import { CustomTable, TableSkeleton, PageHeader, DeleteIconButton } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { apiEmailGroups } from "@/services/models/emailGroupsModel";
 import { confirmToast } from "@/utils/confirmToast";
@@ -83,18 +83,12 @@ const EmailGroups = () => {
                 group={g}
                 onSaved={handleGroupSaved}
                 trigger={
-                  <Button variant="outline" size="icon-sm">
+                  <Button variant="ghost" size="icon">
                     <Pencil className="size-4" />
                   </Button>
                 }
               />
-              <Button
-                variant="destructive"
-                size="icon-sm"
-                onClick={() => handleGroupDelete(g._id, g.name)}
-              >
-                <Trash2 className="size-4" />
-              </Button>
+              <DeleteIconButton onClick={() => handleGroupDelete(g._id, g.name)} />
             </div>
           );
         },

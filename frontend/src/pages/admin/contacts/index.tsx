@@ -4,10 +4,11 @@ import {
   TableSkeleton,
   StatusBadge,
   PageHeader,
+  DeleteIconButton,
 } from "@/components/custom";
 import { convertDateToDateWithoutTime } from "@/utils";
 import { Button } from "@/components/ui/button";
-import { Plus, Upload, FileDown, Pencil, Trash2 } from "lucide-react";
+import { Plus, Upload, FileDown, Pencil } from "lucide-react";
 import { apiContacts, importContacts } from "@/services/models/contactsModel";
 import { Link } from "react-router-dom";
 import ContactPanel from "./components/ContactPanel";
@@ -29,17 +30,17 @@ const downloadTemplate = () => {
 const Contacts = () => {
   const { has } = usePermissions();
   const [contacts, setContacts] = useState<any[]>([]);
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [total, setTotal] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [panelContact, setPanelContact] = useState<any>(null);
-  const [panelOpen, setPanelOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState<boolean>(false);
   const [panelDefaultTab, setPanelDefaultTab] = useState<"activity" | "edit">(
     "activity",
   );
-  const [importing, setImporting] = useState(false);
+  const [importing, setImporting] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -135,17 +136,15 @@ const Contacts = () => {
             <div className="flex items-center gap-1">
               {has("contacts-edit") && (
                 <Button
-                  size="icon-sm"
-                  variant="outline"
+                  size="icon"
+                  variant="ghost"
                   onClick={() => openPanel(contact, "edit")}
                 >
                   <Pencil className="size-4" />
                 </Button>
               )}
               {has("contacts-delete") && (
-                <Button
-                  size="icon-sm"
-                  variant="destructive"
+                <DeleteIconButton
                   onClick={() =>
                     confirmToast({
                       title: `Delete "${contact?.name}"?`,
@@ -171,9 +170,7 @@ const Contacts = () => {
                       },
                     })
                   }
-                >
-                  <Trash2 className="size-4" />
-                </Button>
+                />
               )}
             </div>
           );
@@ -184,34 +181,32 @@ const Contacts = () => {
 
   return (
     <section className="space-y-6">
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".csv"
-        className="hidden"
-        onChange={handleImportFile}
-      />
-
       <PageHeader
         title="Contacts"
         description="Manage and track your leads and customers"
         actions={
           has("contacts-edit") && (
             <>
-              <Button variant="outline" size="sm" onClick={downloadTemplate}>
-                <FileDown className="h-4 w-4" /> Template
+              <Button variant="outline" onClick={downloadTemplate}>
+                <FileDown className="size-4" /> Template
               </Button>
               <Button
                 variant="outline"
-                size="sm"
                 loading={importing}
                 onClick={() => fileInputRef.current?.click()}
               >
-                <Upload className="h-4 w-4" /> Import CSV
+                <Upload className="size-4" /> Import CSV
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".csv"
+                  className="hidden"
+                  onChange={handleImportFile}
+                />
               </Button>
               <Link to="/dashboard/contacts/add-contact">
-                <Button size="sm">
-                  <Plus className="h-4 w-4" /> Add Contact
+                <Button>
+                  <Plus className="size-4" /> Add Contact
                 </Button>
               </Link>
             </>

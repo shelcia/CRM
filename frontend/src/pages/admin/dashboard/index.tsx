@@ -9,10 +9,16 @@ import {
   PhoneCall,
 } from "lucide-react";
 import { apiProvider } from "@/services/utilities/provider";
-import { StatusBadge, PriorityIndicator } from "@/components/custom";
+import {
+  StatusBadge,
+  PriorityIndicator,
+  CustomEmptyState,
+  PageHeader,
+} from "@/components/custom";
 import { convertDateToDateWithoutTime, getTimeOfDay } from "@/utils";
 import { Link } from "react-router-dom";
 import usePermissions from "@/hooks/usePermissions";
+import type { LucideIcon } from "lucide-react";
 import { DashboardStats, Metric } from "./types";
 import MetricCard from "./components/MetricCard";
 
@@ -74,14 +80,10 @@ const Dashboard = () => {
   return (
     <div className="space-y-6">
       {/* Greeting */}
-      <div>
-        <h1 className="text-2xl font-bold">
-          Good {getTimeOfDay()}, {name.split(" ")[0]} 👋
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Here's what's happening in your CRM today.
-        </p>
-      </div>
+      <PageHeader
+        title={`Good ${getTimeOfDay()}, ${name.split(" ")?.[0]} 👋`}
+        description="Here's what's happening in your CRM today"
+      />
 
       {/* Metric cards */}
       {visibleMetrics.length > 0 && (
@@ -94,118 +96,77 @@ const Dashboard = () => {
 
       {/* Recent activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Recent contacts */}
         {has("contacts-view") && (
-          <Card>
-            <div className="flex items-center justify-between px-5 py-4 border-b">
-              <div className="flex items-center gap-2">
-                <PhoneCall className="size-4 text-primary" />
-                <span className="font-semibold text-sm">Recent Contacts</span>
-              </div>
+          <RecentCard
+            title="Recent Contacts"
+            icon={<PhoneCall className="size-4 text-primary" />}
+            viewAllHref="/dashboard/contacts"
+            loading={loading}
+            emptyIcon={Users}
+            emptyTitle="No contacts yet"
+            emptyAction={
               <Link
-                to="/dashboard/contacts"
+                to="/dashboard/contacts/add-contact"
                 className="text-xs text-primary hover:underline"
               >
-                View all
+                Add one
               </Link>
-            </div>
-            <CardContent className="pt-4 pb-2">
-              {loading ? (
-                <p className="text-sm text-muted-foreground py-4 text-center">
-                  Loading…
-                </p>
-              ) : !stats?.recentContacts?.length ? (
-                <div className="py-8 text-center text-muted-foreground text-sm">
-                  No contacts yet.{" "}
-                  <Link
-                    to="/dashboard/contacts/add-contact"
-                    className="text-primary hover:underline"
-                  >
-                    Add one
-                  </Link>
+            }
+            items={stats?.recentContacts ?? []}
+            renderItem={(c) => (
+              <li
+                key={c._id}
+                className="py-2.5 flex items-center justify-between gap-3"
+              >
+                <div className="min-w-0">
+                  <p className="text-sm font-medium truncate">{c.name}</p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {c.company || c.email}
+                  </p>
                 </div>
-              ) : (
-                <ul className="divide-y">
-                  {stats.recentContacts.map((c) => (
-                    <li
-                      key={c._id}
-                      className="py-2.5 flex items-center justify-between gap-3"
-                    >
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium truncate">{c.name}</p>
-                        <p className="text-xs text-muted-foreground truncate">
-                          {c.company || c.email}
-                        </p>
-                      </div>
-                      <div className="shrink-0">
-                        <StatusBadge value={c.status} />
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </CardContent>
-          </Card>
+                <div className="shrink-0">
+                  <StatusBadge value={c.status} />
+                </div>
+              </li>
+            )}
+          />
         )}
 
-        {/* Recent tickets */}
         {has("tickets-view") && (
-          <Card>
-            <div className="flex items-center justify-between px-5 py-4 border-b">
-              <div className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-primary" />
-                <span className="font-semibold text-sm">Recent Tickets</span>
-              </div>
+          <RecentCard
+            title="Recent Tickets"
+            icon={<Clock className="h-4 w-4 text-primary" />}
+            viewAllHref="/dashboard/tickets"
+            loading={loading}
+            emptyIcon={TicketCheck}
+            emptyTitle="No tickets yet"
+            emptyAction={
               <Link
-                to="/dashboard/tickets"
+                to="/dashboard/tickets/add-ticket"
                 className="text-xs text-primary hover:underline"
               >
-                View all
+                Create one
               </Link>
-            </div>
-            <CardContent className="pt-4 pb-2">
-              {loading ? (
-                <p className="text-sm text-muted-foreground py-4 text-center">
-                  Loading…
-                </p>
-              ) : !stats?.recentTickets?.length ? (
-                <div className="py-8 text-center text-muted-foreground text-sm">
-                  No tickets yet.{" "}
-                  <Link
-                    to="/dashboard/tickets/add-ticket"
-                    className="text-primary hover:underline"
-                  >
-                    Create one
-                  </Link>
+            }
+            items={stats?.recentTickets ?? []}
+            renderItem={(t) => (
+              <li
+                key={t._id}
+                className="py-2.5 flex items-center justify-between gap-3"
+              >
+                <div className="min-w-0">
+                  <p className="text-sm font-medium truncate">{t.title}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {convertDateToDateWithoutTime(t.createdAt)}
+                  </p>
                 </div>
-              ) : (
-                <ul className="divide-y">
-                  {stats.recentTickets.map((t) => (
-                    <li
-                      key={t._id}
-                      className="py-2.5 flex items-center justify-between gap-3"
-                    >
-                      <div className="min-w-0">
-                        <p className="text-sm font-medium truncate">
-                          {t.title}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {convertDateToDateWithoutTime(t.createdAt)}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <PriorityIndicator
-                          value={t.priority}
-                          showLabel={false}
-                        />
-                        <StatusBadge value={t.status} />
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </CardContent>
-          </Card>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <PriorityIndicator value={t.priority} showLabel={false} />
+                  <StatusBadge value={t.status} />
+                </div>
+              </li>
+            )}
+          />
         )}
       </div>
     </div>
@@ -213,3 +174,56 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+interface RecentCardProps<T> {
+  title: string;
+  icon: React.ReactNode;
+  viewAllHref: string;
+  loading: boolean;
+  emptyIcon: LucideIcon;
+  emptyTitle: string;
+  emptyAction?: React.ReactNode;
+  items: T[];
+  renderItem: (item: T) => React.ReactNode;
+}
+
+const RecentCard = <T extends { _id: string }>({
+  title,
+  icon,
+  viewAllHref,
+  loading,
+  emptyIcon,
+  emptyTitle,
+  emptyAction,
+  items,
+  renderItem,
+}: RecentCardProps<T>) => (
+  <Card>
+    <div className="flex items-center justify-between px-5 py-4 border-b">
+      <div className="flex items-center gap-2">
+        {icon}
+        <span className="font-semibold text-sm">{title}</span>
+      </div>
+      <Link to={viewAllHref} className="text-xs text-primary hover:underline">
+        View all
+      </Link>
+    </div>
+    <CardContent className="pt-4 pb-2">
+      {loading ? (
+        <p className="text-sm text-muted-foreground py-4 text-center">
+          Loading…
+        </p>
+      ) : !items.length ? (
+        <CustomEmptyState
+          compact
+          icon={emptyIcon}
+          title={emptyTitle}
+          className="py-8"
+          action={emptyAction}
+        />
+      ) : (
+        <ul className="divide-y">{items.map(renderItem)}</ul>
+      )}
+    </CardContent>
+  </Card>
+);

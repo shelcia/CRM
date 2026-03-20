@@ -5,14 +5,8 @@ import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StatCard } from "@/components/custom/StatCard";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { AssignedToSelect } from "@/components/common";
 import { apiDeals } from "@/services/models/dealsModel";
 import PageHeader from "@/components/custom/PageHeader";
 import AddDealDialog from "./components/AddDealDialog";
@@ -49,10 +43,7 @@ const Pipeline = () => {
     return true;
   });
 
-  const assignees = Array.from(
-    new Set(deals.map((d) => d.assignedTo).filter(Boolean)),
-  ) as string[];
-  const dealsByStage = (stage: string) =>
+const dealsByStage = (stage: string) =>
     filteredDeals.filter((d) => d.stage === stage);
 
   const totalValue = deals
@@ -147,19 +138,12 @@ const Pipeline = () => {
             className="pl-8 h-8 text-sm"
           />
         </div>
-        <Select value={filterAssignedTo} onValueChange={setFilterAssignedTo}>
-          <SelectTrigger className="h-8 text-sm w-40">
-            <SelectValue placeholder="All assignees" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All assignees</SelectItem>
-            {assignees.map((a) => (
-              <SelectItem key={a} value={a}>
-                {a}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <AssignedToSelect
+          allOption="All assignees"
+          value={filterAssignedTo}
+          onChange={setFilterAssignedTo}
+          triggerClassName="h-8 text-sm w-40"
+        />
         {(search || filterAssignedTo !== "all") && (
           <Button
             size="sm"

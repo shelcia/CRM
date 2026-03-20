@@ -1,10 +1,10 @@
 import {} from "react";
-import { PageHeader, CustomTable, TableSkeleton } from "@/components/custom";
+import { PageHeader, CustomTable, TableSkeleton, DeleteIconButton } from "@/components/custom";
 import { useListData } from "@/hooks/useListData";
 import { convertDateToDateWithoutTime } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil } from "lucide-react";
 import { apiUsers } from "@/services/models/usersModel";
 import toast from "react-hot-toast";
 import usePermissions from "@/hooks/usePermissions";
@@ -54,21 +54,13 @@ const Users = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-7 w-7"
                   onClick={() => navigate(`edit-user/${user._id}`)}
                 >
                   <Pencil className="size-4" />
                 </Button>
               )}
               {has("users-delete") && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7 text-destructive hover:text-destructive"
-                  onClick={() => handleDelete(user._id)}
-                >
-                  <Trash2 className="size-4" />
-                </Button>
+                <DeleteIconButton onClick={() => handleDelete(user._id)} />
               )}
             </div>
           );

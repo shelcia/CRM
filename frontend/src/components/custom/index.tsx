@@ -16,3 +16,4 @@ export {
   CustomMultipleCheckBoxField,
 } from "./CustomInputs";
 export * from "./CustomLoaders";
+export { DeleteIconButton } from "./CustomButtons";

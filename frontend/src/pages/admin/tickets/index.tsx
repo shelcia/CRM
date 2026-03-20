@@ -5,6 +5,7 @@ import {
   StatusBadge,
   PriorityIndicator,
   PageHeader,
+  CustomEmptyState,
 } from "@/components/custom";
 import { AssignedToDisplay } from "@/components/common";
 import { Button } from "@/components/ui/button";
@@ -176,24 +177,20 @@ const Tickets = () => {
       {isLoading && tickets.length === 0 ? (
         <TableSkeleton rows={6} cols={8} />
       ) : total === 0 && !search ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
-          <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
-            <TicketCheck className="h-8 w-8 text-muted-foreground/50" />
-          </div>
-          <div>
-            <p className="font-semibold text-foreground">No tickets yet</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Create your first support ticket to get started.
-            </p>
-          </div>
-          {has("tickets-edit") && (
-            <Link to="/dashboard/tickets/add-ticket">
-              <Button size="sm">
-                <Plus className="h-4 w-4" /> Create First Ticket
-              </Button>
-            </Link>
-          )}
-        </div>
+        <CustomEmptyState
+          icon={TicketCheck}
+          title="No tickets yet"
+          description="Create your first support ticket to get started."
+          action={
+            has("tickets-edit") && (
+              <Link to="/dashboard/tickets/add-ticket">
+                <Button size="sm">
+                  <Plus className="h-4 w-4" /> Create First Ticket
+                </Button>
+              </Link>
+            )
+          }
+        />
       ) : (
         <CustomTable
           columns={columns}

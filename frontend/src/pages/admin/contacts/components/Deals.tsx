@@ -4,7 +4,7 @@ import { getDealsByContact } from "@/services/models/dealsModel";
 import AddDealDialog from "../../pipeline/components/AddDealDialog";
 import { Button } from "@/components/ui/button";
 import { Kanban, Plus } from "lucide-react";
-import { PageSpinner, StatusBadge } from "@/components/custom";
+import { PageSpinner, StatusBadge, CustomEmptyState } from "@/components/custom";
 import { IDeal } from "../../pipeline/types";
 import { getFmtCurrencyVal } from "@/utils";
 
@@ -51,10 +51,7 @@ const DealsTab = ({ contact }: { contact: IContact }) => {
       </div>
 
       {deals.length === 0 ? (
-        <div className="flex flex-col items-center py-10 text-muted-foreground gap-2">
-          <Kanban className="h-8 w-8 opacity-30" />
-          <p className="text-sm">No deals yet</p>
-        </div>
+        <CustomEmptyState compact icon={Kanban} title="No deals yet" />
       ) : (
         <ul className="space-y-2">
           {deals.map((deal) => (

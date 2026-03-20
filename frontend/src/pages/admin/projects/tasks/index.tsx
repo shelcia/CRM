@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, FolderKanban } from "lucide-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-import { CustomTextField, PageSpinner } from "@/components/custom";
+import {
+  CustomTextField,
+  PageSpinner,
+  CustomEmptyState,
+  PageHeader,
+  DeleteIconButton,
+} from "@/components/custom";
 import { apiProvider } from "@/services/utilities/provider";
 import usePermissions from "@/hooks/usePermissions";
 import { Project } from "../types";
@@ -52,19 +58,17 @@ const Todos = () => {
 
   return (
     <section className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Projects</h1>
-          <p className="text-sm text-muted-foreground">
-            Organise work with Kanban boards
-          </p>
-        </div>
-        {has("todos-edit") && (
-          <Button size="sm" onClick={() => setShowForm((v) => !v)}>
-            <Plus className="h-4 w-4 mr-1" /> New Project
-          </Button>
-        )}
-      </div>
+      <PageHeader
+        title="Projects"
+        description="Organise work with Kanban boards"
+        actions={
+          has("todos-edit") && (
+            <Button onClick={() => setShowForm((v) => !v)}>
+              <Plus className="size-4" /> New Project
+            </Button>
+          )
+        }
+      />
 
       {showForm && (
         <NewProjectForm
@@ -98,14 +102,10 @@ const Todos = () => {
                     </p>
                   </div>
                   {has("todos-delete") && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive"
+                    <DeleteIconButton
+                      className="h-7 w-7 shrink-0"
                       onClick={() => handleDelete(project._id)}
-                    >
-                      <Trash2 className="size-4" />
-                    </Button>
+                    />
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -122,22 +122,19 @@ const Todos = () => {
             </Card>
           ))}
           {projects.length === 0 && !showForm && (
-            <div className="col-span-full flex flex-col items-center justify-center py-20 gap-4 text-center">
-              <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
-                <Plus className="h-7 w-7 text-muted-foreground/50" />
-              </div>
-              <div>
-                <p className="font-semibold">No projects yet</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Create a project to start organizing work with a Kanban board.
-                </p>
-              </div>
-              {has("todos-edit") && (
-                <Button size="sm" onClick={() => setShowForm(true)}>
-                  <Plus className="h-4 w-4" /> Create First Project
-                </Button>
-              )}
-            </div>
+            <CustomEmptyState
+              className="col-span-full py-20"
+              icon={FolderKanban}
+              title="No projects yet"
+              description="Create a project to start organizing work with a Kanban board."
+              action={
+                has("todos-edit") && (
+                  <Button size="sm" onClick={() => setShowForm(true)}>
+                    <Plus className="size-4" /> Create First Project
+                  </Button>
+                )
+              }
+            />
           )}
         </div>
       )}

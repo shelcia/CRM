@@ -69,7 +69,7 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
         className="sm:hidden"
         aria-label="open menu"
       >
-        <Menu className="h-5 w-5" />
+        <Menu className="size-5" />
       </Button>
 
       {/* Brand */}
@@ -105,7 +105,7 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
             <DropdownMenuSeparator />
             {isAdmin && (
               <DropdownMenuItem onClick={() => navigate("/dashboard/profile")}>
-                <User className="h-4 w-4" />
+                <User className="size-4" />
                 Profile
               </DropdownMenuItem>
             )}
@@ -113,7 +113,7 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
               onClick={logout}
               className="text-destructive focus:text-destructive"
             >
-              <LogOut className="h-4 w-4" />
+              <LogOut className="size-4" />
               Logout
             </DropdownMenuItem>
           </DropdownMenuContent>

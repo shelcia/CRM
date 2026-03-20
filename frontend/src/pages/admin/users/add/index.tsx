@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   CustomMultipleCheckBoxField,
   CustomTextField,
+  PageHeader,
 } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -50,20 +51,11 @@ const AddUser = () => {
   return (
     <section className="max-w-3xl space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <Link to="/dashboard/users">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold">Add User</h1>
-          <p className="text-sm text-muted-foreground">
-            Invite a new member to your workspace
-          </p>
-        </div>
-      </div>
-
+      <PageHeader
+        title="Add User"
+        description="Invite a new member to your workspace"
+        isBackButton
+      />
       {/* Profile + Basic Info Card */}
       <Card>
         <div className="flex items-center gap-3 px-6 py-4 border-b">

@@ -1,17 +1,13 @@
 import { INote } from "../types";
 import { ActivityIcon } from "lucide-react";
+import { CustomEmptyState } from "@/components/custom";
 import { NOTE_TYPE_META } from "../constants";
 import { cn } from "@/lib/utils";
 import { convertDateToDateWithTime } from "@/utils";
 
 const ActivityTimeline = ({ notes }: { notes: INote[] }) => {
   if (notes.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16 text-muted-foreground gap-2">
-        <ActivityIcon className="h-8 w-8 opacity-30" />
-        <p className="text-sm">No activity yet</p>
-      </div>
-    );
+    return <CustomEmptyState compact icon={ActivityIcon} title="No activity yet" className="py-16" />;
   }
 
   return (
