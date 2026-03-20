@@ -22,8 +22,9 @@ const Homepage = () => {
         </h1>
 
         <p className="text-muted-foreground text-lg mb-10 max-w-xl">
-          Tiny CRM gives your team contacts, tickets, todos and email — nothing
-          more, nothing less. Simple, fast, open source.
+          Tiny CRM gives your team contacts, tickets, a deal pipeline, project
+          boards, and scheduled email — nothing more, nothing less. Simple,
+          fast, open source.
         </p>
 
         <div className="flex items-center gap-3 flex-wrap justify-center">
@@ -64,7 +65,7 @@ const Homepage = () => {
         <p className="text-center text-sm font-semibold uppercase tracking-widest text-muted-foreground mb-10">
           Everything you need
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {FEATURES.map((f) => (
             <div
               key={f.title}
@@ -87,7 +88,7 @@ const Homepage = () => {
         <section className="max-w-3xl mx-auto px-6 py-16 text-center">
           <h2 className="text-3xl font-bold mb-3">Ready to get organised?</h2>
           <p className="text-muted-foreground mb-8">
-            Create your free account in seconds — no credit card required.
+            Create your free account in seconds
           </p>
           <Button
             size="lg"

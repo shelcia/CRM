@@ -22,73 +22,85 @@
 ## Tech Stack
 
 **Frontend**
-- React 18 + TypeScript + Vite
-- Tailwind CSS v3 + shadcn/ui (Radix UI primitives)
-- DM Sans Variable font
-- TanStack Table, Formik + Yup, React Router v6
+- React 19 + TypeScript + Vite 8
+- Tailwind CSS v4 + shadcn/ui (Radix UI primitives)
+- DM Sans Variable font, oklch green/lime palette
+- TanStack Table v8, Formik + Yup, React Router v7
 - Lucide React icons, react-hot-toast
 
 **Backend**
-- Go 1.21
-- REST API with JWT authentication
-- Email templates (invite, reset password, verification)
+- Go 1.21 + Gin
+- MongoDB via `mongo-driver`
+- JWT authentication, AES-256-GCM encryption
+- SMTP email (gomail + Gmail) with background scheduler
 
 ## Features
 
-Access is controlled by fine-grained permission scopes:
-
-| Scope             | Description                      |
-|-------------------|----------------------------------|
-| `contacts.read`   | View contacts                    |
-| `contacts.write`  | Create and edit contacts         |
-| `tickets.read`    | View tickets                     |
-| `tickets.write`   | Create and edit tickets          |
-| `projects.read`   | View projects / todos            |
-| `projects.write`  | Create and edit projects / todos |
-| `users.read`      | View users                       |
-| `users.write`     | Invite, edit, and remove users   |
+| Module            | What it does                                                        |
+|-------------------|---------------------------------------------------------------------|
+| **Contacts**      | Full CRUD, CSV import/export, notes, server-side search + filters   |
+| **Tickets**       | Support ticket tracking with status/priority/category filters       |
+| **Pipeline**      | Kanban deal board with stage tracking                               |
+| **Projects**      | Kanban project boards with drag-and-drop columns and task cards     |
+| **Emails**        | Template builder with scheduling (one-time/daily/weekly/monthly); background goroutine fires emails via Gmail SMTP |
+| **Email Groups**  | Group contacts for bulk email campaigns                             |
+| **Users**         | Role-based access control (admin / manager / employee)              |
+| **Dashboard**     | Stats overview: contacts, tickets, projects, users, recent activity |
+| **Company**       | Company profile + logo upload                                       |
 
 ## Getting Started
 
-### Frontend
+### Docker (recommended)
 
 ```bash
+cp backend/.env.example backend/.env   # fill in your credentials
+docker compose up --build
+```
+
+### Manual
+
+```bash
+# Backend
+cd backend
+cp .env.example .env   # fill in DB_CONNECT, EMAIL_ID, EMAIL_PWD, TOKEN_SECRET, CRYPTR_SECRET
+go mod download
+go run main.go
+
+# Frontend (separate terminal)
 cd frontend
 npm install
 npm run dev
-```
-
-### Backend
-
-```bash
-cd backend
-go mod download
-go run main.go
 ```
 
 ## Project Structure
 
 ```
 CRM/
-├── frontend/          # React + TypeScript + Vite
+├── docker-compose.yml
+├── frontend/              # React 19 + TypeScript + Vite 8
 │   └── src/
-│       ├── components/    # Shared components (shadcn/ui wrappers, table, editor)
-│       ├── pages/         # Route pages by role (admin, manager, employee)
-│       └── lib/           # utils (cn helper)
-└── backend/           # Go REST API
-    ├── handlers/      # Route handlers
-    ├── models/        # Data models
-    ├── middleware/    # Auth middleware
-    └── templates/    # Email templates
+│       ├── components/    # Reusable UI (CustomTable, CardSection, buttons, etc.)
+│       ├── pages/admin/   # Route pages (contacts, tickets, pipeline, projects, emails, users…)
+│       ├── hooks/         # useEnums, usePermissions
+│       └── services/      # Axios API client + per-resource model wrappers
+└── backend/               # Go REST API
+    ├── handlers/          # Route handlers (one file per resource)
+    ├── models/            # MongoDB models
+    ├── middleware/        # JWT auth, rate limiter
+    ├── scheduler/         # Background email scheduler (fires templates on schedule)
+    ├── templates/         # Transactional email HTML templates
+    └── utils/             # SMTP sender, AES crypto helpers
 ```
 
 ## Demo Credentials
 
-| Role      | Email               | Password    |
-|-----------|---------------------|-------------|
-| admin     | admin@gmail.com     | adminuser   |
-| manager   | manager@gmail.com   | manager     |
-| non-admin | employee@gmail.com  | employee    |
+After running `go run ./cmd/seed` (or via Docker):
+
+| Role    | Email                | Password |
+|---------|----------------------|----------|
+| Admin   | admin@acmecorp.com   | admin123 |
+| Manager | manager@acmecorp.com | admin123 |
+| Member  | member@acmecorp.com  | admin123 |
 
 ## Contributing
 

@@ -19,7 +19,7 @@ A Go backend for Tiny CRM, built with Gin, MongoDB, and JWT authentication.
 
 ```
 backend/
-├── main.go                      # Entry point, router setup
+├── main.go                      # Entry point, router setup, starts email scheduler
 ├── config/
 │   └── config.go                # .env loader
 ├── db/
@@ -29,14 +29,17 @@ backend/
 ├── handlers/
 │   ├── auth.go                  # Auth routes (register, login, verify, reset)
 │   ├── users.go                 # User CRUD
-│   ├── contacts.go              # Contact CRUD + notes + CSV import/export
+│   ├── contacts.go              # Contact CRUD + notes + CSV import/export + filters
 │   ├── company.go               # Company CRUD + logo upload
-│   ├── tickets.go               # Ticket CRUD
+│   ├── tickets.go               # Ticket CRUD + status/priority/category filters
 │   ├── projects.go              # Project CRUD + board endpoint
-│   ├── columns.go               # Kanban column CRUD
+│   ├── columns.go               # Kanban column CRUD + reorder
 │   ├── todos.go                 # Todo CRUD (scoped to project/column)
 │   ├── notes.go                 # Contact notes
+│   ├── deals.go                 # Deal CRUD (pipeline)
+│   ├── dashboard.go             # Dashboard stats aggregation
 │   ├── email_templates.go       # Email template CRUD
+│   ├── email_groups.go          # Email group CRUD
 │   └── enums.go                 # Exposes enums to frontend
 ├── middleware/
 │   ├── auth.go                  # JWT auth-token middleware
@@ -50,7 +53,11 @@ backend/
 │   ├── project.go
 │   ├── column.go
 │   ├── todo.go
-│   └── email_template.go
+│   ├── deal.go
+│   ├── email_template.go
+│   └── email_group.go
+├── scheduler/
+│   └── email_scheduler.go       # Background goroutine — fires email templates on schedule
 ├── templates/
 │   ├── base.go                  # Shared HTML email layout
 │   ├── verification.go          # Email verification template
@@ -58,7 +65,7 @@ backend/
 │   └── invite_user.go           # User invitation template
 ├── utils/
 │   ├── crypto.go                # AES-256-GCM encrypt/decrypt
-│   └── email.go                 # SMTP email sender
+│   └── email.go                 # SMTP email sender (gomail)
 └── cmd/
     └── seed/
         └── main.go              # Standalone DB seed script
@@ -132,10 +139,14 @@ All authenticated requests require an `auth-token` header containing a valid JWT
 
 ### Contacts — `/api/contacts`
 
+Supports query params: `?page=`, `?limit=`, `?search=`, `?status=`, `?priority=`
+
 | Method | Path                    | Description                | Auth |
 |--------|-------------------------|----------------------------|------|
-| GET    | `/`                     | List all contacts          | Yes  |
+| GET    | `/`                     | List contacts (paginated)  | Yes  |
 | POST   | `/`                     | Create a contact           | Yes  |
+| PUT    | `/:id`                  | Update a contact           | Yes  |
+| DELETE | `/:id`                  | Delete a contact           | Yes  |
 | GET    | `/export`               | Export contacts as CSV     | Yes  |
 | POST   | `/import`               | Import contacts from CSV   | Yes  |
 | GET    | `/:id/notes`            | List notes for a contact   | Yes  |
@@ -174,15 +185,35 @@ All authenticated requests require an `auth-token` header containing a valid JWT
 
 ### Tickets — `/api/tickets`
 
-| Method | Path   | Description      | Auth |
-|--------|--------|------------------|------|
-| GET    | `/`    | List all tickets | Yes  |
-| POST   | `/`    | Create a ticket  | Yes  |
-| GET    | `/:id` | Get a ticket     | Yes  |
-| PUT    | `/:id` | Update a ticket  | Yes  |
-| DELETE | `/:id` | Delete a ticket  | Yes  |
+Supports query params: `?page=`, `?limit=`, `?search=`, `?status=`, `?priority=`, `?category=`
+
+| Method | Path   | Description               | Auth |
+|--------|--------|---------------------------|------|
+| GET    | `/`    | List tickets (paginated)  | Yes  |
+| POST   | `/`    | Create a ticket           | Yes  |
+| GET    | `/:id` | Get a ticket              | Yes  |
+| PUT    | `/:id` | Update a ticket           | Yes  |
+| DELETE | `/:id` | Delete a ticket           | Yes  |
+
+### Deals — `/api/deals`
+
+| Method | Path   | Description    | Auth |
+|--------|--------|----------------|------|
+| GET    | `/`    | List all deals | Yes  |
+| POST   | `/`    | Create a deal  | Yes  |
+| GET    | `/:id` | Get a deal     | Yes  |
+| PUT    | `/:id` | Update a deal  | Yes  |
+| DELETE | `/:id` | Delete a deal  | Yes  |
+
+### Dashboard — `/api/dashboard`
+
+| Method | Path     | Description                                              | Auth |
+|--------|----------|----------------------------------------------------------|------|
+| GET    | `/stats` | Aggregated counts (contacts, tickets, projects, users) + recent items | Yes  |
 
 ### Email Templates — `/api/email-templates`
+
+Templates support scheduling: `frequency` (one-time/daily/weekly/monthly), `sendDate`, `sendTime`, `dayOfWeek`, `dayOfMonth`. Active templates are processed by the background scheduler every minute.
 
 | Method | Path   | Description               | Auth |
 |--------|--------|---------------------------|------|
@@ -191,6 +222,16 @@ All authenticated requests require an `auth-token` header containing a valid JWT
 | GET    | `/:id` | Get an email template     | Yes  |
 | PUT    | `/:id` | Update an email template  | Yes  |
 | DELETE | `/:id` | Delete an email template  | Yes  |
+
+### Email Groups — `/api/email-groups`
+
+| Method | Path   | Description             | Auth |
+|--------|--------|-------------------------|------|
+| GET    | `/`    | List all email groups   | Yes  |
+| POST   | `/`    | Create an email group   | Yes  |
+| GET    | `/:id` | Get an email group      | Yes  |
+| PUT    | `/:id` | Update an email group   | Yes  |
+| DELETE | `/:id` | Delete an email group   | Yes  |
 
 ## Demo Credentials
 

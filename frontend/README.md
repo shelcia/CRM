@@ -24,25 +24,34 @@ The frontend for Tiny CRM, built with React, TypeScript, Vite, and Tailwind CSS.
 
 ```
 frontend/src/
-├── components/          # Shared UI components (buttons, inputs, table, etc.)
+├── components/
+│   ├── custom/          # Reusable primitives: CustomTable, CardSection, buttons,
+│   │                    #   TableFilters, TableSkeleton, CustomEmptyState, DragHandle
+│   ├── common/          # Domain-aware components: StatusBadge, PriorityIndicator,
+│   │                    #   AssignedToDisplay, ContactSelect, AuthorAvatar
+│   └── ui/              # shadcn/ui base components (Button, Input, Select, Sheet…)
 ├── hooks/
-│   └── useEnums.ts      # Fetches and caches enum values from the backend
+│   ├── useEnums.ts      # Fetches and caches all enum values from the backend
+│   └── usePermissions.ts # Role-based permission checks (has("contacts-edit") etc.)
 ├── layout/
-│   └── admin/           # Dashboard shell (sidebar, topbar)
+│   └── admin/           # Dashboard shell (sidebar, topbar, route guard)
 ├── pages/
 │   └── admin/
-│       ├── contacts/    # Contact list + add/edit forms
-│       ├── tickets/     # Ticket list + add/edit forms
-│       ├── todos/       # Projects list + Kanban board
+│       ├── dashboard/   # Stats overview
+│       ├── contacts/    # Contact list (server-side search + filters) + add/edit + panel
+│       ├── tickets/     # Ticket list (server-side search + filters) + add/edit + panel
+│       ├── pipeline/    # Kanban deal board
+│       ├── projects/    # Project list + Kanban board with drag-and-drop
+│       ├── emails/      # Email templates + email groups CRUD
 │       ├── users/       # User list + add/edit forms
-│       ├── email/       # Email template CRUD
 │       └── profile/     # Company profile + logo upload
 ├── services/
-│   ├── api.ts           # Axios instance (base URL, auth header)
-│   ├── apiProvider.ts   # Generic CRUD methods (getAll, post, put, remove)
-│   └── models/          # Per-resource API wrappers (contactsModel, etc.)
+│   ├── api.ts           # Axios instance (base URL, auth header injection)
+│   ├── apiProvider.ts   # Generic CRUD methods (getAll, getByParams, post, put, remove)
+│   └── models/          # Per-resource wrappers (contactsModel, ticketsModel, etc.)
 └── utils/
-    └── enumLabel.ts     # toLabel() / toLabelItems() for enum display
+    ├── enumLabel.ts     # toLabel() / toLabelItems() for enum display
+    └── confirmToast.ts  # Confirm-before-delete toast helper
 ```
 
 ## Setup
@@ -76,8 +85,14 @@ The app will be available at `http://localhost:5173`.
 
 ## Key Patterns
 
-**Enums** — All dropdown options (roles, statuses, priorities) come from `GET /api/enums` via the `useEnums()` hook. Use `toLabelItems(arr)` to convert them to `{ val, label }` objects for `CustomSelectField`.
+**Enums** — All dropdown options (roles, statuses, priorities) come from `GET /api/enums` via the `useEnums()` hook. Use `toLabelItems(arr)` to convert them to `{ val, label }` objects for select fields.
 
 **Auth** — JWT is stored in `localStorage` as `CRM-token` and sent on every request via the `auth-token` header, injected automatically by the Axios instance in `api.ts`.
 
-**API calls** — Use the model files in `src/services/models/` (e.g. `contactsModel.getAll()`, `projectsModel.post(data)`). For multipart uploads use `postFormData`.
+**Permissions** — Use `const { has } = usePermissions()` and `has("contacts-edit")` to conditionally render buttons and routes. Permission keys follow the pattern `<resource>-<action>`.
+
+**API calls** — Use the model files in `src/services/models/` (e.g. `apiContacts.getByParams({ page, limit, search, status })`). Server-side paginated endpoints return `{ data: [], total, page, limit }`.
+
+**Tables** — `CustomTable` supports both client-side and server-side modes. Pass a `serverSide` prop with `total`, `page`, `onPageChange`, `onSearchChange`, and optional `columnFilters` to enable server-driven pagination, search, and inline column filter dropdowns.
+
+**Cards** — Use `<CardSection icon={...} title="...">` for the standard bordered card header + content layout used across detail/form pages.
