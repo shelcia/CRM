@@ -7,7 +7,7 @@ const CustomToggle = () => {
 
   return (
     <Button
-      size="icon-sm"
+      size="icon"
       variant="ghost"
       onClick={toggle}
       aria-label="toggle theme"
@@ -15,7 +15,7 @@ const CustomToggle = () => {
       {isDark ? (
         <Moon className="size-5" />
       ) : (
-        <Sun className="size-5 text-yellow-500" />
+        <Sun className="size-5 text-amber-500" />
       )}
     </Button>
   );

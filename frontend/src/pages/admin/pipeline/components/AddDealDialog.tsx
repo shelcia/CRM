@@ -3,13 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { CustomModal } from "@/components/custom";
 import {
   CustomTextField,
   CustomSelectField,
@@ -111,18 +105,16 @@ const AddDealDialog = ({
     });
 
   return (
-    <Dialog
+    <CustomModal
       open={open}
       onOpenChange={(v) => {
         setOpen(v);
         if (!v && !isEdit) resetForm();
       }}
+      title={isEdit ? "Edit Deal" : "New Deal"}
+      trigger={trigger}
+      size="md"
     >
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit Deal" : "New Deal"}</DialogTitle>
-        </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 pt-1">
           <CustomTextField
             label="Title"
@@ -207,8 +199,7 @@ const AddDealDialog = ({
             </Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+    </CustomModal>
   );
 };
 

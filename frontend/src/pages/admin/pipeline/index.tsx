@@ -194,12 +194,6 @@ const Pipeline = () => {
                   >
                     {/* Column header */}
                     <div className="px-3 py-2.5 flex items-center gap-2">
-                      <span
-                        className={cn(
-                          "h-2 w-2 rounded-full shrink-0",
-                          stage.dot,
-                        )}
-                      />
                       <span className="text-sm font-semibold flex-1">
                         {stage.label}
                       </span>

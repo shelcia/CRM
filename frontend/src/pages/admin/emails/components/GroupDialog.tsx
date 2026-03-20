@@ -1,13 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { CustomModal } from "@/components/custom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -107,12 +101,13 @@ const GroupDialog = ({ group, onSaved, trigger }: GroupDialogProps) => {
   );
 
   return (
-    <Dialog open={open} onOpenChange={handleOpen}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="max-w-lg">
-        <DialogHeader>
-          <DialogTitle>{group ? "Edit Group" : "New Email Group"}</DialogTitle>
-        </DialogHeader>
+    <CustomModal
+      open={open}
+      onOpenChange={handleOpen}
+      title={group ? "Edit Group" : "New Email Group"}
+      trigger={trigger}
+      size="lg"
+    >
         <div className="space-y-4 pt-1">
           <div className="space-y-1">
             <Label htmlFor="gname">Group Name</Label>
@@ -197,8 +192,7 @@ const GroupDialog = ({ group, onSaved, trigger }: GroupDialogProps) => {
             </Button>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+    </CustomModal>
   );
 };
 

@@ -4,13 +4,7 @@ import toast from "react-hot-toast";
 import { SerializedEditorState } from "lexical";
 import { CalendarClock } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { CustomModal } from "@/components/custom";
 import {
   Select,
   SelectContent,
@@ -124,21 +118,17 @@ const TemplateDialog = ({
   });
 
   return (
-    <Dialog
+    <CustomModal
       open={open}
       onOpenChange={(v) => {
         setOpen(v);
         if (!v) resetForm();
       }}
+      title={template ? "Edit Template" : "New Email Template"}
+      trigger={trigger}
+      size="xl"
+      contentClassName="max-h-[90vh] overflow-y-auto"
     >
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>
-            {template ? "Edit Template" : "New Email Template"}
-          </DialogTitle>
-        </DialogHeader>
-
         <form onSubmit={handleSubmit} className="space-y-5 pt-1">
           <div className="grid grid-cols-2 gap-4">
             <CustomTextField
@@ -381,8 +371,7 @@ const TemplateDialog = ({
             </Button>
           </div>
         </form>
-      </DialogContent>
-    </Dialog>
+    </CustomModal>
   );
 };
 

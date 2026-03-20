@@ -6,16 +6,16 @@ import {
   TableSkeleton,
   StatCard,
   PageHeader,
+  StatusBadge,
 } from "@/components/custom";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { apiEmailTemplates } from "@/services/models/emailTemplatesModel";
 import { apiEmailGroups } from "@/services/models/emailGroupsModel";
 import { useEnums } from "@/hooks/useEnums";
 import { toLabelItems } from "@/utils";
 import { EmailGroup, EmailTemplate } from "../types";
 import TemplateDialog from "../components/TemplateDialog";
-import { frequencyLabel, statusStyles } from "../constants";
+import { frequencyLabel } from "../constants";
 import { scheduleLabel } from "../helpers";
 
 const EmailTemplates = () => {
@@ -105,14 +105,7 @@ const EmailTemplates = () => {
       options: {
         sortable: true,
         customBodyRender: (val: any) => (
-          <span
-            className={cn(
-              "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize",
-              statusStyles[val as keyof typeof statusStyles],
-            )}
-          >
-            {val}
-          </span>
+          <StatusBadge value={val} className="capitalize" />
         ),
       },
     },

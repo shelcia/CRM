@@ -5,8 +5,8 @@ import {
   Phone,
   TicketCheck,
   CheckSquare,
-  TrendingUp,
   Clock,
+  PhoneCall,
 } from "lucide-react";
 import { apiProvider } from "@/services/utilities/provider";
 import { StatusBadge, PriorityIndicator } from "@/components/custom";
@@ -38,7 +38,7 @@ const Dashboard = () => {
     {
       label: "Total Contacts",
       value: loading ? "—" : (stats?.totalContacts ?? 0),
-      icon: <Phone className="h-5 w-5 text-primary" />,
+      icon: <Phone className="size-5 text-primary" />,
       href: "/dashboard/contacts",
       color: "bg-primary/10",
       permission: "contacts-view",
@@ -46,7 +46,7 @@ const Dashboard = () => {
     {
       label: "Open Tickets",
       value: loading ? "—" : (stats?.openTickets ?? 0),
-      icon: <TicketCheck className="h-5 w-5 text-red-500" />,
+      icon: <TicketCheck className="size-5 text-red-500" />,
       href: "/dashboard/tickets",
       color: "bg-red-500/10",
       permission: "tickets-view",
@@ -54,7 +54,7 @@ const Dashboard = () => {
     {
       label: "Total Projects",
       value: loading ? "—" : (stats?.totalProjects ?? 0),
-      icon: <CheckSquare className="h-5 w-5 text-amber-500" />,
+      icon: <CheckSquare className="size-5 text-amber-500" />,
       href: "/dashboard/todos",
       color: "bg-amber-500/10",
       permission: "todos-view",
@@ -62,7 +62,7 @@ const Dashboard = () => {
     {
       label: "Team Members",
       value: loading ? "—" : (stats?.totalUsers ?? 0),
-      icon: <Users className="h-5 w-5 text-purple-500" />,
+      icon: <Users className="size-5 text-purple-500" />,
       href: "/dashboard/users",
       color: "bg-purple-500/10",
       permission: "users-view",
@@ -99,7 +99,7 @@ const Dashboard = () => {
           <Card>
             <div className="flex items-center justify-between px-5 py-4 border-b">
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-primary" />
+                <PhoneCall className="size-4 text-primary" />
                 <span className="font-semibold text-sm">Recent Contacts</span>
               </div>
               <Link
