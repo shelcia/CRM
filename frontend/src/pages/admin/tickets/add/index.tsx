@@ -10,7 +10,7 @@ import {
 } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, Ticket, SlidersHorizontal } from "lucide-react";
+import { Ticket, SlidersHorizontal } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { apiTickets } from "@/services/models/ticketsModel";
 import { useEnums } from "@/hooks/useEnums";

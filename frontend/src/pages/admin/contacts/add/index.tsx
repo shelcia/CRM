@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
-import { CustomSelectField, CustomTextField } from "@/components/custom";
+import {
+  CustomSelectField,
+  CustomTextField,
+  PageHeader,
+} from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { apiContacts } from "@/services/models/contactsModel";
-import { ArrowLeft, UserRound, TrendingUp } from "lucide-react";
+import { UserRound, TrendingUp } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useEnums } from "@/hooks/useEnums";
 import { toLabelItems } from "@/utils";
@@ -59,19 +63,11 @@ const AddContact = () => {
   return (
     <section className="max-w-3xl space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <Link to="/dashboard/contacts">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold">Add Contact</h1>
-          <p className="text-sm text-muted-foreground">
-            Create a new contact in your CRM
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        title="Add Contact"
+        description="Create a new contact in your CRM"
+        isBackButton
+      />
 
       {/* Basic Info Card */}
       <Card>

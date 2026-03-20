@@ -10,7 +10,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { apiUsers } from "@/services/models/usersModel";
 import toast from "react-hot-toast";
-import { ArrowLeft, UserRound, ShieldCheck } from "lucide-react";
+import { UserRound, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { PERMISSION_GROUPS } from "../constants";
 

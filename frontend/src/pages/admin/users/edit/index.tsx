@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   CustomMultipleCheckBoxField,
   CustomTextField,
+  PageHeader,
 } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,30 +12,7 @@ import { apiUsers } from "@/services/models/usersModel";
 import toast from "react-hot-toast";
 import { ArrowLeft, UserRound, ShieldCheck } from "lucide-react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-
-const PERMISSION_GROUPS = [
-  {
-    label: "Users",
-    keys: ["users-view", "users-edit", "users-delete"],
-    labels: ["View", "Edit", "Delete"],
-  },
-  {
-    label: "Contacts",
-    keys: ["contacts-view", "contacts-edit", "contacts-delete"],
-    labels: ["View", "Edit", "Delete"],
-  },
-  {
-    label: "Tickets",
-    keys: ["tickets-view", "tickets-edit", "tickets-delete"],
-    labels: ["View", "Edit", "Delete"],
-  },
-  {
-    label: "Todos",
-    keys: ["todos-view", "todos-edit", "todos-delete"],
-    labels: ["View", "Edit", "Delete"],
-  },
-  { label: "Admin", keys: ["admin"], labels: ["Admin"] },
-];
+import { PERMISSION_GROUPS } from "../constants";
 
 const permissionsToChecked = (permissions: string[]) => {
   const isAdmin = permissions.includes("admin");
@@ -118,19 +96,11 @@ const EditUser = () => {
   return (
     <section className="max-w-3xl space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <Link to="/dashboard/users">
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold">Edit User</h1>
-          <p className="text-sm text-muted-foreground">
-            Update profile and permissions
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        title="Edit User"
+        description="Update profile and permissions"
+        isBackButton
+      />
 
       {/* Profile Info Card */}
       <Card>
