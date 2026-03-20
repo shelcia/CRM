@@ -51,12 +51,12 @@ const AddTaskForm = ({ onSubmit, onCancel }: AddTaskFormProps) => {
         touched={touched}
         errors={errors}
       />
-      <div className="flex gap-2">
-        <Button type="submit" size="sm" className="flex-1">
-          Add card
-        </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
+      <div className="flex gap-2 justify-end w-full">
+        <Button variant="ghost" size="sm" onClick={onCancel}>
           Cancel
+        </Button>
+        <Button type="submit" size="sm" variant="outline">
+          Add
         </Button>
       </div>
     </form>

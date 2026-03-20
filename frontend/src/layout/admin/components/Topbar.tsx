@@ -75,7 +75,7 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
 
       {/* Brand */}
       <div className="flex items-center gap-2 shrink-0">
-        <img src={logo} alt="Tiny CRM" className="h-7 w-auto" />
+        <img src={logo} alt="Tiny CRM" className="h-7 w-auto rounded-md" />
       </div>
 
       {/* Global search */}

@@ -1,14 +1,9 @@
 import { useState } from "react";
-import { Plus, Pencil, Check, X } from "lucide-react";
+import { Plus, Check, X } from "lucide-react";
 import { DragHandle } from "@/components/custom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { RowActionsMenu } from "./RowActionsMenu";
 import type { Column } from "../types";
 
 interface ColumnHeaderProps {
@@ -82,24 +77,12 @@ const ColumnHeader = ({
           >
             <Plus className="size-4" />
           </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="icon-sm" variant="ghost">
-                <Pencil className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => setEditing(true)}>
-                Rename
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-destructive focus:text-destructive"
-                onClick={onDelete}
-              >
-                Delete column
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <RowActionsMenu
+            onEdit={() => setEditing(true)}
+            onDelete={onDelete}
+            editLabel="Rename"
+            deleteLabel="Delete column"
+          />
         </>
       )}
     </div>

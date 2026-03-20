@@ -8,6 +8,7 @@ import (
 	"tinycrm/db"
 	"tinycrm/handlers"
 	"tinycrm/middleware"
+	"tinycrm/scheduler"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,6 +16,7 @@ import (
 func main() {
 	config.Load()
 	db.Connect()
+	scheduler.Start()
 
 	r := gin.Default()
 

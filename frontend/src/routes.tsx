@@ -4,6 +4,7 @@ import Layout from "./layout/admin/Layout";
 import PublicLayout from "./layout/public/Layout";
 import { Navigate, Outlet } from "react-router-dom";
 import usePermissions from "./hooks/usePermissions";
+import { PageSpinner } from "./components/custom";
 
 const RequirePermission = ({ permission }: { permission: string }) => {
   const { has } = usePermissions();
@@ -13,7 +14,7 @@ const RequirePermission = ({ permission }: { permission: string }) => {
 const Loadable =
   <P extends object>(Component: ComponentType<P>) =>
   (props: P) => (
-    <Suspense fallback={<p>loading ...</p>}>
+    <Suspense fallback={<PageSpinner />}>
       <Component {...props} />
     </Suspense>
   );

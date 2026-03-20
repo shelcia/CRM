@@ -6,13 +6,13 @@ const Topbar = () => (
   <nav className="fixed top-0 left-0 right-0 z-50 h-14 bg-background/95 backdrop-blur border-b flex items-center px-6 gap-3">
     <div className="flex items-center gap-2 flex-1">
       <div className="flex items-center gap-2 shrink-0">
-        <img src={logo} alt="Tiny CRM" className="h-7 w-auto" />
+        <img src={logo} alt="Tiny CRM" className="h-7 w-auto rounded-md" />
       </div>
       <span className="font-bold text-foreground tracking-tight">Tiny CRM</span>
     </div>
 
     <a
-      href="https://github.com/shelcia/easy-crm"
+      href="https://github.com/shelcia/crm"
       target="_blank"
       rel="noreferrer"
       className="p-1.5 rounded-md hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"

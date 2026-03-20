@@ -1,16 +1,11 @@
 import { useState } from "react";
-import { Pencil, Trash2, Check } from "lucide-react";
+import { Pencil, Check } from "lucide-react";
 import { DragHandle } from "@/components/custom";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { RowActionsMenu } from "./RowActionsMenu";
 import type { Todo, TodoAuthor } from "../types";
 import { AssignedToSelect, AuthorAvatar } from "@/components/common";
 import { Textarea } from "@/components/ui/textarea";
@@ -91,17 +86,12 @@ const TaskCard = ({
             onChange={setAssignee}
             triggerClassName="h-7 text-xs"
           />
-          <div className="flex gap-1.5">
-            <Button size="sm" className="flex-1 h-7 text-xs" onClick={save}>
-              <Check className="h-3 w-3 mr-1" /> Save
-            </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              className="h-7 text-xs"
-              onClick={cancel}
-            >
+          <div className="flex gap-2 justify-end w-full">
+            <Button size="sm" variant="ghost" onClick={cancel}>
               Cancel
+            </Button>
+            <Button size="sm" variant="outline" onClick={save}>
+              Save
             </Button>
           </div>
         </div>
@@ -115,24 +105,11 @@ const TaskCard = ({
             <p className="text-sm font-medium leading-snug flex-1">
               {todo.title}
             </p>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-all flex-shrink-0">
-                  <Pencil className="size-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setEditing(true)}>
-                  <Pencil className="size-4 mr-2" /> Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  className="text-destructive focus:text-destructive"
-                  onClick={onDelete}
-                >
-                  <Trash2 className="size-4 mr-2" /> Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <RowActionsMenu
+              onEdit={() => setEditing(true)}
+              onDelete={onDelete}
+              triggerClassName="opacity-0 group-hover:opacity-100 transition-all flex-shrink-0"
+            />
           </div>
 
           {todo.description && (
