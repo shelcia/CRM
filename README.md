@@ -15,6 +15,14 @@
 <img src="https://img.shields.io/github/issues-raw/shelcia/CRM?style=for-the-badge">
 </p>
 
+<a href="https://www.star-history.com/?repos=shelcia%2FCRM&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=shelcia/CRM&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=shelcia/CRM&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/image?repos=shelcia/CRM&type=date&legend=top-left" />
+ </picture>
+</a>
+
 ## Introduction
 
 **Tiny CRM** is a full-stack customer relationship management app with role-based access for admins, managers, and employees. Built with a React + TypeScript frontend and a Go backend.
