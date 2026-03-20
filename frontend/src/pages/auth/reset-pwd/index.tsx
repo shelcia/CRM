@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
-import { CustomAuthInput } from "@/components/custom";
-import { apiAuth } from "@/services/models/authModel";
-import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { CustomTextField } from "@/components/custom";
+import { apiAuth } from "@/services/models/authModel";
 
 const ResetPwd = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,7 @@ const ResetPwd = () => {
         .put({ password: values.password }, `change-password/${id}`)
         .then((res) => {
           if (res.status === "200") {
-            toast.success("Successfully reset");
+            toast.success("Password reset successfully");
             navigate("/login");
           } else {
             toast.error(res.status === "400" ? res.message : "Error");
@@ -40,32 +40,50 @@ const ResetPwd = () => {
 
   return (
     <>
-      <h1 className="text-2xl font-bold">Reset Password</h1>
-      <CustomAuthInput
-        name="password"
-        placeholder="enter new password"
-        values={values}
-        handleChange={handleChange}
-        touched={touched}
-        errors={errors}
-        type="password"
-      />
-      <CustomAuthInput
-        name="confirmPassword"
-        placeholder="confirm password"
-        values={values}
-        handleChange={handleChange}
-        touched={touched}
-        errors={errors}
-        type="password"
-      />
-      <Button
-        className="w-full mt-1"
-        loading={isLoading}
-        onClick={() => handleSubmit()}
-      >
-        Reset Password
-      </Button>
+      <div className="flex flex-col gap-1 mb-2">
+        <h1 className="text-2xl font-bold tracking-tight">Set New Password</h1>
+        <p className="text-sm text-muted-foreground">
+          Choose a strong password (min. 6 characters)
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <CustomTextField
+          name="password"
+          label="New Password"
+          type="password"
+          placeholder="Enter new password"
+          values={values}
+          handleChange={handleChange}
+          touched={touched}
+          errors={errors}
+        />
+
+        <CustomTextField
+          name="confirmPassword"
+          label="Confirm Password"
+          type="password"
+          placeholder="Confirm new password"
+          values={values}
+          handleChange={handleChange}
+          touched={touched}
+          errors={errors}
+        />
+
+        <Button
+          className="w-full"
+          loading={isLoading}
+          onClick={() => handleSubmit()}
+        >
+          Reset Password
+        </Button>
+      </div>
+
+      <p className="text-sm text-center text-muted-foreground">
+        <Link to="/login" className="text-primary hover:underline font-medium">
+          Back to login
+        </Link>
+      </p>
     </>
   );
 };

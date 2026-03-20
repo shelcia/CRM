@@ -139,7 +139,7 @@ const Contacts = () => {
                   variant="outline"
                   onClick={() => openPanel(contact, "edit")}
                 >
-                  <Pencil className="h-3.5 w-3.5" />
+                  <Pencil className="size-4" />
                 </Button>
               )}
               {has("contacts-delete") && (
@@ -172,7 +172,7 @@ const Contacts = () => {
                     })
                   }
                 >
-                  <Trash2 className="h-3.5 w-3.5" />
+                  <Trash2 className="size-4" />
                 </Button>
               )}
             </div>

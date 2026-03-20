@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { apiAuth } from "@/services/models/authModel";
 import { toast } from "react-hot-toast";
+import { MailCheck, MailWarning } from "lucide-react";
 
 const Verification = () => {
   const [searchParams] = useSearchParams({});
@@ -14,9 +14,9 @@ const Verification = () => {
     const email = localStorage.getItem("CRM-email");
     apiAuth.post({ email }, "resend").then((res) => {
       if (res.status === "200") {
-        toast.success("Verification Email is resent !");
+        toast.success("Verification email resent");
       } else {
-        toast.error("Sending verification Email failed !");
+        toast.error("Failed to resend verification email");
       }
       setIsLoading(false);
     });
@@ -27,13 +27,15 @@ const Verification = () => {
   if (status === "success") {
     return (
       <section className="flex flex-col gap-3">
-        <Alert severity="success">
-          <AlertTitle>First Step Towards Using Tiny CRM</AlertTitle>
-          Thank you for signing up! You can now enjoy full access to our
-          CRM&apos;s features after email verification.
-        </Alert>
+        <div className="flex flex-col items-center gap-2 rounded-lg border border-primary/20 bg-primary/5 p-4 text-center">
+          <MailCheck className="h-8 w-8 text-primary" />
+          <p className="text-sm font-semibold">Check your inbox</p>
+          <p className="text-xs text-muted-foreground">
+            Verify your email to get full access to Tiny CRM.
+          </p>
+        </div>
         <Link to="/login">
-          <Button className="w-full">Go back to Login</Button>
+          <Button className="w-full">Go to Login</Button>
         </Link>
       </section>
     );
@@ -42,20 +44,19 @@ const Verification = () => {
   if (status === "not-verified") {
     return (
       <section className="flex flex-col gap-3">
-        <Alert severity="error">
-          <AlertTitle>Not Verified</AlertTitle>
-          Please verify the email to access the features.
-        </Alert>
-        <Button
-          className="w-full"
-          loading={isLoading}
-          onClick={resendVerification}
-        >
-          Resend Verification
+        <div className="flex flex-col items-center gap-2 rounded-lg border border-destructive/20 bg-destructive/5 p-4 text-center">
+          <MailWarning className="h-8 w-8 text-destructive" />
+          <p className="text-sm font-semibold">Email not verified</p>
+          <p className="text-xs text-muted-foreground">
+            Please verify your email to access all features.
+          </p>
+        </div>
+        <Button className="w-full" loading={isLoading} onClick={resendVerification}>
+          Resend Verification Email
         </Button>
         <Link to="/login">
           <Button variant="outline" className="w-full">
-            Go back to Login
+            Back to Login
           </Button>
         </Link>
       </section>

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiAuth } from "@/services/models/authModel";
 import { Button } from "@/components/ui/button";
+import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 
 const EmailVerify = () => {
   const { id } = useParams();
@@ -13,30 +14,40 @@ const EmailVerify = () => {
     apiAuth.put({}, `verification/${id}`).then((res) => {
       if (res.status === "200") {
         setSuccess(true);
-        setMessage("Verified Successfully");
+        setMessage("Email verified successfully");
         setTimeout(() => navigate("/"), 3000);
       } else {
         setSuccess(false);
-        setMessage("Verification Failed");
+        setMessage("Verification failed");
       }
     });
   }, [id, navigate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background p-4">
-      <div className="w-full max-w-sm rounded-lg border bg-card shadow-sm p-6 flex flex-col gap-3">
-        <p
-          className={`text-center rounded px-4 py-2 text-white font-medium ${
-            success ? "bg-[#2CC5BD]" : "bg-[#FD396D]"
-          }`}
-        >
-          {message || "Verifying..."}
+    <>
+      <div className="flex flex-col items-center gap-2 py-2">
+        {!message ? (
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        ) : success ? (
+          <CheckCircle2 className="h-10 w-10 text-primary" />
+        ) : (
+          <XCircle className="h-10 w-10 text-destructive" />
+        )}
+        <p className="text-sm font-medium text-center">
+          {message || "Verifying your email…"}
         </p>
-        <Link to="/">
-          <Button className="w-full">Go to Home</Button>
-        </Link>
+        {success && (
+          <p className="text-xs text-muted-foreground text-center">
+            Redirecting to home in 3 seconds…
+          </p>
+        )}
       </div>
-    </div>
+      <Link to="/">
+        <Button className="w-full" variant={success ? "default" : "outline"}>
+          Go to Home
+        </Button>
+      </Link>
+    </>
   );
 };
 

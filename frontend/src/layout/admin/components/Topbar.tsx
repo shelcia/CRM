@@ -5,6 +5,8 @@ import {
   CheckSquare,
   Mail,
   Users,
+  LayoutTemplate,
+  BookUser,
   Menu,
   LogOut,
   User,
@@ -91,7 +93,7 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
                   <User className="h-4 w-4 text-primary" />
                 )}
               </div>
-              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
+              <ChevronDown className="size-4 text-muted-foreground" />
             </button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-48">
@@ -123,7 +125,15 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
 
 export default Topbar;
 
-export const menuContents = [
+export interface NavItem {
+  title: string;
+  link: string;
+  icon: React.ReactNode;
+  permission: string;
+  children?: Omit<NavItem, "children">[];
+}
+
+export const menuContents: NavItem[] = [
   {
     title: "Dashboard",
     link: "/dashboard",
@@ -155,10 +165,24 @@ export const menuContents = [
     permission: "projects-view",
   },
   {
-    title: "Email",
+    title: "Emails",
     link: "/dashboard/emails",
     icon: <Mail className="h-4 w-4" />,
     permission: "admin",
+    children: [
+      {
+        title: "Templates",
+        link: "/dashboard/emails/templates",
+        icon: <LayoutTemplate className="h-4 w-4" />,
+        permission: "admin",
+      },
+      {
+        title: "Groups",
+        link: "/dashboard/emails/groups",
+        icon: <BookUser className="h-4 w-4" />,
+        permission: "admin",
+      },
+    ],
   },
   {
     title: "Users",

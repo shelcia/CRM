@@ -16,3 +16,11 @@ export type Column = {
   order: number;
   todos: Todo[];
 };
+
+export type Project = {
+  _id: string;
+  name: string;
+  date: string;
+  totalTasks: number;
+  doneTasks: number;
+};

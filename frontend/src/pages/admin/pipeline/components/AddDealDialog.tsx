@@ -11,22 +11,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   CustomTextField,
   CustomSelectField,
 } from "@/components/custom/CustomInputs";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { apiDeals } from "@/services/models/dealsModel";
-import useUsers from "@/hooks/useUsers";
+import { AssignedToSelect } from "@/components/common/AssignedTo";
 import { IDeal } from "../types";
 import { CURRENCIES, STAGE_ITEMS } from "../helpers";
+import { DatePicker } from "@/components/custom";
 
 interface IAddDealDialogProps {
   deal?: IDeal;
@@ -50,7 +43,6 @@ const AddDealDialog = ({
   const isEdit = !!deal;
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const { userItems } = useUsers();
 
   const { values, errors, touched, handleChange, handleSubmit, resetForm } =
     useFormik({
@@ -182,39 +174,23 @@ const AddDealDialog = ({
           />
           <div className="space-y-1">
             <Label htmlFor="expectedClose">Expected Close</Label>
-            <Input
-              id="expectedClose"
-              name="expectedClose"
-              type="date"
+            <DatePicker
               value={values.expectedClose}
-              onChange={handleChange}
+              onChange={(date) =>
+                handleChange({
+                  target: { name: "expectedClose", value: date },
+                })
+              }
             />
           </div>
           <div className="space-y-1">
             <Label>Assigned To</Label>
-            <Select
-              value={values.assignedTo || "__none__"}
-              onValueChange={(v) =>
-                handleChange({
-                  target: {
-                    name: "assignedTo",
-                    value: v === "__none__" ? "" : v,
-                  },
-                })
+            <AssignedToSelect
+              value={values.assignedTo ?? ""}
+              onChange={(v) =>
+                handleChange({ target: { name: "assignedTo", value: v } })
               }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="__none__">Unassigned</SelectItem>
-                {userItems.map((u) => (
-                  <SelectItem key={u.val} value={u.val}>
-                    {u.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            />
           </div>
           <div className="flex justify-end gap-3 pt-1">
             <Button

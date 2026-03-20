@@ -14,50 +14,56 @@ import { Link, useNavigate } from "react-router-dom";
 import { apiTickets } from "@/services/models/ticketsModel";
 import { useEnums } from "@/hooks/useEnums";
 import { toLabelItems } from "@/utils";
-import useUsers from "@/hooks/useUsers";
+import { AssignedToSelect } from "@/components/common";
+import { Label } from "@/components/ui/label";
 
 const AddTicket = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const { ticketStatuses, ticketPriorities, ticketCategories } = useEnums();
-  const { userItems } = useUsers();
-
-  const { errors, values, handleChange, handleSubmit, touched, resetForm } =
-    useFormik({
-      initialValues: {
-        title: "",
-        contact: "",
-        email: "",
-        category: "technical",
-        priority: "medium",
-        status: "open",
-        assignedTo: "",
-        description: "",
-      },
-      validationSchema: Yup.object().shape({
-        title: Yup.string().required("Ticket title is required"),
-        contact: Yup.string().required("Contact name is required"),
-        email: Yup.string().email("Enter a valid email"),
-        category: Yup.string().required("Category is required"),
-        priority: Yup.string().required("Priority is required"),
-        status: Yup.string().required("Status is required"),
-        assignedTo: Yup.string(),
-        description: Yup.string(),
-      }),
-      onSubmit: (vals) => {
-        setIsLoading(true);
-        apiTickets.post!(vals, "", true).then((res) => {
-          if (res && res._id) {
-            toast.success("Ticket created successfully");
-            resetForm();
-            navigate("/dashboard/tickets");
-          } else {
-            toast.error(res?.message ?? "Failed to create ticket");
-          }
-          setIsLoading(false);
-        });
-      },
-    });
+  const {
+    errors,
+    values,
+    handleChange,
+    handleSubmit,
+    touched,
+    resetForm,
+    setFieldValue,
+  } = useFormik({
+    initialValues: {
+      title: "",
+      contact: "",
+      email: "",
+      category: "technical",
+      priority: "medium",
+      status: "open",
+      assignedTo: "",
+      description: "",
+    },
+    validationSchema: Yup.object().shape({
+      title: Yup.string().required("Ticket title is required"),
+      contact: Yup.string().required("Contact name is required"),
+      email: Yup.string().email("Enter a valid email"),
+      category: Yup.string().required("Category is required"),
+      priority: Yup.string().required("Priority is required"),
+      status: Yup.string().required("Status is required"),
+      assignedTo: Yup.string(),
+      description: Yup.string(),
+    }),
+    onSubmit: (vals) => {
+      setIsLoading(true);
+      apiTickets.post!(vals, "", true).then((res) => {
+        if (res && res._id) {
+          toast.success("Ticket created successfully");
+          resetForm();
+          navigate("/dashboard/tickets");
+        } else {
+          toast.error(res?.message ?? "Failed to create ticket");
+        }
+        setIsLoading(false);
+      });
+    },
+  });
 
   return (
     <section className="max-w-3xl space-y-6">
@@ -162,15 +168,13 @@ const AddTicket = () => {
               errors={errors}
               labelItms={toLabelItems(ticketStatuses)}
             />
-            <CustomSelectField
-              label="Assigned To"
-              name="assignedTo"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-              labelItms={[{ val: "", label: "Unassigned" }, ...userItems]}
-            />
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium">Assigned To</Label>
+              <AssignedToSelect
+                value={values.assignedTo}
+                onChange={(v) => setFieldValue("assignedTo", v)}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>

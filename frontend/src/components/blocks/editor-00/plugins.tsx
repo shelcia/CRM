@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect } from "react"
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary"
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin"
+import { useState, useCallback, useEffect } from "react";
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import {
   $createParagraphNode,
   $getSelection,
@@ -12,15 +12,15 @@ import {
   REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
-} from "lexical"
+} from "lexical";
 import {
   $createHeadingNode,
   $createQuoteNode,
   $isHeadingNode,
   $isQuoteNode,
   HeadingTagType,
-} from "@lexical/rich-text"
-import { $setBlocksType } from "@lexical/selection"
+} from "@lexical/rich-text";
+import { $setBlocksType } from "@lexical/selection";
 import {
   Bold,
   Italic,
@@ -32,9 +32,9 @@ import {
   Quote,
   Undo2,
   Redo2,
-} from "lucide-react"
-import { ContentEditable } from "@/components/editor/editor-ui/content-editable"
-import { cn } from "@/lib/utils"
+} from "lucide-react";
+import { ContentEditable } from "@/components/editor/editor-ui/content-editable";
+import { cn } from "@/lib/utils";
 
 // ── Toolbar primitives ────────────────────────────────────────────────────────
 
@@ -44,17 +44,17 @@ const ToolbarBtn = ({
   title,
   children,
 }: {
-  active?: boolean
-  onClick: () => void
-  title: string
-  children: React.ReactNode
+  active?: boolean;
+  onClick: () => void;
+  title: string;
+  children: React.ReactNode;
 }) => (
   <button
     type="button"
     title={title}
     onMouseDown={(e) => {
-      e.preventDefault() // keep editor focus
-      onClick()
+      e.preventDefault(); // keep editor focus
+      onClick();
     }}
     className={cn(
       "flex items-center justify-center h-7 w-7 rounded text-sm transition-colors",
@@ -65,129 +65,169 @@ const ToolbarBtn = ({
   >
     {children}
   </button>
-)
+);
 
-const Sep = () => <div className="h-4 w-px bg-border mx-0.5" />
+const Sep = () => <div className="h-4 w-px bg-border mx-0.5" />;
 
 // ── Toolbar plugin ─────────────────────────────────────────────────────────────
 
 const ToolbarPlugin = () => {
-  const [editor] = useLexicalComposerContext()
-  const [isBold, setIsBold] = useState(false)
-  const [isItalic, setIsItalic] = useState(false)
-  const [isUnderline, setIsUnderline] = useState(false)
-  const [isStrikethrough, setIsStrikethrough] = useState(false)
-  const [blockType, setBlockType] = useState("paragraph")
+  const [editor] = useLexicalComposerContext();
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+  const [isUnderline, setIsUnderline] = useState(false);
+  const [isStrikethrough, setIsStrikethrough] = useState(false);
+  const [blockType, setBlockType] = useState("paragraph");
 
   const syncToolbar = useCallback(() => {
-    const selection = $getSelection()
-    if (!$isRangeSelection(selection)) return
+    const selection = $getSelection();
+    if (!$isRangeSelection(selection)) return;
 
-    setIsBold(selection.hasFormat("bold"))
-    setIsItalic(selection.hasFormat("italic"))
-    setIsUnderline(selection.hasFormat("underline"))
-    setIsStrikethrough(selection.hasFormat("strikethrough"))
+    setIsBold(selection.hasFormat("bold"));
+    setIsItalic(selection.hasFormat("italic"));
+    setIsUnderline(selection.hasFormat("underline"));
+    setIsStrikethrough(selection.hasFormat("strikethrough"));
 
-    const anchor = selection.anchor.getNode()
+    const anchor = selection.anchor.getNode();
     const element =
-      anchor.getKey() === "root" ? anchor : anchor.getTopLevelElementOrThrow()
+      anchor.getKey() === "root" ? anchor : anchor.getTopLevelElementOrThrow();
 
     if ($isHeadingNode(element)) {
-      setBlockType(element.getTag())
+      setBlockType(element.getTag());
     } else if ($isQuoteNode(element)) {
-      setBlockType("quote")
+      setBlockType("quote");
     } else {
-      setBlockType("paragraph")
+      setBlockType("paragraph");
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     return editor.registerCommand(
       SELECTION_CHANGE_COMMAND,
       () => {
-        syncToolbar()
-        return false
+        syncToolbar();
+        return false;
       },
       COMMAND_PRIORITY_LOW,
-    )
-  }, [editor, syncToolbar])
+    );
+  }, [editor, syncToolbar]);
 
   const formatHeading = (tag: HeadingTagType) => {
     editor.update(() => {
-      const selection = $getSelection()
-      if (!$isRangeSelection(selection)) return
+      const selection = $getSelection();
+      if (!$isRangeSelection(selection)) return;
       $setBlocksType(selection, () =>
         blockType === tag ? $createParagraphNode() : $createHeadingNode(tag),
-      )
-    })
-  }
+      );
+    });
+  };
 
   const formatQuote = () => {
     editor.update(() => {
-      const selection = $getSelection()
-      if (!$isRangeSelection(selection)) return
+      const selection = $getSelection();
+      if (!$isRangeSelection(selection)) return;
       $setBlocksType(selection, () =>
         blockType === "quote" ? $createParagraphNode() : $createQuoteNode(),
-      )
-    })
-  }
+      );
+    });
+  };
 
   return (
     <div className="flex items-center gap-0.5 px-2 py-1.5 border-b flex-wrap">
       {/* Undo / Redo */}
-      <ToolbarBtn title="Undo" onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}>
-        <Undo2 className="h-3.5 w-3.5" />
+      <ToolbarBtn
+        title="Undo"
+        onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
+      >
+        <Undo2 className="size-4" />
       </ToolbarBtn>
-      <ToolbarBtn title="Redo" onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}>
-        <Redo2 className="h-3.5 w-3.5" />
+      <ToolbarBtn
+        title="Redo"
+        onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
+      >
+        <Redo2 className="size-4" />
       </ToolbarBtn>
 
       <Sep />
 
       {/* Inline formatting */}
-      <ToolbarBtn active={isBold} title="Bold" onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")}>
-        <Bold className="h-3.5 w-3.5" />
+      <ToolbarBtn
+        active={isBold}
+        title="Bold"
+        onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")}
+      >
+        <Bold className="size-4" />
       </ToolbarBtn>
-      <ToolbarBtn active={isItalic} title="Italic" onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")}>
-        <Italic className="h-3.5 w-3.5" />
+      <ToolbarBtn
+        active={isItalic}
+        title="Italic"
+        onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")}
+      >
+        <Italic className="size-4" />
       </ToolbarBtn>
-      <ToolbarBtn active={isUnderline} title="Underline" onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline")}>
-        <Underline className="h-3.5 w-3.5" />
+      <ToolbarBtn
+        active={isUnderline}
+        title="Underline"
+        onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline")}
+      >
+        <Underline className="size-4" />
       </ToolbarBtn>
-      <ToolbarBtn active={isStrikethrough} title="Strikethrough" onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough")}>
-        <Strikethrough className="h-3.5 w-3.5" />
+      <ToolbarBtn
+        active={isStrikethrough}
+        title="Strikethrough"
+        onClick={() =>
+          editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough")
+        }
+      >
+        <Strikethrough className="size-4" />
       </ToolbarBtn>
 
       <Sep />
 
       {/* Block type */}
-      <ToolbarBtn active={blockType === "h1"} title="Heading 1" onClick={() => formatHeading("h1")}>
-        <Heading1 className="h-3.5 w-3.5" />
+      <ToolbarBtn
+        active={blockType === "h1"}
+        title="Heading 1"
+        onClick={() => formatHeading("h1")}
+      >
+        <Heading1 className="size-4" />
       </ToolbarBtn>
-      <ToolbarBtn active={blockType === "h2"} title="Heading 2" onClick={() => formatHeading("h2")}>
-        <Heading2 className="h-3.5 w-3.5" />
+      <ToolbarBtn
+        active={blockType === "h2"}
+        title="Heading 2"
+        onClick={() => formatHeading("h2")}
+      >
+        <Heading2 className="size-4" />
       </ToolbarBtn>
-      <ToolbarBtn active={blockType === "h3"} title="Heading 3" onClick={() => formatHeading("h3")}>
-        <Heading3 className="h-3.5 w-3.5" />
+      <ToolbarBtn
+        active={blockType === "h3"}
+        title="Heading 3"
+        onClick={() => formatHeading("h3")}
+      >
+        <Heading3 className="size-4" />
       </ToolbarBtn>
-      <ToolbarBtn active={blockType === "quote"} title="Quote" onClick={formatQuote}>
-        <Quote className="h-3.5 w-3.5" />
+      <ToolbarBtn
+        active={blockType === "quote"}
+        title="Quote"
+        onClick={formatQuote}
+      >
+        <Quote className="size-4" />
       </ToolbarBtn>
     </div>
-  )
-}
+  );
+};
 
 // ── Composed plugins ───────────────────────────────────────────────────────────
 
 export function Plugins() {
   const [floatingAnchorElem, setFloatingAnchorElem] =
-    useState<HTMLDivElement | null>(null)
+    useState<HTMLDivElement | null>(null);
 
   const onRef = (_floatingAnchorElem: HTMLDivElement) => {
     if (_floatingAnchorElem !== null) {
-      setFloatingAnchorElem(_floatingAnchorElem)
+      setFloatingAnchorElem(_floatingAnchorElem);
     }
-  }
+  };
 
   return (
     <div className="relative">
@@ -204,5 +244,5 @@ export function Plugins() {
         />
       </div>
     </div>
-  )
+  );
 }

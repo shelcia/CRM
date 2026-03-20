@@ -4,9 +4,9 @@ import {
   TableSkeleton,
   StatusBadge,
   PriorityIndicator,
-  AuthorAvatar,
   PageHeader,
 } from "@/components/custom";
+import { AssignedToDisplay } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Plus, TicketCheck, Pencil, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -87,15 +87,7 @@ const Tickets = () => {
       label: "Assigned To",
       name: "assignedTo",
       options: {
-        customBodyRender: (val: string) =>
-          val ? (
-            <div className="flex items-center gap-1.5">
-              <AuthorAvatar name={val} />
-              <span className="text-sm">{val}</span>
-            </div>
-          ) : (
-            <span className="text-muted-foreground">—</span>
-          ),
+        customBodyRender: (val: string) => <AssignedToDisplay name={val} />,
       },
     },
     {
@@ -122,7 +114,7 @@ const Tickets = () => {
                   variant="outline"
                   onClick={() => openPanel(ticket)}
                 >
-                  <Pencil className="h-3.5 w-3.5" />
+                  <Pencil className="size-4" />
                 </Button>
               )}
               {has("tickets-delete") && (
@@ -155,7 +147,7 @@ const Tickets = () => {
                     })
                   }
                 >
-                  <Trash2 className="h-3.5 w-3.5" />
+                  <Trash2 className="size-4" />
                 </Button>
               )}
             </div>

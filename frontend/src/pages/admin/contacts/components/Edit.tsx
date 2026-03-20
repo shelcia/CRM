@@ -1,13 +1,6 @@
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useEnums } from "@/hooks/useEnums";
 import { toLabelItems } from "@/utils";
+import { FormField, FormSelect } from "@/components/common";
 
 type EditForm = {
   name: string;
@@ -21,63 +14,65 @@ type EditForm = {
   priority: string;
 };
 
-const Edit = ({
-  form,
-  set,
-}: {
+interface EditProps {
   form: EditForm;
   set: (field: keyof EditForm, value: string) => void;
-}) => {
+}
+
+const Edit = ({ form, set }: EditProps) => {
   const { contactStatuses, contactPriorities } = useEnums();
-
-  const field = (label: string, key: keyof EditForm, type = "text") => (
-    <div className="flex flex-col gap-1">
-      <label className="text-xs font-medium text-muted-foreground">
-        {label}
-      </label>
-      <Input
-        type={type}
-        value={form[key]}
-        onChange={(e) => set(key, e.target.value)}
-      />
-    </div>
-  );
-
-  const select = (
-    label: string,
-    key: keyof EditForm,
-    items: { val: string; label: string }[],
-  ) => (
-    <div className="flex flex-col gap-1">
-      <label className="text-xs font-medium text-muted-foreground">
-        {label}
-      </label>
-      <Select value={form[key]} onValueChange={(v) => set(key, v)}>
-        <SelectTrigger>
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {items.map((i) => (
-            <SelectItem key={i.val} value={i.val}>
-              {i.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
-  );
 
   return (
     <div className="flex flex-col gap-3">
-      {field("Full Name", "name")}
-      {field("Email", "email", "email")}
-      {field("Phone", "number")}
-      {field("Company", "company")}
-      {field("Job Title", "jobTitle")}
-      {field("Company Size", "companySize", "number")}
-      {field("Probability (0–1)", "probability")}
-      {select("Status", "status", toLabelItems(contactStatuses))}
-      {select("Priority", "priority", toLabelItems(contactPriorities))}
+      <FormField
+        label="Full Name"
+        value={form.name}
+        onChange={(v) => set("name", v)}
+      />
+      <FormField
+        label="Email"
+        value={form.email}
+        onChange={(v) => set("email", v)}
+        type="email"
+      />
+      <FormField
+        label="Phone"
+        value={form.number}
+        onChange={(v) => set("number", v)}
+      />
+      <FormField
+        label="Company"
+        value={form.company}
+        onChange={(v) => set("company", v)}
+      />
+      <FormField
+        label="Job Title"
+        value={form.jobTitle}
+        onChange={(v) => set("jobTitle", v)}
+      />
+      <FormField
+        label="Company Size"
+        value={form.companySize}
+        onChange={(v) => set("companySize", v)}
+        type="number"
+      />
+      <FormField
+        label="Probability (0–1)"
+        value={form.probability}
+        onChange={(v) => set("probability", v)}
+      />
+      <FormSelect
+        label="Status"
+        value={form.status}
+        onChange={(v) => set("status", v)}
+        items={toLabelItems(contactStatuses)}
+      />
+      <FormSelect
+        label="Priority"
+        value={form.priority}
+        onChange={(v) => set("priority", v)}
+        items={toLabelItems(contactPriorities)}
+      />
     </div>
   );
 };

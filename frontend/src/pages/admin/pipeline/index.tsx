@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Plus, TrendingUp, DollarSign, Target, Search, X } from "lucide-react";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import toast from "react-hot-toast";
-import KanbanSkeleton from "@/components/custom/KanbanSkeleton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StatCard } from "@/components/custom/StatCard";
@@ -21,6 +20,7 @@ import DealCard from "./components/DealCard";
 import { STAGES } from "./constants";
 import { getFmtCurrencyVal } from "@/utils";
 import { IDeal } from "./types";
+import { KanbanSkeleton } from "@/components/custom";
 
 const Pipeline = () => {
   const [deals, setDeals] = useState<IDeal[]>([]);
@@ -118,7 +118,7 @@ const Pipeline = () => {
             onCreated={(deal) => setDeals((prev) => [deal, ...prev])}
             trigger={
               <Button>
-                <Plus className="h-4 w-4" /> New Deal
+                <Plus className="size-4" /> New Deal
               </Button>
             }
           />
@@ -139,7 +139,7 @@ const Pipeline = () => {
       {/* Filters */}
       <div className="flex items-center gap-2 flex-wrap">
         <div className="relative flex-1 min-w-[180px] max-w-xs">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground pointer-events-none" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
           <Input
             placeholder="Search deals..."
             value={search}
@@ -170,7 +170,7 @@ const Pipeline = () => {
               setFilterAssignedTo("all");
             }}
           >
-            <X className="h-3.5 w-3.5 mr-1" /> Clear
+            <X className="size-4 mr-1" /> Clear
           </Button>
         )}
       </div>
@@ -213,7 +213,7 @@ const Pipeline = () => {
                         }
                         trigger={
                           <button className="text-muted-foreground hover:text-foreground transition-colors">
-                            <Plus className="h-3.5 w-3.5" />
+                            <Plus className="size-4" />
                           </button>
                         }
                       />

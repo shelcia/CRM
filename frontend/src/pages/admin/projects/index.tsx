@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import KanbanSkeleton from "@/components/custom/KanbanSkeleton";
+import { KanbanSkeleton } from "@/components/custom";
 import { Plus } from "lucide-react";
 import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,8 @@ import { apiUsers } from "@/services/models/usersModel";
 import { type Column, type Todo, type TodoAuthor } from "./types";
 import reorder from "@/utils/reorder";
 import ColumnHeader from "./components/ColumnHeader";
-import TodoCard from "./components/TodoCard";
-import AddTodoForm from "./components/AddTodoForm";
+import TaskCard from "./components/TaskCard";
+import AddTaskForm from "./components/AddTaskForm";
 import AddColumnForm from "./components/AddColumnForm";
 
 const Projects = () => {
@@ -242,7 +242,7 @@ const Projects = () => {
                               )}
                             >
                               {addingColId === col._id && (
-                                <AddTodoForm
+                                <AddTaskForm
                                   onSubmit={(todo) =>
                                     handleAddTodo(col._id, todo)
                                   }
@@ -256,7 +256,7 @@ const Projects = () => {
                                   key={todo._id}
                                 >
                                   {(provided, snapshot) => (
-                                    <TodoCard
+                                    <TaskCard
                                       todo={todo}
                                       provided={provided}
                                       isDragging={snapshot.isDragging}

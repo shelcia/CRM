@@ -84,7 +84,7 @@ const Notes = ({ contactId, notes, onAdd, onDelete }: NotesProps) => {
             loading={saving}
             disabled={!body.trim()}
           >
-            <Send className="h-3.5 w-3.5 mr-1" />
+            <Send className="size-4 mr-1" />
             Save
           </Button>
         </div>
@@ -117,7 +117,7 @@ const Notes = ({ contactId, notes, onAdd, onDelete }: NotesProps) => {
                     onClick={() => handleDelete(note._id)}
                     className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
                   >
-                    <Trash2 className="h-3.5 w-3.5" />
+                    <Trash2 className="size-4" />
                   </Button>
                 </div>
                 <p className="text-sm text-foreground leading-relaxed">

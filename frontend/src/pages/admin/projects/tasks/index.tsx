@@ -6,19 +6,11 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import PageSpinner from "@/components/custom/PageSpinner";
 
-import { CustomTextField } from "@/components/custom";
+import { CustomTextField, PageSpinner } from "@/components/custom";
 import { apiProvider } from "@/services/utilities/provider";
 import usePermissions from "@/hooks/usePermissions";
-
-type Project = {
-  _id: string;
-  name: string;
-  date: string;
-  totalTasks: number;
-  doneTasks: number;
-};
+import { Project } from "../types";
 
 const Todos = () => {
   const { has } = usePermissions();
@@ -112,7 +104,7 @@ const Todos = () => {
                       className="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive"
                       onClick={() => handleDelete(project._id)}
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
+                      <Trash2 className="size-4" />
                     </Button>
                   )}
                 </div>
@@ -137,8 +129,7 @@ const Todos = () => {
               <div>
                 <p className="font-semibold">No projects yet</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  Create a project to start organizing work with a Kanban
-                  board.
+                  Create a project to start organizing work with a Kanban board.
                 </p>
               </div>
               {has("todos-edit") && (

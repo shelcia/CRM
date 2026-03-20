@@ -46,14 +46,16 @@ export interface TableColumn {
 
 export interface ServerSideProps {
   total: number;
-  page: number;       // 1-indexed
+  page: number; // 1-indexed
   pageSize: number;
   onPageChange: (page: number) => void;
   onSearchChange: (search: string) => void;
   loading?: boolean;
 }
 
-interface CustomTableProps<TData extends Record<string, any> = Record<string, any>> {
+interface CustomTableProps<
+  TData extends Record<string, any> = Record<string, any>,
+> {
   columns: TableColumn[];
   data: TData[];
   title?: string;
@@ -93,7 +95,8 @@ const CustomTable = <TData extends Record<string, any>>({
         enableSorting: col.options?.sortable ?? !col.options?.customBodyRender,
         enableColumnFilter: !col.options?.customBodyRender,
         cell: col.options?.customBodyRender
-          ? ({ getValue, row }) => col.options!.customBodyRender!(getValue(), row.index)
+          ? ({ getValue, row }) =>
+              col.options!.customBodyRender!(getValue(), row.index)
           : ({ getValue }) => (getValue() as string) ?? "—",
       })),
     [colDefs],
@@ -126,7 +129,9 @@ const CustomTable = <TData extends Record<string, any>>({
   const activeFilterCount = columnFilters.length;
 
   const downloadCSV = () => {
-    const visibleCols = colDefs.filter((c) => columnVisibility[c.name] !== false);
+    const visibleCols = colDefs.filter(
+      (c) => columnVisibility[c.name] !== false,
+    );
     const headers = visibleCols.map((c) => c.label).join(",");
     const rows = data.map((row) =>
       visibleCols.map((col) => `"${row[col.name] ?? ""}"`).join(","),
@@ -142,7 +147,9 @@ const CustomTable = <TData extends Record<string, any>>({
   };
 
   // Pagination display values
-  const totalRows = serverSide ? serverSide.total : table.getFilteredRowModel().rows.length;
+  const totalRows = serverSide
+    ? serverSide.total
+    : table.getFilteredRowModel().rows.length;
   const { pageIndex, pageSize: currentPageSize } = table.getState().pagination;
   const displayPage = serverSide ? serverSide.page : pageIndex + 1;
   const displayPageSize = serverSide ? serverSide.pageSize : currentPageSize;
@@ -165,16 +172,20 @@ const CustomTable = <TData extends Record<string, any>>({
               placeholder="Search..."
               value={serverSide ? serverSearch : globalFilter}
               onChange={(e) =>
-                serverSide ? setServerSearch(e.target.value) : setGlobalFilter(e.target.value)
+                serverSide
+                  ? setServerSearch(e.target.value)
+                  : setGlobalFilter(e.target.value)
               }
               className="pl-8 pr-7 h-8 w-56 text-sm"
             />
             {(serverSide ? serverSearch : globalFilter) && (
               <button
-                onClick={() => serverSide ? setServerSearch("") : setGlobalFilter("")}
+                onClick={() =>
+                  serverSide ? setServerSearch("") : setGlobalFilter("")
+                }
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="size-4" />
               </button>
             )}
           </div>
@@ -187,7 +198,7 @@ const CustomTable = <TData extends Record<string, any>>({
               onClick={() => setShowColumnFilters((v) => !v)}
               className="h-8 gap-1.5"
             >
-              <Filter className="h-3.5 w-3.5" />
+              <Filter className="size-4" />
               Filter
               {activeFilterCount > 0 && (
                 <span className="ml-0.5 rounded-full bg-primary text-primary-foreground text-[10px] font-semibold w-4 h-4 flex items-center justify-center">
@@ -201,12 +212,14 @@ const CustomTable = <TData extends Record<string, any>>({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="h-8 gap-1.5">
-                <Columns className="h-3.5 w-3.5" />
+                <Columns className="size-4" />
                 Columns
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuLabel className="text-xs">Toggle columns</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-xs">
+                Toggle columns
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               {table
                 .getAllColumns()
@@ -225,7 +238,12 @@ const CustomTable = <TData extends Record<string, any>>({
           </DropdownMenu>
 
           {/* CSV download */}
-          <Button variant="outline" size="sm" onClick={downloadCSV} className="h-8">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={downloadCSV}
+            className="h-8"
+          >
             <Download className="h-4 w-4" />
           </Button>
         </div>
@@ -253,15 +271,18 @@ const CustomTable = <TData extends Record<string, any>>({
                           }
                           onClick={header.column.getToggleSortingHandler()}
                         >
-                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                           {header.column.getCanSort() && (
                             <span className="text-muted-foreground/50">
                               {header.column.getIsSorted() === "asc" ? (
-                                <ChevronUp className="h-3.5 w-3.5" />
+                                <ChevronUp className="size-4" />
                               ) : header.column.getIsSorted() === "desc" ? (
-                                <ChevronDown className="h-3.5 w-3.5" />
+                                <ChevronDown className="size-4" />
                               ) : (
-                                <ChevronsUpDown className="h-3.5 w-3.5" />
+                                <ChevronsUpDown className="size-4" />
                               )}
                             </span>
                           )}
@@ -279,14 +300,22 @@ const CustomTable = <TData extends Record<string, any>>({
                         {header.column.getCanFilter() ? (
                           <div className="relative">
                             <Input
-                              value={(header.column.getFilterValue() as string) ?? ""}
-                              onChange={(e) => header.column.setFilterValue(e.target.value || undefined)}
+                              value={
+                                (header.column.getFilterValue() as string) ?? ""
+                              }
+                              onChange={(e) =>
+                                header.column.setFilterValue(
+                                  e.target.value || undefined,
+                                )
+                              }
                               placeholder={`Filter…`}
                               className="h-7 text-xs pr-6"
                             />
                             {header.column.getFilterValue() && (
                               <button
-                                onClick={() => header.column.setFilterValue(undefined)}
+                                onClick={() =>
+                                  header.column.setFilterValue(undefined)
+                                }
                                 className="absolute right-1.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                               >
                                 <X className="h-3 w-3" />
@@ -319,7 +348,10 @@ const CustomTable = <TData extends Record<string, any>>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="px-4 py-3 whitespace-nowrap">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </td>
                   ))}
                 </tr>
@@ -344,7 +376,9 @@ const CustomTable = <TData extends Record<string, any>>({
                 ? serverSide.onPageChange(serverSide.page - 1)
                 : table.previousPage()
             }
-            disabled={serverSide ? serverSide.page <= 1 : !table.getCanPreviousPage()}
+            disabled={
+              serverSide ? serverSide.page <= 1 : !table.getCanPreviousPage()
+            }
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>

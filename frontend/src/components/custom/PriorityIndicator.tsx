@@ -4,23 +4,23 @@ import { toLabel } from "@/utils";
 
 const CONFIG: Record<string, { icon: React.ReactNode; className: string }> = {
   low: {
-    icon: <ArrowDown className="h-3.5 w-3.5" />,
+    icon: <ArrowDown className="size-4" />,
     className: "text-muted-foreground",
   },
   medium: {
-    icon: <ArrowRight className="h-3.5 w-3.5" />,
+    icon: <ArrowRight className="size-4" />,
     className: "text-blue-500",
   },
   high: {
-    icon: <ArrowUp className="h-3.5 w-3.5" />,
+    icon: <ArrowUp className="size-4" />,
     className: "text-orange-500",
   },
   veryHigh: {
-    icon: <ChevronsUp className="h-3.5 w-3.5" />,
+    icon: <ChevronsUp className="size-4" />,
     className: "text-red-500",
   },
   critical: {
-    icon: <ChevronsUp className="h-3.5 w-3.5" />,
+    icon: <ChevronsUp className="size-4" />,
     className: "text-red-500",
   },
 };

@@ -56,14 +56,14 @@ const ColumnHeader = ({
             onClick={save}
             className="text-primary hover:text-primary"
           >
-            <Check className="h-3.5 w-3.5" />
+            <Check className="size-4" />
           </Button>
           <Button
             size="icon-sm"
             variant="ghost"
             onClick={() => setEditing(false)}
           >
-            <X className="h-3.5 w-3.5" />
+            <X className="size-4" />
           </Button>
         </>
       ) : (
@@ -85,7 +85,7 @@ const ColumnHeader = ({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="icon-sm" variant="ghost">
-                <Pencil className="h-3.5 w-3.5" />
+                <Pencil className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

@@ -4,14 +4,14 @@ import { CustomTextAreaField, CustomTextField } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import type { Todo } from "../types";
 
-interface AddTodoFormProps {
+interface AddTaskFormProps {
   onSubmit: (
     todo: Omit<Todo, "_id" | "date" | "projectId" | "columnId">,
   ) => void;
   onCancel: () => void;
 }
 
-const AddTodoForm = ({ onSubmit, onCancel }: AddTodoFormProps) => {
+const AddTaskForm = ({ onSubmit, onCancel }: AddTaskFormProps) => {
   const { errors, values, handleChange, handleSubmit, touched } = useFormik({
     initialValues: {
       title: "",
@@ -63,4 +63,4 @@ const AddTodoForm = ({ onSubmit, onCancel }: AddTodoFormProps) => {
   );
 };
 
-export default AddTodoForm;
+export default AddTaskForm;

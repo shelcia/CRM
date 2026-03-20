@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Pencil, Trash2, Check } from "lucide-react";
-import { DragHandle, AuthorAvatar } from "@/components/custom";
+import { DragHandle } from "@/components/custom";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,8 +19,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import type { Todo, TodoAuthor } from "../types";
+import { AuthorAvatar } from "@/components/common";
 
-interface TodoCardProps {
+interface TaskCardProps {
   todo: Todo;
   provided: any;
   isDragging: boolean;
@@ -33,14 +34,14 @@ interface TodoCardProps {
   }) => void;
 }
 
-const TodoCard = ({
+const TaskCard = ({
   todo,
   provided,
   isDragging,
   users,
   onDelete,
   onEdit,
-}: TodoCardProps) => {
+}: TaskCardProps) => {
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState(todo.title);
   const [description, setDescription] = useState(todo.description);
@@ -134,18 +135,18 @@ const TodoCard = ({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-foreground transition-all flex-shrink-0">
-                  <Pencil className="h-3.5 w-3.5" />
+                  <Pencil className="size-4" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => setEditing(true)}>
-                  <Pencil className="h-3.5 w-3.5 mr-2" /> Edit
+                  <Pencil className="size-4 mr-2" /> Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="text-destructive focus:text-destructive"
                   onClick={onDelete}
                 >
-                  <Trash2 className="h-3.5 w-3.5 mr-2" /> Delete
+                  <Trash2 className="size-4 mr-2" /> Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -159,11 +160,7 @@ const TodoCard = ({
 
           <div className="flex items-center justify-between ml-5">
             <div className="flex items-center gap-1.5">
-              <AuthorAvatar
-                name={todo.author.name}
-                image={todo.author.image}
-                className="h-5 w-5 text-[9px]"
-              />
+              <AuthorAvatar name={todo.author.name} image={todo.author.image} />
               <span className="text-xs text-muted-foreground truncate max-w-[80px]">
                 {todo.author.name}
               </span>
@@ -181,4 +178,4 @@ const TodoCard = ({
   );
 };
 
-export default TodoCard;
+export default TaskCard;

@@ -37,21 +37,48 @@ const Layout = () => {
         <ul className="p-2 space-y-1">
           {visibleItems.map((item, index) => (
             <li key={index}>
-              <NavLink
-                to={item.link}
-                end={item.link === "/dashboard"}
-                onClick={handleDrawerToggle}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-primary text-white"
-                      : "text-foreground hover:bg-accent"
-                  }`
-                }
-              >
-                {item.icon}
-                {item.title}
-              </NavLink>
+              {item.children ? (
+                <>
+                  <div className="flex items-center gap-3 px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                    {item.icon} {item.title}
+                  </div>
+                  {item.children
+                    .filter((c) => has(c.permission))
+                    .map((child) => (
+                      <NavLink
+                        key={child.link}
+                        to={child.link}
+                        onClick={handleDrawerToggle}
+                        className={({ isActive }) =>
+                          `flex items-center gap-3 pl-7 pr-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                            isActive
+                              ? "bg-primary text-white"
+                              : "text-foreground hover:bg-accent"
+                          }`
+                        }
+                      >
+                        {child.icon}
+                        {child.title}
+                      </NavLink>
+                    ))}
+                </>
+              ) : (
+                <NavLink
+                  to={item.link}
+                  end={item.link === "/dashboard"}
+                  onClick={handleDrawerToggle}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-primary text-white"
+                        : "text-foreground hover:bg-accent"
+                    }`
+                  }
+                >
+                  {item.icon}
+                  {item.title}
+                </NavLink>
+              )}
             </li>
           ))}
         </ul>

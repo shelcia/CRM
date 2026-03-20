@@ -4,10 +4,9 @@ import { getDealsByContact } from "@/services/models/dealsModel";
 import AddDealDialog from "../../pipeline/components/AddDealDialog";
 import { Button } from "@/components/ui/button";
 import { Kanban, Plus } from "lucide-react";
-import { StatusBadge } from "@/components/custom";
+import { PageSpinner, StatusBadge } from "@/components/custom";
 import { IDeal } from "../../pipeline/types";
 import { getFmtCurrencyVal } from "@/utils";
-import PageSpinner from "@/components/custom/PageSpinner";
 
 const DealsTab = ({ contact }: { contact: IContact }) => {
   const [deals, setDeals] = useState<IDeal[]>([]);
@@ -44,7 +43,7 @@ const DealsTab = ({ contact }: { contact: IContact }) => {
           onCreated={(deal) => setDeals((prev) => [deal, ...prev])}
           trigger={
             <Button size="sm" variant="outline" className="ml-auto">
-              <Plus className="h-3.5 w-3.5 mr-1" />
+              <Plus className="size-4 mr-1" />
               Add Deal
             </Button>
           }

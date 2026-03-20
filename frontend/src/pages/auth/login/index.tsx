@@ -1,17 +1,13 @@
-import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { CustomTextField } from "@/components/custom";
 import { apiAuth } from "@/services/models/authModel";
-import { Eye, EyeOff } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(false);
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -61,23 +57,20 @@ const Login = () => {
       </div>
 
       <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            placeholder="james@company.com"
-            value={values.email}
-            onChange={handleChange}
-            error={Boolean(touched.email && errors.email)}
-            helperText={touched.email && errors.email}
-          />
-        </div>
+        <CustomTextField
+          name="email"
+          label="Email"
+          type="email"
+          placeholder="james@company.com"
+          values={values}
+          handleChange={handleChange}
+          touched={touched}
+          errors={errors}
+        />
 
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between">
-            <Label htmlFor="password">Password</Label>
+            <span className="text-sm font-medium">Password</span>
             <Link
               to="/forget-password"
               className="text-xs text-primary hover:underline"
@@ -85,31 +78,15 @@ const Login = () => {
               Forgot password?
             </Link>
           </div>
-          <div className="relative">
-            <Input
-              id="password"
-              name="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              value={values.password}
-              onChange={handleChange}
-              error={Boolean(touched.password && errors.password)}
-              helperText={touched.password && errors.password}
-              className="pr-9"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((p) => !p)}
-              className="absolute right-2.5 top-2 text-muted-foreground hover:text-foreground transition-colors"
-              tabIndex={-1}
-            >
-              {showPassword ? (
-                <EyeOff className="h-4 w-4" />
-              ) : (
-                <Eye className="h-4 w-4" />
-              )}
-            </button>
-          </div>
+          <CustomTextField
+            name="password"
+            type="password"
+            placeholder="Enter your password"
+            values={values}
+            handleChange={handleChange}
+            touched={touched}
+            errors={errors}
+          />
         </div>
 
         <Button className="w-full" onClick={() => handleSubmit()}>

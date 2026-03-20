@@ -1,5 +1,5 @@
 import { Pencil, Trash2 } from "lucide-react";
-import AuthorAvatar from "@/components/custom/AuthorAvatar";
+import { AuthorAvatar } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import AddDealDialog from "./AddDealDialog";
@@ -42,7 +42,7 @@ const DealCard = ({
                 variant="ghost"
                 onClick={(e) => e.stopPropagation()}
               >
-                <Pencil className="h-3.5 w-3.5" />
+                <Pencil className="size-4" />
               </Button>
             }
           />
@@ -55,7 +55,7 @@ const DealCard = ({
             }}
             className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
           >
-            <Trash2 className="h-3.5 w-3.5" />
+            <Trash2 className="size-4" />
           </Button>
         </div>
       </div>

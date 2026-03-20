@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/select";
 import { apiTickets } from "@/services/models/ticketsModel";
 import { useEnums } from "@/hooks/useEnums";
-import useUsers from "@/hooks/useUsers";
 import { toLabelItems } from "@/utils";
+import { AssignedToSelect } from "@/components/common";
 import toast from "react-hot-toast";
 import { ITicket } from "../types";
 
@@ -28,7 +28,6 @@ interface TicketPanelProps {
 
 const TicketPanel = ({ ticket, open, onClose, onUpdate }: TicketPanelProps) => {
   const { ticketStatuses, ticketPriorities, ticketCategories } = useEnums();
-  const { userItems } = useUsers();
   const [form, setForm] = useState<Partial<ITicket>>({});
   const [saving, setSaving] = useState(false);
 
@@ -159,24 +158,11 @@ const TicketPanel = ({ ticket, open, onClose, onUpdate }: TicketPanelProps) => {
             {/* Assigned To */}
             <div className="space-y-1.5">
               <Label className="text-xs">Assigned To</Label>
-              <Select
-                value={form.assignedTo || "__none__"}
-                onValueChange={(v) =>
-                  set("assignedTo", v === "__none__" ? "" : v)
-                }
-              >
-                <SelectTrigger className="h-8 text-xs">
-                  <SelectValue placeholder="Unassigned" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__none__">Unassigned</SelectItem>
-                  {userItems.map((u) => (
-                    <SelectItem key={u.val} value={u.val}>
-                      {u.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <AssignedToSelect
+                value={form.assignedTo ?? ""}
+                onChange={(v) => set("assignedTo", v)}
+                triggerClassName="h-8 text-xs"
+              />
             </div>
 
             {/* Description */}

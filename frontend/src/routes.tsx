@@ -44,7 +44,10 @@ const AddTicket = Loadable(lazy(() => import("./pages/admin/tickets/add")));
 const Projects = Loadable(lazy(() => import("./pages/admin/projects")));
 const Todos = Loadable(lazy(() => import("./pages/admin/projects/tasks")));
 
-const Emails = Loadable(lazy(() => import("./pages/admin/emails")));
+const EmailTemplates = Loadable(
+  lazy(() => import("./pages/admin/emails/templates")),
+);
+const EmailGroups = Loadable(lazy(() => import("./pages/admin/emails/groups")));
 const Pipeline = Loadable(lazy(() => import("./pages/admin/pipeline")));
 const Dashboard = Loadable(lazy(() => import("./pages/admin/dashboard")));
 
@@ -157,7 +160,11 @@ const routes = [
       {
         path: "emails",
         element: <RequirePermission permission="admin" />,
-        children: [{ index: true, element: <Emails /> }],
+        children: [
+          { index: true, element: <Navigate to="templates" replace /> },
+          { path: "templates", element: <EmailTemplates /> },
+          { path: "groups", element: <EmailGroups /> },
+        ],
       },
       {
         path: "pipeline",

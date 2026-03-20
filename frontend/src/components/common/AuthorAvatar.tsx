@@ -10,7 +10,12 @@ interface AuthorAvatarProps {
 const AuthorAvatar = ({ name, image, className }: AuthorAvatarProps) => {
   const [imgError, setImgError] = React.useState(false);
   const initials = name
-    ? name.split(" ").map((w) => w[0]).join("").toUpperCase().slice(0, 2)
+    ? name
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
     : "?";
 
   if (image && !imgError) {
@@ -18,7 +23,10 @@ const AuthorAvatar = ({ name, image, className }: AuthorAvatarProps) => {
       <img
         src={image}
         alt={name}
-        className={cn("h-6 w-6 rounded-full object-cover bg-muted shrink-0", className)}
+        className={cn(
+          "size-6 rounded-full object-cover bg-muted shrink-0",
+          className,
+        )}
         onError={() => setImgError(true)}
       />
     );
@@ -27,7 +35,7 @@ const AuthorAvatar = ({ name, image, className }: AuthorAvatarProps) => {
   return (
     <span
       className={cn(
-        "h-6 w-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-[10px] font-bold shrink-0",
+        "size-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-[10px] font-bold shrink-0",
         className,
       )}
     >
