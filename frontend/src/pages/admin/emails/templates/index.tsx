@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Plus, Mail, Clock, Pencil } from "lucide-react";
+import { Plus, Clock } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   CustomTable,
@@ -7,6 +7,8 @@ import {
   StatCard,
   PageHeader,
   DeleteIconButton,
+  EditIconButton,
+  AddPrimaryButton,
 } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import { apiEmailTemplates } from "@/services/models/emailTemplatesModel";
@@ -125,11 +127,7 @@ const EmailTemplates = () => {
                 statusItems={statusItems}
                 frequencyItems={frequencyItems}
                 groups={groups}
-                trigger={
-                  <Button variant="ghost" size="icon">
-                    <Pencil className="size-4" />
-                  </Button>
-                }
+                trigger={<EditIconButton onClick={() => {}} />}
               />
               <DeleteIconButton onClick={() => handleDelete(t._id)} />
             </div>
@@ -151,9 +149,7 @@ const EmailTemplates = () => {
             frequencyItems={frequencyItems}
             groups={groups}
             trigger={
-              <Button>
-                <Plus className="size-4" /> New Template
-              </Button>
+              <AddPrimaryButton text="New Template" onClick={() => {}} />
             }
           />
         }

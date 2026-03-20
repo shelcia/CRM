@@ -4,10 +4,12 @@ import {
   TableSkeleton,
   PageHeader,
   DeleteIconButton,
+  EditIconButton,
+  AddPrimaryButton,
 } from "@/components/custom";
 import { convertDateToDateWithoutTime } from "@/utils";
 import { Button } from "@/components/ui/button";
-import { Plus, Upload, FileDown, Pencil } from "lucide-react";
+import { Plus, Upload, FileDown } from "lucide-react";
 import { apiContacts, importContacts } from "@/services/models/contactsModel";
 import { Link } from "react-router-dom";
 import ContactPanel from "./components/ContactPanel";
@@ -135,13 +137,7 @@ const Contacts = () => {
           return (
             <div className="flex items-center gap-1">
               {has("contacts-edit") && (
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => openPanel(contact, "edit")}
-                >
-                  <Pencil className="size-4" />
-                </Button>
+                <EditIconButton onClick={() => openPanel(contact, "edit")} />
               )}
               {has("contacts-delete") && (
                 <DeleteIconButton
@@ -205,9 +201,7 @@ const Contacts = () => {
                 />
               </Button>
               <Link to="/dashboard/contacts/add-contact">
-                <Button>
-                  <Plus className="size-4" /> Add Contact
-                </Button>
+                <AddPrimaryButton text="Add Contact" onClick={() => {}} />
               </Link>
             </>
           )

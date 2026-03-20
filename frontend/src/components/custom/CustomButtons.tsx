@@ -1,18 +1,34 @@
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, Pencil, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface DeleteIconButtonProps {
-  onClick: () => void;
-  size?: "icon" | "icon-sm";
+interface CustomButtonProps {
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  size?: "icon" | "icon-sm" | "default";
   className?: string;
+  text?: string;
 }
+
+export const EditIconButton = ({
+  onClick,
+  size = "icon",
+  className,
+}: CustomButtonProps) => (
+  <Button
+    variant="ghost"
+    size={size}
+    className={cn("text-muted-foreground hover:text-foreground", className)}
+    onClick={onClick}
+  >
+    <Pencil className="size-4" />
+  </Button>
+);
 
 export const DeleteIconButton = ({
   onClick,
   size = "icon",
   className,
-}: DeleteIconButtonProps) => (
+}: CustomButtonProps) => (
   <Button
     variant="ghost"
     size={size}
@@ -23,5 +39,16 @@ export const DeleteIconButton = ({
     onClick={onClick}
   >
     <Trash2 className="size-4" />
+  </Button>
+);
+
+export const AddPrimaryButton = ({
+  onClick,
+  size = "default",
+  className,
+  text = "Add",
+}: CustomButtonProps) => (
+  <Button onClick={onClick} className={className} size={size}>
+    <Plus className="size-4" strokeWidth={2.5} /> {text}
   </Button>
 );

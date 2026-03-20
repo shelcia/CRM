@@ -1,10 +1,14 @@
-import {} from "react";
-import { PageHeader, CustomTable, TableSkeleton, DeleteIconButton } from "@/components/custom";
+import {
+  PageHeader,
+  CustomTable,
+  TableSkeleton,
+  DeleteIconButton,
+  EditIconButton,
+  AddPrimaryButton,
+} from "@/components/custom";
 import { useListData } from "@/hooks/useListData";
 import { convertDateToDateWithoutTime } from "@/utils";
-import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { Plus, Pencil } from "lucide-react";
 import { apiUsers } from "@/services/models/usersModel";
 import toast from "react-hot-toast";
 import usePermissions from "@/hooks/usePermissions";
@@ -51,13 +55,9 @@ const Users = () => {
           return (
             <div className="flex items-center gap-1">
               {has("users-edit") && (
-                <Button
-                  variant="ghost"
-                  size="icon"
+                <EditIconButton
                   onClick={() => navigate(`edit-user/${user._id}`)}
-                >
-                  <Pencil className="size-4" />
-                </Button>
+                />
               )}
               {has("users-delete") && (
                 <DeleteIconButton onClick={() => handleDelete(user._id)} />
@@ -77,9 +77,7 @@ const Users = () => {
         actions={
           has("users-edit") && (
             <Link to="add-user">
-              <Button>
-                <Plus className="h-4 w-4" /> Add User
-              </Button>
+              <AddPrimaryButton text="Add User" onClick={() => {}} />
             </Link>
           )
         }

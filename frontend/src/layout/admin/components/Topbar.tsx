@@ -25,6 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CustomToggle } from "@/components/custom";
+import GlobalSearch from "@/components/custom/GlobalSearch";
 
 interface TopbarProps {
   handleDrawerToggle: () => void;
@@ -77,8 +78,13 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
         <img src={logo} alt="Tiny CRM" className="h-7 w-auto" />
       </div>
 
+      {/* Global search */}
+      <div className="flex-1 flex justify-center">
+        <GlobalSearch />
+      </div>
+
       {/* Right actions */}
-      <div className="ml-auto flex items-center gap-1">
+      <div className="flex items-center gap-1">
         <CustomToggle />
 
         <DropdownMenu>

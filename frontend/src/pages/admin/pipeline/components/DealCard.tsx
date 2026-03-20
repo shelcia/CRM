@@ -1,7 +1,5 @@
-import { Pencil } from "lucide-react";
 import { AuthorAvatar } from "@/components/common";
-import { DeleteIconButton } from "@/components/custom";
-import { Button } from "@/components/ui/button";
+import { DeleteIconButton, EditIconButton } from "@/components/custom";
 import { cn } from "@/lib/utils";
 import AddDealDialog from "./AddDealDialog";
 import { IDeal } from "../types";
@@ -38,13 +36,10 @@ const DealCard = ({
             deal={deal}
             onUpdated={onUpdated}
             trigger={
-              <Button
+              <EditIconButton
                 size="icon-sm"
-                variant="ghost"
                 onClick={(e) => e.stopPropagation()}
-              >
-                <Pencil className="size-4" />
-              </Button>
+              />
             }
           />
           <span onClick={(e) => e.stopPropagation()}>

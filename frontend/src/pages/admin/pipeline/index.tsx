@@ -14,7 +14,7 @@ import DealCard from "./components/DealCard";
 import { STAGES } from "./constants";
 import { getFmtCurrencyVal } from "@/utils";
 import { IDeal } from "./types";
-import { KanbanSkeleton } from "@/components/custom";
+import { AddPrimaryButton, KanbanSkeleton } from "@/components/custom";
 
 const Pipeline = () => {
   const [deals, setDeals] = useState<IDeal[]>([]);
@@ -43,7 +43,7 @@ const Pipeline = () => {
     return true;
   });
 
-const dealsByStage = (stage: string) =>
+  const dealsByStage = (stage: string) =>
     filteredDeals.filter((d) => d.stage === stage);
 
   const totalValue = deals
@@ -107,11 +107,7 @@ const dealsByStage = (stage: string) =>
         actions={
           <AddDealDialog
             onCreated={(deal) => setDeals((prev) => [deal, ...prev])}
-            trigger={
-              <Button>
-                <Plus className="size-4" /> New Deal
-              </Button>
-            }
+            trigger={<AddPrimaryButton text="New Deal" onClick={() => {}} />}
           />
         }
       />

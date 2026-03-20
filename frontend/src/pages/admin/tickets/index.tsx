@@ -2,13 +2,17 @@ import { useEffect, useState } from "react";
 import {
   CustomTable,
   TableSkeleton,
-  StatusBadge,
-  PriorityIndicator,
   PageHeader,
   CustomEmptyState,
   DeleteIconButton,
+  EditIconButton,
+  AddPrimaryButton,
 } from "@/components/custom";
-import { AssignedToDisplay } from "@/components/common";
+import {
+  AssignedToDisplay,
+  PriorityIndicator,
+  StatusBadge,
+} from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Plus, TicketCheck, Pencil } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -111,13 +115,10 @@ const Tickets = () => {
           return (
             <div className="flex items-center gap-1">
               {has("tickets-edit") && (
-                <Button
+                <EditIconButton
                   size="icon-sm"
-                  variant="outline"
                   onClick={() => openPanel(ticket)}
-                >
-                  <Pencil className="size-4" />
-                </Button>
+                />
               )}
               {has("tickets-delete") && (
                 <DeleteIconButton
@@ -164,9 +165,7 @@ const Tickets = () => {
         actions={
           has("tickets-edit") && (
             <Link to="/dashboard/tickets/add-ticket">
-              <Button>
-                <Plus className="h-4 w-4" /> Add Ticket
-              </Button>
+              <AddPrimaryButton text="Add Ticket" onClick={() => {}} />
             </Link>
           )
         }
@@ -182,9 +181,10 @@ const Tickets = () => {
           action={
             has("tickets-edit") && (
               <Link to="/dashboard/tickets/add-ticket">
-                <Button size="sm">
-                  <Plus className="h-4 w-4" /> Create First Ticket
-                </Button>
+                <AddPrimaryButton
+                  text="Create First Ticket"
+                  onClick={() => {}}
+                />
               </Link>
             )
           }

@@ -13,6 +13,8 @@ import {
   CustomEmptyState,
   PageHeader,
   DeleteIconButton,
+  CustomModal,
+  AddPrimaryButton,
 } from "@/components/custom";
 import { apiProvider } from "@/services/utilities/provider";
 import usePermissions from "@/hooks/usePermissions";
@@ -63,19 +65,25 @@ const Todos = () => {
         description="Organise work with Kanban boards"
         actions={
           has("todos-edit") && (
-            <Button onClick={() => setShowForm((v) => !v)}>
-              <Plus className="size-4" /> New Project
-            </Button>
+            <AddPrimaryButton
+              text="New Project"
+              onClick={() => setShowForm(true)}
+            />
           )
         }
       />
 
-      {showForm && (
+      <CustomModal
+        title="New Project"
+        size="sm"
+        open={showForm}
+        onOpenChange={(open) => !open && setShowForm(false)}
+      >
         <NewProjectForm
           onSubmit={handleCreate}
           onCancel={() => setShowForm(false)}
         />
-      )}
+      </CustomModal>
 
       {isLoading ? (
         <PageSpinner />
@@ -121,7 +129,7 @@ const Todos = () => {
               </CardContent>
             </Card>
           ))}
-          {projects.length === 0 && !showForm && (
+          {projects.length === 0 && (
             <CustomEmptyState
               className="col-span-full py-20"
               icon={FolderKanban}
@@ -129,9 +137,10 @@ const Todos = () => {
               description="Create a project to start organizing work with a Kanban board."
               action={
                 has("todos-edit") && (
-                  <Button size="sm" onClick={() => setShowForm(true)}>
-                    <Plus className="size-4" /> Create First Project
-                  </Button>
+                  <AddPrimaryButton
+                    text="Create First Project"
+                    onClick={() => setShowForm(true)}
+                  />
                 )
               }
             />
@@ -160,23 +169,23 @@ const NewProjectForm = ({
   });
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 items-start max-w-sm">
-      <div className="flex-1">
-        <CustomTextField
-          name="name"
-          placeholder="Project name"
-          values={values}
-          handleChange={handleChange}
-          touched={touched}
-          errors={errors}
-        />
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <CustomTextField
+        name="name"
+        placeholder="Project name"
+        values={values}
+        handleChange={handleChange}
+        touched={touched}
+        errors={errors}
+      />
+      <div className="flex justify-end gap-2">
+        <Button type="button" variant="outline" size="sm" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button type="submit" size="sm">
+          Create
+        </Button>
       </div>
-      <Button type="submit" size="sm">
-        Create
-      </Button>
-      <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
-        Cancel
-      </Button>
     </form>
   );
 };

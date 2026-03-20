@@ -302,7 +302,7 @@ const Projects = () => {
             onClick={() => setShowAddColumn(true)}
             className="w-full justify-start gap-2 rounded-xl border border-dashed px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 h-auto"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="size-4" />
             Add column
           </Button>
         )}
