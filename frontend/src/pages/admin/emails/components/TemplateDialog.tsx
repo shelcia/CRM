@@ -23,7 +23,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Editor } from "@/components/blocks/editor-00/editor";
 import { apiEmailTemplates } from "@/services/models/emailTemplatesModel";
-import { EmailGroup, EmailTemplate } from "../types";
+import { EmailGroup, EmailTemplate, RecipientType } from "../types";
 import { emptyTemplate, isGroupName, makeValidationSchema } from "../helpers";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toLabel } from "@/utils";
@@ -51,11 +51,10 @@ const TemplateDialog = ({
   const initialRecipientType =
     template && isGroupName(template.recipient, groups)
       ? "email-group"
-      : ("custom-emails" as "email-group" | "custom-emails");
+      : "custom-emails";
 
-  const [recipientType, setRecipientType] = useState<
-    "email-group" | "custom-emails"
-  >(initialRecipientType);
+  const [recipientType, setRecipientType] =
+    useState<RecipientType>(initialRecipientType);
 
   const {
     values,
@@ -169,13 +168,11 @@ const TemplateDialog = ({
           <RadioGroup
             defaultValue={recipientType}
             className="w-fit flex gap-4"
-            onValueChange={(v) =>
-              setRecipientType(v as "email-group" | "custom-emails")
-            }
+            onValueChange={(val) => setRecipientType(val as RecipientType)}
           >
             {["email-group", "custom-emails"].map((type) => (
               <div className="flex items-center gap-3" key={type}>
-                <RadioGroupItem value={type} id={`r${Math.random()}`} />
+                <RadioGroupItem value={type} id={type} />
                 <Label htmlFor={type}>{toLabel(type)}</Label>
               </div>
             ))}

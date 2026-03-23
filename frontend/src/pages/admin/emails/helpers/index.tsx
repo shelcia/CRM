@@ -1,5 +1,11 @@
 import * as Yup from "yup";
-import { EmailGroup, EmailTemplate, Frequency, Status } from "../types";
+import {
+  EmailGroup,
+  EmailTemplate,
+  Frequency,
+  RecipientType,
+  Status,
+} from "../types";
 
 export const scheduleLabel = (t: EmailTemplate) => {
   if (t.frequency === "one-time") return `${t.sendDate} at ${t.sendTime}`;
@@ -31,9 +37,7 @@ export const emptyTemplate = {
 export const isGroupName = (recipient: string, groups: EmailGroup[]) =>
   groups.some((g) => g.name === recipient);
 
-export const makeValidationSchema = (
-  recipientType: "email-group" | "custom-emails",
-) =>
+export const makeValidationSchema = (recipientType: RecipientType) =>
   Yup.object().shape({
     name: Yup.string().required("Template name is required"),
     subject: Yup.string().required("Subject is required"),

@@ -1,5 +1,6 @@
 export type Frequency = "one-time" | "daily" | "weekly" | "monthly";
 export type Status = "active" | "draft" | "paused";
+export type RecipientType = "email-group" | "custom-emails";
 
 export interface EmailGroup {
   _id: string;
