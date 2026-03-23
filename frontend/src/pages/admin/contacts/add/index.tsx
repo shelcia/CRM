@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import * as Yup from "yup";
 import { useFormik } from "formik";
+import { makeEmptyContact, contactValidationSchema } from "../helpers";
 import toast from "react-hot-toast";
 import {
   CustomSelectField,
@@ -22,29 +22,8 @@ const AddContact = () => {
 
   const { errors, values, handleChange, handleSubmit, touched, resetForm } =
     useFormik({
-      initialValues: {
-        name: "",
-        email: "",
-        number: "",
-        company: "",
-        jobTitle: "",
-        priority: "low",
-        companySize: "",
-        probability: "0.5",
-        status: "new",
-        lastActivity: new Date().toISOString(),
-      },
-      validationSchema: Yup.object().shape({
-        name: Yup.string().required("Contact name is required"),
-        email: Yup.string().email("Enter a valid email"),
-        number: Yup.string(),
-        company: Yup.string(),
-        jobTitle: Yup.string(),
-        priority: Yup.string(),
-        companySize: Yup.number().min(0).nullable(),
-        probability: Yup.string(),
-        status: Yup.string().required("Status is required"),
-      }),
+      initialValues: makeEmptyContact(),
+      validationSchema: contactValidationSchema,
       onSubmit: (vals) => {
         setIsLoading(true);
         apiContacts.post!(vals, "", true).then((res) => {

@@ -3,15 +3,17 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { apiAuth } from "@/services/models/authModel";
 import { toast } from "react-hot-toast";
+import { useAuth } from "@/context/AuthContext";
 import { MailCheck, MailWarning } from "lucide-react";
 
 const Verification = () => {
   const [searchParams] = useSearchParams({});
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
 
   const resendVerification = () => {
     setIsLoading(true);
-    const email = localStorage.getItem("CRM-email");
+    const email = user?.email;
     apiAuth.post({ email }, "resend").then((res) => {
       if (res.status === "200") {
         toast.success("Verification email resent");

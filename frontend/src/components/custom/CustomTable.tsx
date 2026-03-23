@@ -419,7 +419,7 @@ const CustomTable = <TData extends Record<string, any>>({
           <Button
             variant="outline"
             size="sm"
-            className="h-7 w-7 p-0"
+            className="size-7 p-0"
             onClick={() =>
               serverSide
                 ? serverSide.onPageChange(serverSide.page - 1)
@@ -437,7 +437,7 @@ const CustomTable = <TData extends Record<string, any>>({
           <Button
             variant="outline"
             size="sm"
-            className="h-7 w-7 p-0"
+            className="size-7 p-0"
             onClick={() =>
               serverSide
                 ? serverSide.onPageChange(serverSide.page + 1)

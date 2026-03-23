@@ -1,5 +1,6 @@
 import { ApiCore } from "../utilities/core";
 import { BASE_URL } from "../api";
+import { getStoredToken } from "../utilities/auth";
 
 const url = "contacts";
 
@@ -13,7 +14,7 @@ export const apiContacts = new ApiCore({
   url: url,
 });
 
-const getToken = () => localStorage.getItem("CRM-token");
+const getToken = getStoredToken;
 
 export const exportContacts = (): Promise<void> =>
   fetch(`${BASE_URL}/contacts/export`, {

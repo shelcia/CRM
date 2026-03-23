@@ -111,7 +111,7 @@ const Todos = () => {
                   </div>
                   {has("todos-delete") && (
                     <DeleteIconButton
-                      className="h-7 w-7 shrink-0"
+                      className="size-7 shrink-0"
                       onClick={() => handleDelete(project._id)}
                     />
                   )}

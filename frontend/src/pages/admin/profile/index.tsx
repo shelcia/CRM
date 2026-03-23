@@ -7,6 +7,7 @@ import { CustomTextField, PageHeader, CardSection } from "@/components/custom";
 import { Building2, ImagePlus, UserRound } from "lucide-react";
 import { apiCompany } from "@/services/models/companyModel";
 import { BASE_URL } from "@/services/api";
+import { useAuth } from "@/context/AuthContext";
 
 // Strip trailing /api to get the server origin for static assets
 const SERVER_ORIGIN = BASE_URL.replace(/\/api$/, "");
@@ -18,9 +19,10 @@ const Profile = () => {
   const [logoUploading, setLogoUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const name = localStorage.getItem("CRM-name") ?? "";
-  const email = localStorage.getItem("CRM-email") ?? "";
-  const role = localStorage.getItem("CRM-type") ?? "";
+  const { user } = useAuth();
+  const name = user?.name ?? "";
+  const email = user?.email ?? "";
+  const role = user?.type ?? "";
   const initials = name
     .split(" ")
     .map((w) => w[0])
@@ -106,11 +108,14 @@ const Profile = () => {
         title="Profile"
         description="View your account and manage company settings"
       />
-      <CardSection icon={<UserRound className="h-4 w-4 text-primary" />} title="Account">
+      <CardSection
+        icon={<UserRound className="h-4 w-4 text-primary" />}
+        title="Account"
+      >
         <div className="flex items-center gap-4">
           <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
             <span className="text-primary font-bold text-lg">
-              {initials || <UserRound className="h-7 w-7 text-primary/60" />}
+              {initials || <UserRound className="size-7 text-primary/60" />}
             </span>
           </div>
           <div className="space-y-0.5">
@@ -129,112 +134,112 @@ const Profile = () => {
         title="Company Details"
         contentClassName="space-y-6"
       >
-          {/* Logo upload */}
-          <div className="flex items-center gap-5">
-            <div className="h-20 w-20 rounded-lg border bg-muted flex items-center justify-center overflow-hidden shrink-0">
-              {logoPreview || logoUrl ? (
-                <img
-                  src={logoPreview ?? `${SERVER_ORIGIN}${logoUrl}`}
-                  alt="Company logo"
-                  className="h-full w-full object-contain"
-                />
-              ) : (
-                <Building2 className="h-8 w-8 text-muted-foreground/40" />
-              )}
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm font-medium">Company Logo</p>
-              <p className="text-xs text-muted-foreground">
-                JPG, PNG, WebP or GIF — max 5 MB
-              </p>
-              <div className="flex gap-2">
+        {/* Logo upload */}
+        <div className="flex items-center gap-5">
+          <div className="h-20 w-20 rounded-lg border bg-muted flex items-center justify-center overflow-hidden shrink-0">
+            {logoPreview || logoUrl ? (
+              <img
+                src={logoPreview ?? `${SERVER_ORIGIN}${logoUrl}`}
+                alt="Company logo"
+                className="h-full w-full object-contain"
+              />
+            ) : (
+              <Building2 className="h-8 w-8 text-muted-foreground/40" />
+            )}
+          </div>
+          <div className="space-y-2">
+            <p className="text-sm font-medium">Company Logo</p>
+            <p className="text-xs text-muted-foreground">
+              JPG, PNG, WebP or GIF — max 5 MB
+            </p>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <ImagePlus className="size-4 mr-1.5" />
+                Choose file
+              </Button>
+              {logoPreview && (
                 <Button
                   type="button"
-                  variant="outline"
                   size="sm"
-                  onClick={() => fileInputRef.current?.click()}
+                  loading={logoUploading}
+                  onClick={handleLogoUpload}
                 >
-                  <ImagePlus className="size-4 mr-1.5" />
-                  Choose file
+                  Upload
                 </Button>
-                {logoPreview && (
-                  <Button
-                    type="button"
-                    size="sm"
-                    loading={logoUploading}
-                    onClick={handleLogoUpload}
-                  >
-                    Upload
-                  </Button>
-                )}
-              </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleLogoChange}
-              />
+              )}
             </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleLogoChange}
+            />
           </div>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <CustomTextField
-              label="Company Name"
-              name="name"
-              placeholder="ex: Acme Corp"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-            />
-            <CustomTextField
-              label="Phone"
-              name="number"
-              placeholder="ex: +1 555 000 0000"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-            />
-            <CustomTextField
-              label="Company Email"
-              name="cmail"
-              placeholder="ex: hello@acme.com"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-            />
-            <CustomTextField
-              label="Website"
-              name="website"
-              placeholder="ex: https://acme.com"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-            />
-            <CustomTextField
-              label="Address"
-              name="address"
-              placeholder="ex: 123 Main St, New York"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-            />
-            <CustomTextField
-              label="Company Size"
-              name="companySize"
-              placeholder="ex: 200"
-              values={values}
-              handleChange={handleChange}
-              touched={touched}
-              errors={errors}
-              type="number"
-            />
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <CustomTextField
+            label="Company Name"
+            name="name"
+            placeholder="ex: Acme Corp"
+            values={values}
+            handleChange={handleChange}
+            touched={touched}
+            errors={errors}
+          />
+          <CustomTextField
+            label="Phone"
+            name="number"
+            placeholder="ex: +1 555 000 0000"
+            values={values}
+            handleChange={handleChange}
+            touched={touched}
+            errors={errors}
+          />
+          <CustomTextField
+            label="Company Email"
+            name="cmail"
+            placeholder="ex: hello@acme.com"
+            values={values}
+            handleChange={handleChange}
+            touched={touched}
+            errors={errors}
+          />
+          <CustomTextField
+            label="Website"
+            name="website"
+            placeholder="ex: https://acme.com"
+            values={values}
+            handleChange={handleChange}
+            touched={touched}
+            errors={errors}
+          />
+          <CustomTextField
+            label="Address"
+            name="address"
+            placeholder="ex: 123 Main St, New York"
+            values={values}
+            handleChange={handleChange}
+            touched={touched}
+            errors={errors}
+          />
+          <CustomTextField
+            label="Company Size"
+            name="companySize"
+            placeholder="ex: 200"
+            values={values}
+            handleChange={handleChange}
+            touched={touched}
+            errors={errors}
+            type="number"
+          />
+        </div>
       </CardSection>
 
       <div className="flex justify-end">

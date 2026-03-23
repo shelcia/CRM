@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CustomToggle } from "@/components/custom";
 import GlobalSearch from "@/components/custom/GlobalSearch";
+import { useAuth } from "@/context/AuthContext";
 
 interface TopbarProps {
   handleDrawerToggle: () => void;
@@ -33,9 +34,10 @@ interface TopbarProps {
 
 const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
   const navigate = useNavigate();
+  const { user, clearUser } = useAuth();
 
-  const userName = localStorage.getItem("CRM-name") ?? "";
-  const userRole = localStorage.getItem("CRM-type") ?? "";
+  const userName = user?.name ?? "";
+  const userRole = user?.type ?? "";
   const isAdmin = userRole === "admin";
   const initials = userName
     .split(" ")
@@ -45,7 +47,7 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
     .slice(0, 2);
 
   const logout = () => {
-    localStorage.clear();
+    clearUser();
     // Clear all cached API data so the next user starts fresh
     [
       "dashboard/stats",
@@ -90,7 +92,7 @@ const Topbar = ({ handleDrawerToggle }: TopbarProps) => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex items-center gap-1.5 pl-1.5 pr-2 py-1 rounded-md hover:bg-accent transition-colors text-foreground">
-              <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
+              <div className="size-7 rounded-full bg-primary/10 flex items-center justify-center">
                 {initials ? (
                   <span className="text-primary text-xs font-bold">
                     {initials}

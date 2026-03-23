@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import * as Yup from "yup";
+import { emptyColumn, columnValidationSchema } from "../helpers";
 import { CustomTextField } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 
@@ -10,10 +10,8 @@ interface AddColumnFormProps {
 
 const AddColumnForm = ({ onSubmit, onCancel }: AddColumnFormProps) => {
   const { values, errors, touched, handleChange, handleSubmit } = useFormik({
-    initialValues: { name: "" },
-    validationSchema: Yup.object({
-      name: Yup.string().min(2, "Too short").required("Required"),
-    }),
+    initialValues: emptyColumn,
+    validationSchema: columnValidationSchema,
     onSubmit: (v) => onSubmit(v.name),
   });
 

@@ -1,6 +1,8 @@
+import { useAuth } from "@/context/AuthContext";
+
 const usePermissions = () => {
-  const raw = localStorage.getItem("CRM-permissions");
-  const permissions: string[] = raw ? JSON.parse(raw) : [];
+  const { user } = useAuth();
+  const permissions: string[] = user?.permissions ?? [];
 
   const has = (key: string) =>
     key === "dashboard" || permissions.includes("admin") || permissions.includes(key);

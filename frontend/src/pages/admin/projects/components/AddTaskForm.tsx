@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import * as Yup from "yup";
+import { emptyTask, taskValidationSchema } from "../helpers";
 import { CustomTextAreaField, CustomTextField } from "@/components/custom";
 import { Button } from "@/components/ui/button";
 import type { Todo } from "../types";
@@ -13,14 +13,8 @@ interface AddTaskFormProps {
 
 const AddTaskForm = ({ onSubmit, onCancel }: AddTaskFormProps) => {
   const { errors, values, handleChange, handleSubmit, touched } = useFormik({
-    initialValues: {
-      title: "",
-      description: "",
-      author: { name: "", image: "/static/avatar/001-man.svg" },
-    },
-    validationSchema: Yup.object({
-      title: Yup.string().min(3, "Too short").required("Required"),
-    }),
+    initialValues: emptyTask,
+    validationSchema: taskValidationSchema,
     onSubmit: (v) =>
       onSubmit({
         title: v.title,

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { CustomModal } from "@/components/custom";
@@ -12,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { apiDeals } from "@/services/models/dealsModel";
 import { AssignedToSelect, ContactSelect } from "@/components/common";
 import { IDeal } from "../types";
-import { CURRENCIES, STAGE_ITEMS } from "../helpers";
+import { CURRENCIES, STAGE_ITEMS, makeDealInitialValues, dealValidationSchema } from "../helpers";
 import { DatePicker } from "@/components/custom";
 
 interface IAddDealDialogProps {
@@ -41,24 +40,8 @@ const AddDealDialog = ({
   const { values, errors, touched, handleChange, handleSubmit, resetForm } =
     useFormik({
       enableReinitialize: true,
-      initialValues: {
-        title: deal?.title ?? "",
-        contactName: deal?.contactName ?? defaultContactName ?? "",
-        contactId: deal?.contactId ?? defaultContactId ?? "",
-        value: deal?.value?.toString() ?? "",
-        currency: deal?.currency ?? "USD",
-        stage: deal?.stage ?? defaultStage ?? "lead",
-        assignedTo: deal?.assignedTo ?? "",
-        expectedClose: deal?.expectedClose
-          ? deal.expectedClose.slice(0, 10)
-          : "",
-      },
-      validationSchema: Yup.object({
-        title: Yup.string().required("Title is required"),
-        value: Yup.number().min(0, "Must be ≥ 0").required("Value is required"),
-        currency: Yup.string().required(),
-        stage: Yup.string().required(),
-      }),
+      initialValues: makeDealInitialValues(deal, defaultStage, defaultContactId, defaultContactName),
+      validationSchema: dealValidationSchema,
       onSubmit: (vals) => {
         setSaving(true);
         const payload = {

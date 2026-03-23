@@ -13,6 +13,7 @@ import { CustomEmptyState, PageHeader } from "@/components/custom";
 import { convertDateToDateWithoutTime, getTimeOfDay } from "@/utils";
 import { Link } from "react-router-dom";
 import usePermissions from "@/hooks/usePermissions";
+import { useAuth } from "@/context/AuthContext";
 import type { LucideIcon } from "lucide-react";
 import { DashboardStats, Metric } from "./types";
 import MetricCard from "./components/MetricCard";
@@ -23,8 +24,9 @@ const Dashboard = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const { has } = usePermissions();
+  const { user } = useAuth();
 
-  const name = localStorage.getItem("CRM-name") ?? "there";
+  const name = user?.name ?? "there";
 
   useEffect(() => {
     const ctrl = new AbortController();

@@ -10,7 +10,7 @@ import {
 import { useEnums } from "@/hooks/useEnums";
 import { convertDateToDateWithoutTime } from "@/utils";
 import { Button } from "@/components/ui/button";
-import { Plus, Upload, FileDown } from "lucide-react";
+import { Upload, FileDown } from "lucide-react";
 import { apiContacts, importContacts } from "@/services/models/contactsModel";
 import { Link } from "react-router-dom";
 import ContactPanel from "./components/ContactPanel";
@@ -58,8 +58,8 @@ const Contacts = () => {
     const ctrl = new AbortController();
     setIsLoading(true);
     const params: Record<string, unknown> = { page, limit: PAGE_SIZE };
-    if (search)           params.search   = search;
-    if (filters.status)   params.status   = filters.status;
+    if (search) params.search = search;
+    if (filters.status) params.status = filters.status;
     if (filters.priority) params.priority = filters.priority;
     apiContacts.getByParams!(params, ctrl.signal, "", true).then((res) => {
       if (cancelled) return;
@@ -236,8 +236,16 @@ const Contacts = () => {
             },
             loading: isLoading,
             columnFilters: {
-              status:   { options: contactStatuses,   value: filters.status   ?? "", onChange: (v) => handleFilterChange("status",   v) },
-              priority: { options: contactPriorities, value: filters.priority ?? "", onChange: (v) => handleFilterChange("priority", v) },
+              status: {
+                options: contactStatuses,
+                value: filters.status ?? "",
+                onChange: (v) => handleFilterChange("status", v),
+              },
+              priority: {
+                options: contactPriorities,
+                value: filters.priority ?? "",
+                onChange: (v) => handleFilterChange("priority", v),
+              },
             },
           }}
         />

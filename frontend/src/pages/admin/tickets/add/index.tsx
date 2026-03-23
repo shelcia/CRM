@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import * as Yup from "yup";
 import { useFormik } from "formik";
+import { emptyTicket, ticketValidationSchema } from "./helpers";
 import toast from "react-hot-toast";
 import {
   CustomSelectField,
@@ -31,26 +31,8 @@ const AddTicket = () => {
     resetForm,
     setFieldValue,
   } = useFormik({
-    initialValues: {
-      title: "",
-      contact: "",
-      email: "",
-      category: "technical",
-      priority: "medium",
-      status: "open",
-      assignedTo: "",
-      description: "",
-    },
-    validationSchema: Yup.object().shape({
-      title: Yup.string().required("Ticket title is required"),
-      contact: Yup.string().required("Contact name is required"),
-      email: Yup.string().email("Enter a valid email"),
-      category: Yup.string().required("Category is required"),
-      priority: Yup.string().required("Priority is required"),
-      status: Yup.string().required("Status is required"),
-      assignedTo: Yup.string(),
-      description: Yup.string(),
-    }),
+    initialValues: emptyTicket,
+    validationSchema: ticketValidationSchema,
     onSubmit: (vals) => {
       setIsLoading(true);
       apiTickets.post!(vals, "", true).then((res) => {

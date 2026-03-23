@@ -1,41 +1,28 @@
 import React, { useState } from "react";
 import { CustomTextField } from "@/components/custom";
 import { useFormik } from "formik";
-import * as Yup from "yup";
+import { emptyCompany, companyValidationSchema } from "./helpers";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 import { Building2, Globe, Phone, Mail, Users, MapPin } from "lucide-react";
 import { apiCompany } from "@/services/models/companyModel";
 
 const AddCompany = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const { patchUser } = useAuth();
 
   const { errors, values, handleChange, handleSubmit, touched } = useFormik({
-    initialValues: {
-      name: "",
-      website: "",
-      number: "",
-      cmail: "",
-      address: "",
-      companySize: "",
-    },
-    validationSchema: Yup.object({
-      name: Yup.string().required("Company name is required"),
-      website: Yup.string(),
-      number: Yup.string(),
-      cmail: Yup.string().email("Enter a valid email"),
-      address: Yup.string(),
-      companySize: Yup.string(),
-    }),
+    initialValues: emptyCompany,
+    validationSchema: companyValidationSchema,
     onSubmit: (values) => {
       setIsLoading(true);
       apiCompany.post!(values, "", true).then((res) => {
         if (res && res._id) {
           toast.success("Company created successfully");
-          localStorage.setItem("CRM-companyId", res._id);
-          localStorage.setItem("CRM-company", res.name);
+          patchUser({ companyId: res._id, company: res.name });
           navigate("/dashboard/contacts");
         } else {
           toast.error(res?.message ?? "Failed to create company");
@@ -51,7 +38,7 @@ const AddCompany = () => {
         {/* Header */}
         <div className="text-center space-y-3">
           <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 mb-1">
-            <Building2 className="h-7 w-7 text-primary" />
+            <Building2 className="size-7 text-primary" />
           </div>
           <h1 className="text-2xl font-bold">Set up your workspace</h1>
           <p className="text-sm text-muted-foreground">

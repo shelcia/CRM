@@ -4,7 +4,8 @@ import axios from "axios";
 import { handleResponse, handleError } from "./response";
 import { BASE_URL } from "../api";
 
-const getToken = () => localStorage.getItem("CRM-token");
+import { getStoredToken } from "./auth";
+const getToken = getStoredToken;
 
 // ── Cache ──────────────────────────────────────────────────────────────────────
 

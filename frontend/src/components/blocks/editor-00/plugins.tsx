@@ -57,7 +57,7 @@ const ToolbarBtn = ({
       onClick();
     }}
     className={cn(
-      "flex items-center justify-center h-7 w-7 rounded text-sm transition-colors",
+      "flex items-center justify-center size-7 rounded text-sm transition-colors",
       active
         ? "bg-primary text-primary-foreground"
         : "text-muted-foreground hover:bg-muted hover:text-foreground",

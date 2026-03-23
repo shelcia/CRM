@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { CustomTextField } from "@/components/custom";
 import { AuthHeader } from "@/components/common";
 import { apiAuth } from "@/services/models/authModel";
+import { useAuth } from "@/context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setUser, patchUser } = useAuth();
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -26,21 +28,23 @@ const Login = () => {
   const loginUser = (user) => {
     apiAuth.post(user, "login").then((res) => {
       if (res.status === "200") {
-        localStorage.setItem("CRM-id", res.message.id);
-        localStorage.setItem("CRM-name", res.message.name);
-        localStorage.setItem("CRM-email", res.message.email);
-        localStorage.setItem("CRM-type", res.message.type);
-        localStorage.setItem("CRM-token", res.message.token);
-        localStorage.setItem("CRM-companyId", res.message.companyId);
-        localStorage.setItem("CRM-company", res.message.company);
-        localStorage.setItem("CRM-permissions", JSON.stringify(res.message.permissions ?? []));
+        setUser({
+          id: res.message.id,
+          name: res.message.name,
+          email: res.message.email,
+          type: res.message.type,
+          token: res.message.token,
+          companyId: res.message.companyId ?? "",
+          company: res.message.company ?? "",
+          permissions: res.message.permissions ?? [],
+        });
         if (res.message.companyId) {
           navigate("/dashboard");
         } else {
           navigate("/dashboard/add-company");
         }
       } else if (res.status === "401") {
-        localStorage.setItem("CRM-email", user.email);
+        patchUser({ email: user.email });
         navigate("/verification?status=not-verified");
       } else {
         toast.error(res.message);

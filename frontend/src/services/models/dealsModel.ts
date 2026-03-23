@@ -1,7 +1,8 @@
 import { ApiCore } from "../utilities/core";
 import { BASE_URL } from "../api";
+import { getStoredToken } from "../utilities/auth";
 
-const getToken = () => localStorage.getItem("CRM-token") ?? "";
+const getToken = getStoredToken;
 
 export const apiDeals = new ApiCore({
   getAll: true,
