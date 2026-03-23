@@ -54,9 +54,12 @@ export interface TableColumn {
 }
 
 export interface ServerSideColumnFilter {
-  options: string[];
+  type?: "select" | "text" | "date"; // default: "select"
+  options?: string[];                 // select only
   value: string;
   onChange: (value: string) => void;
+  valueTo?: string;                   // date range end
+  onChangeTo?: (value: string) => void;
 }
 
 export interface ServerSideProps {
@@ -150,7 +153,7 @@ const CustomTable = <TData extends Record<string, any>>({
   });
 
   const activeFilterCount = serverSide?.columnFilters
-    ? Object.values(serverSide.columnFilters).filter((f) => f.value).length
+    ? Object.values(serverSide.columnFilters).filter((f) => f.value || f.valueTo).length
     : columnFilters.length;
 
   const downloadCSV = () => {
@@ -325,7 +328,39 @@ const CustomTable = <TData extends Record<string, any>>({
                         serverSide?.columnFilters?.[header.id];
                       return (
                         <th key={`filter-${header.id}`} className="px-3 py-2">
-                          {serverFilter ? (
+                          {serverFilter?.type === "text" ? (
+                            <div className="relative">
+                              <Input
+                                value={serverFilter.value}
+                                onChange={(e) => serverFilter.onChange(e.target.value)}
+                                placeholder="Filter…"
+                                className="h-7 text-xs pr-6"
+                              />
+                              {serverFilter.value && (
+                                <button
+                                  onClick={() => serverFilter.onChange("")}
+                                  className="absolute right-1.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                >
+                                  <X className="h-3 w-3" />
+                                </button>
+                              )}
+                            </div>
+                          ) : serverFilter?.type === "date" ? (
+                            <div className="flex flex-col gap-1">
+                              <Input
+                                type="date"
+                                value={serverFilter.value}
+                                onChange={(e) => serverFilter.onChange(e.target.value)}
+                                className="h-6 text-[10px] px-1.5"
+                              />
+                              <Input
+                                type="date"
+                                value={serverFilter.valueTo ?? ""}
+                                onChange={(e) => serverFilter.onChangeTo?.(e.target.value)}
+                                className="h-6 text-[10px] px-1.5"
+                              />
+                            </div>
+                          ) : serverFilter ? (
                             <Select
                               value={serverFilter.value || "all"}
                               onValueChange={(v) =>
@@ -337,7 +372,7 @@ const CustomTable = <TData extends Record<string, any>>({
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="all">All</SelectItem>
-                                {serverFilter.options.map((opt) => (
+                                {(serverFilter.options ?? []).map((opt) => (
                                   <SelectItem key={opt} value={opt}>
                                     {toLabel(opt)}
                                   </SelectItem>

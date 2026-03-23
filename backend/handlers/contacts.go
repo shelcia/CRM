@@ -48,9 +48,15 @@ func getAuthorName(c *gin.Context) string {
 func GetContacts(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
-	search := strings.TrimSpace(c.Query("search"))
-	status := strings.TrimSpace(c.Query("status"))
-	priority := strings.TrimSpace(c.Query("priority"))
+	search           := strings.TrimSpace(c.Query("search"))
+	status           := strings.TrimSpace(c.Query("status"))
+	priority         := strings.TrimSpace(c.Query("priority"))
+	company          := strings.TrimSpace(c.Query("company"))
+	contactOwner     := strings.TrimSpace(c.Query("contactOwner"))
+	lastActivityFrom := strings.TrimSpace(c.Query("lastActivityFrom"))
+	lastActivityTo   := strings.TrimSpace(c.Query("lastActivityTo"))
+	dateFrom         := strings.TrimSpace(c.Query("dateFrom"))
+	dateTo           := strings.TrimSpace(c.Query("dateTo"))
 
 	if page < 1 {
 		page = 1
@@ -72,6 +78,40 @@ func GetContacts(c *gin.Context) {
 	}
 	if priority != "" {
 		filter["priority"] = priority
+	}
+	if company != "" {
+		filter["company"] = bson.M{"$regex": company, "$options": "i"}
+	}
+	if contactOwner != "" {
+		filter["contactOwner"] = bson.M{"$regex": contactOwner, "$options": "i"}
+	}
+	if lastActivityFrom != "" || lastActivityTo != "" {
+		r := bson.M{}
+		if lastActivityFrom != "" {
+			if t, err := time.Parse("2006-01-02", lastActivityFrom); err == nil {
+				r["$gte"] = t
+			}
+		}
+		if lastActivityTo != "" {
+			if t, err := time.Parse("2006-01-02", lastActivityTo); err == nil {
+				r["$lte"] = t.Add(24*time.Hour - time.Second)
+			}
+		}
+		filter["lastActivity"] = r
+	}
+	if dateFrom != "" || dateTo != "" {
+		r := bson.M{}
+		if dateFrom != "" {
+			if t, err := time.Parse("2006-01-02", dateFrom); err == nil {
+				r["$gte"] = t
+			}
+		}
+		if dateTo != "" {
+			if t, err := time.Parse("2006-01-02", dateTo); err == nil {
+				r["$lte"] = t.Add(24*time.Hour - time.Second)
+			}
+		}
+		filter["date"] = r
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

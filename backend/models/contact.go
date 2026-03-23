@@ -17,7 +17,7 @@ type Contact struct {
 	ContactOwner    string             `bson:"contactOwner,omitempty" json:"contactOwner,omitempty"`
 	Assignee        []string           `bson:"assignee,omitempty" json:"assignee,omitempty"`
 	Priority        string             `bson:"priority,omitempty" json:"priority,omitempty"`
-	CompanySize     int                `bson:"companySize,omitempty,truncate" json:"companySize,omitempty"`
+	CompanySize     int                `bson:"companySize,omitempty" json:"companySize,omitempty"`
 	JobTitle        string             `bson:"jobTitle,omitempty" json:"jobTitle,omitempty"`
 	ExpectedRevenue float64            `bson:"expectedRevenue,omitempty" json:"expectedRevenue,omitempty"`
 	ExpectedClosing *time.Time         `bson:"expectedClosing,omitempty" json:"expectedClosing,omitempty"`

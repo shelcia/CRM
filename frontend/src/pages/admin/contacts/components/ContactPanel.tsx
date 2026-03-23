@@ -80,7 +80,7 @@ const ContactPanel = ({
     setSaving(true);
     const res = await apiContacts.putById!(
       contact._id,
-      form,
+      { ...form, companySize: Number(form.companySize) || 0 },
       new AbortController().signal,
       "",
       true,

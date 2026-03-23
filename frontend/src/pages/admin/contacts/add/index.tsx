@@ -26,7 +26,7 @@ const AddContact = () => {
       validationSchema: contactValidationSchema,
       onSubmit: (vals) => {
         setIsLoading(true);
-        apiContacts.post!(vals, "", true).then((res) => {
+        apiContacts.post!({ ...vals, companySize: Number(vals.companySize) || 0 }, "", true).then((res) => {
           if (res && res._id) {
             toast.success("Contact added successfully");
             resetForm();

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Pencil, Check } from "lucide-react";
 import { DragHandle } from "@/components/custom";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { RowActionsMenu } from "./RowActionsMenu";
 import type { Todo, TodoAuthor } from "../types";
@@ -62,30 +62,39 @@ const TaskCard = ({
       )}
     >
       {editing ? (
-        <div className="space-y-2">
-          <Input
-            autoFocus
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") save();
-              if (e.key === "Escape") cancel();
-            }}
-            className="h-7 text-sm"
-            placeholder="Card title"
-          />
-          <Textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={2}
-            placeholder="Description (optional)"
-            className="w-full rounded-md border border-input bg-transparent px-3 py-1.5 text-xs shadow-sm resize-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-          />
-          <AssignedToSelect
-            value={assignee}
-            onChange={setAssignee}
-            triggerClassName="h-7 text-xs"
-          />
+        <div className="space-y-2.5">
+          <div className="space-y-1">
+            <Label className="text-xs">Title</Label>
+            <Input
+              autoFocus
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") save();
+                if (e.key === "Escape") cancel();
+              }}
+              className="h-7 text-sm"
+              placeholder="Card title"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label className="text-xs">Description</Label>
+            <Textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={2}
+              placeholder="Description (optional)"
+              className="w-full rounded-md border border-input bg-transparent px-3 py-1.5 text-xs shadow-sm resize-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label className="text-xs">Assignee</Label>
+            <AssignedToSelect
+              value={assignee}
+              onChange={setAssignee}
+              triggerClassName="h-7 text-xs"
+            />
+          </div>
           <div className="flex gap-2 justify-end w-full">
             <Button size="sm" variant="ghost" onClick={cancel}>
               Cancel

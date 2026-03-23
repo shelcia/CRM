@@ -2,10 +2,10 @@ package handlers
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
+	"io"
 	"net/http"
-	"os"
-	"path/filepath"
 	"strings"
 	"time"
 
@@ -34,41 +34,43 @@ func UploadCompanyLogo(c *gin.Context) {
 	}
 	defer file.Close()
 
-	ext := strings.ToLower(filepath.Ext(header.Filename))
-	allowed := map[string]bool{".jpg": true, ".jpeg": true, ".png": true, ".webp": true, ".gif": true}
-	if !allowed[ext] {
+	mimeTypes := map[string]string{
+		".jpg": "image/jpeg", ".jpeg": "image/jpeg",
+		".png": "image/png", ".webp": "image/webp", ".gif": "image/gif",
+	}
+	ext := strings.ToLower(header.Filename[strings.LastIndex(header.Filename, "."):])
+	mime, ok := mimeTypes[ext]
+	if !ok {
 		utils.Err(c, http.StatusBadRequest, "Only image files are allowed (jpg, jpeg, png, webp, gif)")
 		return
 	}
 
-	if err := os.MkdirAll("uploads/logos", 0755); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create upload directory", err)
+	if header.Size > 5<<20 {
+		utils.Err(c, http.StatusBadRequest, "File exceeds 5 MB limit")
 		return
 	}
 
-	filename := fmt.Sprintf("%s%s", currentUser.CompanyID, ext)
-	destPath := filepath.Join("uploads", "logos", filename)
-
-	if err := c.SaveUploadedFile(header, destPath); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to save file", err)
+	data, err := io.ReadAll(file)
+	if err != nil {
+		utils.Err(c, http.StatusInternalServerError, "Failed to read file", err)
 		return
 	}
 
-	logoURL := fmt.Sprintf("/uploads/logos/%s", filename)
+	dataURI := fmt.Sprintf("data:%s;base64,%s", mime, base64.StdEncoding.EncodeToString(data))
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	_, err = db.Collection("companies").UpdateOne(ctx,
 		bson.M{"_id": companyID},
-		bson.M{"$set": bson.M{"logo": logoURL}},
+		bson.M{"$set": bson.M{"logo": dataURI}},
 	)
 	if err != nil {
 		utils.Err(c, http.StatusInternalServerError, "Failed to update company logo", err)
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"logo": logoURL})
+	c.JSON(http.StatusOK, gin.H{"logo": dataURI})
 }
 
 func GetCompany(c *gin.Context) {

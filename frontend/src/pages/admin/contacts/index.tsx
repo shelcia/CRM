@@ -59,8 +59,14 @@ const Contacts = () => {
     setIsLoading(true);
     const params: Record<string, unknown> = { page, limit: PAGE_SIZE };
     if (search) params.search = search;
-    if (filters.status) params.status = filters.status;
-    if (filters.priority) params.priority = filters.priority;
+    if (filters.status)           params.status           = filters.status;
+    if (filters.priority)         params.priority         = filters.priority;
+    if (filters.company)          params.company          = filters.company;
+    if (filters.contactOwner)     params.contactOwner     = filters.contactOwner;
+    if (filters.lastActivityFrom) params.lastActivityFrom = filters.lastActivityFrom;
+    if (filters.lastActivityTo)   params.lastActivityTo   = filters.lastActivityTo;
+    if (filters.dateFrom)         params.dateFrom         = filters.dateFrom;
+    if (filters.dateTo)           params.dateTo           = filters.dateTo;
     apiContacts.getByParams!(params, ctrl.signal, "", true).then((res) => {
       if (cancelled) return;
       if (res?.data) {
@@ -110,6 +116,7 @@ const Contacts = () => {
     { label: "Email", name: "email" },
     { label: "Phone No.", name: "number" },
     { label: "Company", name: "company" },
+    { label: "Owner", name: "contactOwner" },
     {
       label: "Last Activity",
       name: "lastActivity",
@@ -245,6 +252,30 @@ const Contacts = () => {
                 options: contactPriorities,
                 value: filters.priority ?? "",
                 onChange: (v) => handleFilterChange("priority", v),
+              },
+              company: {
+                type: "text",
+                value: filters.company ?? "",
+                onChange: (v) => handleFilterChange("company", v),
+              },
+              contactOwner: {
+                type: "text",
+                value: filters.contactOwner ?? "",
+                onChange: (v) => handleFilterChange("contactOwner", v),
+              },
+              lastActivity: {
+                type: "date",
+                value: filters.lastActivityFrom ?? "",
+                onChange: (v) => handleFilterChange("lastActivityFrom", v),
+                valueTo: filters.lastActivityTo ?? "",
+                onChangeTo: (v) => handleFilterChange("lastActivityTo", v),
+              },
+              createdAt: {
+                type: "date",
+                value: filters.dateFrom ?? "",
+                onChange: (v) => handleFilterChange("dateFrom", v),
+                valueTo: filters.dateTo ?? "",
+                onChangeTo: (v) => handleFilterChange("dateTo", v),
               },
             },
           }}
