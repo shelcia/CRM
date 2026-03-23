@@ -56,13 +56,13 @@ func Register(c *gin.Context) {
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), 10)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to hash password")
+		utils.Err(c, http.StatusInternalServerError, "Failed to hash password", err)
 		return
 	}
 
 	token, err := generateToken(input.Email)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to generate token")
+		utils.Err(c, http.StatusInternalServerError, "Failed to generate token", err)
 		return
 	}
 
@@ -74,7 +74,7 @@ func Register(c *gin.Context) {
 	}
 
 	if _, err = db.Collection("companies").InsertOne(ctx, company); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create company")
+		utils.Err(c, http.StatusInternalServerError, "Failed to create company", err)
 		return
 	}
 
@@ -106,7 +106,7 @@ func Register(c *gin.Context) {
 	)
 
 	if _, err = db.Collection("users").InsertOne(ctx, user); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create user")
+		utils.Err(c, http.StatusInternalServerError, "Failed to create user", err)
 		return
 	}
 
@@ -154,7 +154,7 @@ func Login(c *gin.Context) {
 
 	token, err := generateToken(user.Email)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to generate token")
+		utils.Err(c, http.StatusInternalServerError, "Failed to generate token", err)
 		return
 	}
 
@@ -192,7 +192,7 @@ func Login(c *gin.Context) {
 func VerifyEmail(c *gin.Context) {
 	email, err := utils.Decrypt(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid verification link")
+		utils.Err(c, http.StatusBadRequest, "Invalid verification link", err)
 		return
 	}
 
@@ -204,7 +204,7 @@ func VerifyEmail(c *gin.Context) {
 		bson.M{"$set": bson.M{"verified": true}},
 	)
 	if err != nil || result.MatchedCount == 0 {
-		utils.Err(c, http.StatusBadRequest, "User not found")
+		utils.Err(c, http.StatusBadRequest, "User not found", err)
 		return
 	}
 
@@ -231,7 +231,7 @@ func ResendVerification(c *gin.Context) {
 
 	encryptedEmail, err := utils.Encrypt(input.Email)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to generate verification link")
+		utils.Err(c, http.StatusInternalServerError, "Failed to generate verification link", err)
 		return
 	}
 
@@ -266,7 +266,7 @@ func ResetPassword(c *gin.Context) {
 
 	encryptedEmail, err := utils.Encrypt(input.Email)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to generate reset link")
+		utils.Err(c, http.StatusInternalServerError, "Failed to generate reset link", err)
 		return
 	}
 
@@ -284,7 +284,7 @@ func ResetPassword(c *gin.Context) {
 func ChangePassword(c *gin.Context) {
 	email, err := utils.Decrypt(c.Param("token"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid reset link")
+		utils.Err(c, http.StatusBadRequest, "Invalid reset link", err)
 		return
 	}
 
@@ -298,7 +298,7 @@ func ChangePassword(c *gin.Context) {
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), 10)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to hash password")
+		utils.Err(c, http.StatusInternalServerError, "Failed to hash password", err)
 		return
 	}
 
@@ -310,7 +310,7 @@ func ChangePassword(c *gin.Context) {
 		bson.M{"$set": bson.M{"password": string(hash)}},
 	)
 	if err != nil || result.MatchedCount == 0 {
-		utils.Err(c, http.StatusBadRequest, "User not found")
+		utils.Err(c, http.StatusBadRequest, "User not found", err)
 		return
 	}
 

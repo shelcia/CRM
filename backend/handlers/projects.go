@@ -29,14 +29,14 @@ func GetProjects(c *gin.Context) {
 
 	cursor, err := db.Collection("projects").Find(ctx, bson.M{})
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to fetch projects")
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch projects", err)
 		return
 	}
 	defer cursor.Close(ctx)
 
 	projects := make([]models.Project, 0)
 	if err = cursor.All(ctx, &projects); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to decode projects")
+		utils.Err(c, http.StatusInternalServerError, "Failed to decode projects", err)
 		return
 	}
 
@@ -54,7 +54,7 @@ func GetProjects(c *gin.Context) {
 	// Fetch all todos for these projects in one query
 	todoCursor, err := db.Collection("todos").Find(ctx, bson.M{"projectId": bson.M{"$in": projectIDs}})
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to fetch tasks")
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch tasks", err)
 		return
 	}
 	defer todoCursor.Close(ctx)
@@ -65,7 +65,7 @@ func GetProjects(c *gin.Context) {
 	}
 	allTodos := make([]todoDoc, 0)
 	if err = todoCursor.All(ctx, &allTodos); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to decode tasks")
+		utils.Err(c, http.StatusInternalServerError, "Failed to decode tasks", err)
 		return
 	}
 
@@ -75,7 +75,7 @@ func GetProjects(c *gin.Context) {
 		"name":      bson.M{"$regex": "^done$", "$options": "i"},
 	})
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to fetch columns")
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch columns", err)
 		return
 	}
 	defer colCursor.Close(ctx)
@@ -129,7 +129,7 @@ func CreateProject(c *gin.Context) {
 	defer cancel()
 
 	if _, err := db.Collection("projects").InsertOne(ctx, project); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create project")
+		utils.Err(c, http.StatusInternalServerError, "Failed to create project", err)
 		return
 	}
 
@@ -153,7 +153,7 @@ func CreateProject(c *gin.Context) {
 func UpdateProject(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid project ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid project ID", err)
 		return
 	}
 
@@ -174,7 +174,7 @@ func UpdateProject(c *gin.Context) {
 		bson.M{"$set": bson.M{"name": body.Name}},
 	)
 	if err != nil || result.MatchedCount == 0 {
-		utils.Err(c, http.StatusNotFound, "Project not found")
+		utils.Err(c, http.StatusNotFound, "Project not found", err)
 		return
 	}
 
@@ -184,7 +184,7 @@ func UpdateProject(c *gin.Context) {
 func DeleteProject(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid project ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid project ID", err)
 		return
 	}
 
@@ -196,7 +196,7 @@ func DeleteProject(c *gin.Context) {
 	db.Collection("columns").DeleteMany(ctx, bson.M{"projectId": id})  //nolint
 	result, err := db.Collection("projects").DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil || result.DeletedCount == 0 {
-		utils.Err(c, http.StatusNotFound, "Project not found")
+		utils.Err(c, http.StatusNotFound, "Project not found", err)
 		return
 	}
 
@@ -207,7 +207,7 @@ func DeleteProject(c *gin.Context) {
 func GetBoard(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid project ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid project ID", err)
 		return
 	}
 
@@ -218,28 +218,28 @@ func GetBoard(c *gin.Context) {
 	opts := options.Find().SetSort(bson.D{{Key: "order", Value: 1}})
 	cursor, err := db.Collection("columns").Find(ctx, bson.M{"projectId": id}, opts)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to fetch columns")
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch columns", err)
 		return
 	}
 	defer cursor.Close(ctx)
 
 	columns := make([]models.Column, 0)
 	if err = cursor.All(ctx, &columns); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to decode columns")
+		utils.Err(c, http.StatusInternalServerError, "Failed to decode columns", err)
 		return
 	}
 
 	// Fetch all todos for this project
 	todoCursor, err := db.Collection("todos").Find(ctx, bson.M{"projectId": id})
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to fetch todos")
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch todos", err)
 		return
 	}
 	defer todoCursor.Close(ctx)
 
 	todos := make([]models.Todo, 0)
 	if err = todoCursor.All(ctx, &todos); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to decode todos")
+		utils.Err(c, http.StatusInternalServerError, "Failed to decode todos", err)
 		return
 	}
 

@@ -19,6 +19,32 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// logActivity inserts a system-generated activity note and bumps the contact's lastActivity.
+func logActivity(ctx context.Context, contactID primitive.ObjectID, author, body string) {
+	note := models.Note{
+		ID:        primitive.NewObjectID(),
+		ContactID: contactID,
+		Type:      models.NoteTypeActivity,
+		Body:      body,
+		Author:    author,
+		CreatedAt: time.Now(),
+	}
+	db.Collection("contact_notes").InsertOne(ctx, note)
+	db.Collection("contacts").UpdateOne(ctx,
+		bson.M{"_id": contactID},
+		bson.M{"$set": bson.M{"lastActivity": note.CreatedAt}},
+	)
+}
+
+func getAuthorName(c *gin.Context) string {
+	if u, ok := c.Get("user"); ok {
+		if user, ok := u.(models.User); ok {
+			return user.Name
+		}
+	}
+	return ""
+}
+
 func GetContacts(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
@@ -60,14 +86,14 @@ func GetContacts(c *gin.Context) {
 
 	cursor, err := db.Collection("contacts").Find(ctx, filter, opts)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to fetch contacts")
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch contacts", err)
 		return
 	}
 	defer cursor.Close(ctx)
 
 	contacts := make([]models.Contact, 0)
 	if err = cursor.All(ctx, &contacts); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to decode contacts")
+		utils.Err(c, http.StatusInternalServerError, "Failed to decode contacts", err)
 		return
 	}
 
@@ -102,9 +128,11 @@ func CreateContact(c *gin.Context) {
 	}
 
 	if _, err := db.Collection("contacts").InsertOne(ctx, contact); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create contact")
+		utils.Err(c, http.StatusInternalServerError, "Failed to create contact", err)
 		return
 	}
+
+	logActivity(ctx, contact.ID, getAuthorName(c), "Contact created")
 
 	c.JSON(http.StatusCreated, contact)
 }
@@ -120,14 +148,14 @@ func ExportContacts(c *gin.Context) {
 
 	cursor, err := db.Collection("contacts").Find(ctx, bson.M{})
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to fetch contacts")
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch contacts", err)
 		return
 	}
 	defer cursor.Close(ctx)
 
 	contacts := make([]models.Contact, 0)
 	if err = cursor.All(ctx, &contacts); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to decode contacts")
+		utils.Err(c, http.StatusInternalServerError, "Failed to decode contacts", err)
 		return
 	}
 
@@ -157,7 +185,7 @@ func ExportContacts(c *gin.Context) {
 func ImportContacts(c *gin.Context) {
 	file, _, err := c.Request.FormFile("file")
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "CSV file is required")
+		utils.Err(c, http.StatusBadRequest, "CSV file is required", err)
 		return
 	}
 	defer file.Close()
@@ -167,7 +195,7 @@ func ImportContacts(c *gin.Context) {
 
 	rows, err := reader.ReadAll()
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Failed to parse CSV")
+		utils.Err(c, http.StatusBadRequest, "Failed to parse CSV", err)
 		return
 	}
 	if len(rows) < 2 {
@@ -260,7 +288,7 @@ func ImportContacts(c *gin.Context) {
 
 	res, err := db.Collection("contacts").InsertMany(ctx, docs)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to import contacts")
+		utils.Err(c, http.StatusInternalServerError, "Failed to import contacts", err)
 		return
 	}
 
@@ -273,7 +301,7 @@ func ImportContacts(c *gin.Context) {
 func UpdateContact(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid contact ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid contact ID", err)
 		return
 	}
 
@@ -288,6 +316,46 @@ func UpdateContact(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	// Fetch existing contact before update so we can diff fields.
+	var existing models.Contact
+	db.Collection("contacts").FindOne(ctx, bson.M{"_id": id}).Decode(&existing)
+
+	author := getAuthorName(c)
+
+	strField := func(key string) (string, bool) {
+		v, ok := body[key]
+		if !ok {
+			return "", false
+		}
+		s, ok := v.(string)
+		return s, ok
+	}
+
+	if s, ok := strField("status"); ok && s != "" && s != existing.Status {
+		logActivity(ctx, id, author, fmt.Sprintf("Status changed from %s to %s", existing.Status, s))
+	}
+	if p, ok := strField("priority"); ok && p != "" && p != existing.Priority {
+		logActivity(ctx, id, author, fmt.Sprintf("Priority changed from %s to %s", existing.Priority, p))
+	}
+	if n, ok := strField("name"); ok && n != "" && n != existing.Name {
+		logActivity(ctx, id, author, fmt.Sprintf("Name updated to %s", n))
+	}
+	if co, ok := strField("company"); ok && co != "" && co != existing.Company {
+		logActivity(ctx, id, author, fmt.Sprintf("Company updated to %s", co))
+	}
+	if jt, ok := strField("jobTitle"); ok && jt != "" && jt != existing.JobTitle {
+		logActivity(ctx, id, author, fmt.Sprintf("Job title updated to %s", jt))
+	}
+	if a, ok := strField("contactOwner"); ok && a != existing.ContactOwner {
+		if existing.ContactOwner == "" {
+			logActivity(ctx, id, author, fmt.Sprintf("Assigned to %s", a))
+		} else if a == "" {
+			logActivity(ctx, id, author, fmt.Sprintf("Unassigned from %s", existing.ContactOwner))
+		} else {
+			logActivity(ctx, id, author, fmt.Sprintf("Reassigned from %s to %s", existing.ContactOwner, a))
+		}
+	}
+
 	after := options.After
 	var updated models.Contact
 	err = db.Collection("contacts").FindOneAndUpdate(
@@ -297,7 +365,7 @@ func UpdateContact(c *gin.Context) {
 		&options.FindOneAndUpdateOptions{ReturnDocument: &after},
 	).Decode(&updated)
 	if err != nil {
-		utils.Err(c, http.StatusNotFound, "Contact not found")
+		utils.Err(c, http.StatusNotFound, "Contact not found", err)
 		return
 	}
 
@@ -307,7 +375,7 @@ func UpdateContact(c *gin.Context) {
 func DeleteContact(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid contact ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid contact ID", err)
 		return
 	}
 
@@ -316,7 +384,7 @@ func DeleteContact(c *gin.Context) {
 
 	result, err := db.Collection("contacts").DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil || result.DeletedCount == 0 {
-		utils.Err(c, http.StatusNotFound, "Contact not found")
+		utils.Err(c, http.StatusNotFound, "Contact not found", err)
 		return
 	}
 

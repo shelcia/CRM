@@ -66,17 +66,17 @@ const Homepage = () => {
           Everything you need
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {FEATURES.map((f) => (
+          {FEATURES.map((feature) => (
             <div
-              key={f.title}
+              key={feature.title}
               className="rounded-xl border bg-card p-5 flex flex-col gap-3 hover:shadow-md transition-shadow"
             >
               <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
-                {f.icon}
+                {feature.icon}
               </div>
-              <h3 className="font-semibold text-sm">{f.title}</h3>
+              <h3 className="font-semibold text-sm">{feature.title}</h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                {f.description}
+                {feature.description}
               </p>
             </div>
           ))}

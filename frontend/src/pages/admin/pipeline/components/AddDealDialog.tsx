@@ -52,7 +52,7 @@ const AddDealDialog = ({
           currency: vals.currency,
           stage: vals.stage,
           assignedTo: vals.assignedTo || undefined,
-          expectedClose: vals.expectedClose || undefined,
+          expectedClose: vals.expectedClose ? vals.expectedClose + "T00:00:00Z" : undefined,
         };
         if (isEdit) {
           apiDeals.putById!(

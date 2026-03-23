@@ -61,14 +61,14 @@ func GetTickets(c *gin.Context) {
 
 	cursor, err := db.Collection("tickets").Find(ctx, filter, opts)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to fetch tickets")
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch tickets", err)
 		return
 	}
 	defer cursor.Close(ctx)
 
 	tickets := make([]models.Ticket, 0)
 	if err = cursor.All(ctx, &tickets); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to decode tickets")
+		utils.Err(c, http.StatusInternalServerError, "Failed to decode tickets", err)
 		return
 	}
 
@@ -83,7 +83,7 @@ func GetTickets(c *gin.Context) {
 func GetTicket(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid ticket ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid ticket ID", err)
 		return
 	}
 
@@ -92,7 +92,7 @@ func GetTicket(c *gin.Context) {
 
 	var ticket models.Ticket
 	if err = db.Collection("tickets").FindOne(ctx, bson.M{"_id": id}).Decode(&ticket); err != nil {
-		utils.Err(c, http.StatusNotFound, "Ticket not found")
+		utils.Err(c, http.StatusNotFound, "Ticket not found", err)
 		return
 	}
 
@@ -114,7 +114,7 @@ func CreateTicket(c *gin.Context) {
 	defer cancel()
 
 	if _, err := db.Collection("tickets").InsertOne(ctx, ticket); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create ticket")
+		utils.Err(c, http.StatusInternalServerError, "Failed to create ticket", err)
 		return
 	}
 
@@ -124,7 +124,7 @@ func CreateTicket(c *gin.Context) {
 func UpdateTicket(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid ticket ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid ticket ID", err)
 		return
 	}
 
@@ -153,7 +153,7 @@ func UpdateTicket(c *gin.Context) {
 
 	result, err := db.Collection("tickets").UpdateOne(ctx, bson.M{"_id": id}, update)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to update ticket")
+		utils.Err(c, http.StatusInternalServerError, "Failed to update ticket", err)
 		return
 	}
 	if result.MatchedCount == 0 {
@@ -168,7 +168,7 @@ func UpdateTicket(c *gin.Context) {
 func DeleteTicket(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid ticket ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid ticket ID", err)
 		return
 	}
 
@@ -177,7 +177,7 @@ func DeleteTicket(c *gin.Context) {
 
 	result, err := db.Collection("tickets").DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to delete ticket")
+		utils.Err(c, http.StatusInternalServerError, "Failed to delete ticket", err)
 		return
 	}
 	if result.DeletedCount == 0 {

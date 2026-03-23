@@ -27,14 +27,14 @@ func GetDeals(c *gin.Context) {
 	opts := options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}})
 	cursor, err := db.Collection("deals").Find(ctx, filter, opts)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to fetch deals")
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch deals", err)
 		return
 	}
 	defer cursor.Close(ctx)
 
 	deals := make([]models.Deal, 0)
 	if err = cursor.All(ctx, &deals); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to decode deals")
+		utils.Err(c, http.StatusInternalServerError, "Failed to decode deals", err)
 		return
 	}
 
@@ -44,7 +44,7 @@ func GetDeals(c *gin.Context) {
 func GetDeal(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid deal ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid deal ID", err)
 		return
 	}
 
@@ -53,7 +53,7 @@ func GetDeal(c *gin.Context) {
 
 	var deal models.Deal
 	if err = db.Collection("deals").FindOne(ctx, bson.M{"_id": id}).Decode(&deal); err != nil {
-		utils.Err(c, http.StatusNotFound, "Deal not found")
+		utils.Err(c, http.StatusNotFound, "Deal not found", err)
 		return
 	}
 
@@ -82,7 +82,7 @@ func CreateDeal(c *gin.Context) {
 	defer cancel()
 
 	if _, err := db.Collection("deals").InsertOne(ctx, deal); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create deal")
+		utils.Err(c, http.StatusInternalServerError, "Failed to create deal", err)
 		return
 	}
 
@@ -92,7 +92,7 @@ func CreateDeal(c *gin.Context) {
 func UpdateDeal(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid deal ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid deal ID", err)
 		return
 	}
 
@@ -121,7 +121,7 @@ func UpdateDeal(c *gin.Context) {
 
 	result, err := db.Collection("deals").UpdateOne(ctx, bson.M{"_id": id}, update)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to update deal")
+		utils.Err(c, http.StatusInternalServerError, "Failed to update deal", err)
 		return
 	}
 	if result.MatchedCount == 0 {
@@ -136,7 +136,7 @@ func UpdateDeal(c *gin.Context) {
 func DeleteDeal(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid deal ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid deal ID", err)
 		return
 	}
 
@@ -145,7 +145,7 @@ func DeleteDeal(c *gin.Context) {
 
 	result, err := db.Collection("deals").DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to delete deal")
+		utils.Err(c, http.StatusInternalServerError, "Failed to delete deal", err)
 		return
 	}
 	if result.DeletedCount == 0 {

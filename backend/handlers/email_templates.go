@@ -22,14 +22,14 @@ func GetEmailTemplates(c *gin.Context) {
 	opts := options.Find().SetSort(bson.M{"createdAt": -1})
 	cursor, err := db.Collection("email_templates").Find(ctx, bson.M{}, opts)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to fetch email templates")
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch email templates", err)
 		return
 	}
 	defer cursor.Close(ctx)
 
 	templates := make([]models.EmailTemplate, 0)
 	if err = cursor.All(ctx, &templates); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to decode email templates")
+		utils.Err(c, http.StatusInternalServerError, "Failed to decode email templates", err)
 		return
 	}
 
@@ -39,7 +39,7 @@ func GetEmailTemplates(c *gin.Context) {
 func GetEmailTemplate(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid template ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid template ID", err)
 		return
 	}
 
@@ -48,7 +48,7 @@ func GetEmailTemplate(c *gin.Context) {
 
 	var tmpl models.EmailTemplate
 	if err = db.Collection("email_templates").FindOne(ctx, bson.M{"_id": id}).Decode(&tmpl); err != nil {
-		utils.Err(c, http.StatusNotFound, "Email template not found")
+		utils.Err(c, http.StatusNotFound, "Email template not found", err)
 		return
 	}
 
@@ -70,7 +70,7 @@ func CreateEmailTemplate(c *gin.Context) {
 	defer cancel()
 
 	if _, err := db.Collection("email_templates").InsertOne(ctx, tmpl); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create email template")
+		utils.Err(c, http.StatusInternalServerError, "Failed to create email template", err)
 		return
 	}
 
@@ -80,7 +80,7 @@ func CreateEmailTemplate(c *gin.Context) {
 func UpdateEmailTemplate(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid template ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid template ID", err)
 		return
 	}
 
@@ -111,7 +111,7 @@ func UpdateEmailTemplate(c *gin.Context) {
 
 	result, err := db.Collection("email_templates").UpdateOne(ctx, bson.M{"_id": id}, update)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to update email template")
+		utils.Err(c, http.StatusInternalServerError, "Failed to update email template", err)
 		return
 	}
 	if result.MatchedCount == 0 {
@@ -126,7 +126,7 @@ func UpdateEmailTemplate(c *gin.Context) {
 func DeleteEmailTemplate(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid template ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid template ID", err)
 		return
 	}
 
@@ -135,7 +135,7 @@ func DeleteEmailTemplate(c *gin.Context) {
 
 	result, err := db.Collection("email_templates").DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to delete email template")
+		utils.Err(c, http.StatusInternalServerError, "Failed to delete email template", err)
 		return
 	}
 	if result.DeletedCount == 0 {

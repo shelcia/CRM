@@ -20,7 +20,7 @@ import (
 func GetNotes(c *gin.Context) {
 	contactID, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid contact ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid contact ID", err)
 		return
 	}
 
@@ -30,14 +30,14 @@ func GetNotes(c *gin.Context) {
 	opts := options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}})
 	cursor, err := db.Collection("contact_notes").Find(ctx, bson.M{"contactId": contactID}, opts)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to fetch notes")
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch notes", err)
 		return
 	}
 	defer cursor.Close(ctx)
 
 	notes := make([]models.Note, 0)
 	if err = cursor.All(ctx, &notes); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to decode notes")
+		utils.Err(c, http.StatusInternalServerError, "Failed to decode notes", err)
 		return
 	}
 
@@ -49,7 +49,7 @@ func GetNotes(c *gin.Context) {
 func AddNote(c *gin.Context) {
 	contactID, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid contact ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid contact ID", err)
 		return
 	}
 
@@ -84,7 +84,7 @@ func AddNote(c *gin.Context) {
 	defer cancel()
 
 	if _, err := db.Collection("contact_notes").InsertOne(ctx, note); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to save note")
+		utils.Err(c, http.StatusInternalServerError, "Failed to save note", err)
 		return
 	}
 
@@ -101,7 +101,7 @@ func AddNote(c *gin.Context) {
 func DeleteNote(c *gin.Context) {
 	noteID, err := primitive.ObjectIDFromHex(c.Param("noteId"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid note ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid note ID", err)
 		return
 	}
 
@@ -110,7 +110,7 @@ func DeleteNote(c *gin.Context) {
 
 	result, err := db.Collection("contact_notes").DeleteOne(ctx, bson.M{"_id": noteID})
 	if err != nil || result.DeletedCount == 0 {
-		utils.Err(c, http.StatusNotFound, "Note not found")
+		utils.Err(c, http.StatusNotFound, "Note not found", err)
 		return
 	}
 

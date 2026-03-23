@@ -29,14 +29,14 @@ func GetUsers(c *gin.Context) {
 
 	cursor, err := db.Collection("users").Find(ctx, bson.M{"companyId": currentUser.CompanyID})
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to fetch users")
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch users", err)
 		return
 	}
 	defer cursor.Close(ctx)
 
 	users := make([]models.User, 0)
 	if err = cursor.All(ctx, &users); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to decode users")
+		utils.Err(c, http.StatusInternalServerError, "Failed to decode users", err)
 		return
 	}
 
@@ -57,7 +57,7 @@ type createUserInput struct {
 func GetUser(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid user ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid user ID", err)
 		return
 	}
 
@@ -66,7 +66,7 @@ func GetUser(c *gin.Context) {
 
 	var user models.User
 	if err = db.Collection("users").FindOne(ctx, bson.M{"_id": id}).Decode(&user); err != nil {
-		utils.Err(c, http.StatusNotFound, "User not found")
+		utils.Err(c, http.StatusNotFound, "User not found", err)
 		return
 	}
 
@@ -83,7 +83,7 @@ type updateUserInput struct {
 func UpdateUser(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid user ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid user ID", err)
 		return
 	}
 
@@ -104,7 +104,7 @@ func UpdateUser(c *gin.Context) {
 
 	result, err := db.Collection("users").UpdateOne(ctx, bson.M{"_id": id}, update)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to update user")
+		utils.Err(c, http.StatusInternalServerError, "Failed to update user", err)
 		return
 	}
 	if result.MatchedCount == 0 {
@@ -121,7 +121,7 @@ func UpdateUser(c *gin.Context) {
 func DeleteUser(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid user ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid user ID", err)
 		return
 	}
 
@@ -130,7 +130,7 @@ func DeleteUser(c *gin.Context) {
 
 	result, err := db.Collection("users").DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to delete user")
+		utils.Err(c, http.StatusInternalServerError, "Failed to delete user", err)
 		return
 	}
 	if result.DeletedCount == 0 {
@@ -161,13 +161,13 @@ func CreateUser(c *gin.Context) {
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(input.Password), 10)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to hash password")
+		utils.Err(c, http.StatusInternalServerError, "Failed to hash password", err)
 		return
 	}
 
 	token, err := generateToken(input.Email)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to generate token")
+		utils.Err(c, http.StatusInternalServerError, "Failed to generate token", err)
 		return
 	}
 
@@ -190,7 +190,7 @@ func CreateUser(c *gin.Context) {
 	}
 
 	if _, err = db.Collection("users").InsertOne(ctx, newUser); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create user")
+		utils.Err(c, http.StatusInternalServerError, "Failed to create user", err)
 		return
 	}
 

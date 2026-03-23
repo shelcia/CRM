@@ -17,7 +17,7 @@ import (
 func CreateTodo(c *gin.Context) {
 	projectID, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid project ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid project ID", err)
 		return
 	}
 
@@ -35,7 +35,7 @@ func CreateTodo(c *gin.Context) {
 	defer cancel()
 
 	if _, err := db.Collection("todos").InsertOne(ctx, todo); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create todo")
+		utils.Err(c, http.StatusInternalServerError, "Failed to create todo", err)
 		return
 	}
 
@@ -45,7 +45,7 @@ func CreateTodo(c *gin.Context) {
 func UpdateTodo(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid todo ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid todo ID", err)
 		return
 	}
 
@@ -59,7 +59,7 @@ func UpdateTodo(c *gin.Context) {
 	if colStr, ok := body["columnId"].(string); ok {
 		colOID, err := primitive.ObjectIDFromHex(colStr)
 		if err != nil {
-			utils.Err(c, http.StatusBadRequest, "Invalid column ID")
+			utils.Err(c, http.StatusBadRequest, "Invalid column ID", err)
 			return
 		}
 		body["columnId"] = colOID
@@ -74,7 +74,7 @@ func UpdateTodo(c *gin.Context) {
 		bson.M{"$set": body},
 	)
 	if err != nil || result.MatchedCount == 0 {
-		utils.Err(c, http.StatusNotFound, "Todo not found")
+		utils.Err(c, http.StatusNotFound, "Todo not found", err)
 		return
 	}
 
@@ -84,7 +84,7 @@ func UpdateTodo(c *gin.Context) {
 func DeleteTodo(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid todo ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid todo ID", err)
 		return
 	}
 
@@ -93,7 +93,7 @@ func DeleteTodo(c *gin.Context) {
 
 	result, err := db.Collection("todos").DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil || result.DeletedCount == 0 {
-		utils.Err(c, http.StatusNotFound, "Todo not found")
+		utils.Err(c, http.StatusNotFound, "Todo not found", err)
 		return
 	}
 

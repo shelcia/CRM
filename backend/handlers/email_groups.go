@@ -22,14 +22,14 @@ func GetEmailGroups(c *gin.Context) {
 	opts := options.Find().SetSort(bson.D{{Key: "createdAt", Value: -1}})
 	cursor, err := db.Collection("email_groups").Find(ctx, bson.M{}, opts)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to fetch email groups")
+		utils.Err(c, http.StatusInternalServerError, "Failed to fetch email groups", err)
 		return
 	}
 	defer cursor.Close(ctx)
 
 	groups := make([]models.EmailGroup, 0)
 	if err = cursor.All(ctx, &groups); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to decode email groups")
+		utils.Err(c, http.StatusInternalServerError, "Failed to decode email groups", err)
 		return
 	}
 
@@ -39,7 +39,7 @@ func GetEmailGroups(c *gin.Context) {
 func GetEmailGroup(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid group ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid group ID", err)
 		return
 	}
 
@@ -48,7 +48,7 @@ func GetEmailGroup(c *gin.Context) {
 
 	var group models.EmailGroup
 	if err = db.Collection("email_groups").FindOne(ctx, bson.M{"_id": id}).Decode(&group); err != nil {
-		utils.Err(c, http.StatusNotFound, "Email group not found")
+		utils.Err(c, http.StatusNotFound, "Email group not found", err)
 		return
 	}
 
@@ -73,7 +73,7 @@ func CreateEmailGroup(c *gin.Context) {
 	defer cancel()
 
 	if _, err := db.Collection("email_groups").InsertOne(ctx, group); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create email group")
+		utils.Err(c, http.StatusInternalServerError, "Failed to create email group", err)
 		return
 	}
 
@@ -83,7 +83,7 @@ func CreateEmailGroup(c *gin.Context) {
 func UpdateEmailGroup(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid group ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid group ID", err)
 		return
 	}
 
@@ -110,7 +110,7 @@ func UpdateEmailGroup(c *gin.Context) {
 
 	result, err := db.Collection("email_groups").UpdateOne(ctx, bson.M{"_id": id}, update)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to update email group")
+		utils.Err(c, http.StatusInternalServerError, "Failed to update email group", err)
 		return
 	}
 	if result.MatchedCount == 0 {
@@ -125,7 +125,7 @@ func UpdateEmailGroup(c *gin.Context) {
 func DeleteEmailGroup(c *gin.Context) {
 	id, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid group ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid group ID", err)
 		return
 	}
 
@@ -134,7 +134,7 @@ func DeleteEmailGroup(c *gin.Context) {
 
 	result, err := db.Collection("email_groups").DeleteOne(ctx, bson.M{"_id": id})
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to delete email group")
+		utils.Err(c, http.StatusInternalServerError, "Failed to delete email group", err)
 		return
 	}
 	if result.DeletedCount == 0 {

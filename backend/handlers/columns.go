@@ -17,7 +17,7 @@ import (
 func CreateColumn(c *gin.Context) {
 	projectID, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid project ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid project ID", err)
 		return
 	}
 
@@ -44,7 +44,7 @@ func CreateColumn(c *gin.Context) {
 	}
 
 	if _, err := db.Collection("columns").InsertOne(ctx, col); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create column")
+		utils.Err(c, http.StatusInternalServerError, "Failed to create column", err)
 		return
 	}
 
@@ -54,7 +54,7 @@ func CreateColumn(c *gin.Context) {
 func UpdateColumn(c *gin.Context) {
 	colID, err := primitive.ObjectIDFromHex(c.Param("colId"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid column ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid column ID", err)
 		return
 	}
 
@@ -75,7 +75,7 @@ func UpdateColumn(c *gin.Context) {
 		bson.M{"$set": bson.M{"name": body.Name}},
 	)
 	if err != nil || result.MatchedCount == 0 {
-		utils.Err(c, http.StatusNotFound, "Column not found")
+		utils.Err(c, http.StatusNotFound, "Column not found", err)
 		return
 	}
 
@@ -85,7 +85,7 @@ func UpdateColumn(c *gin.Context) {
 func ReorderColumns(c *gin.Context) {
 	projectID, err := primitive.ObjectIDFromHex(c.Param("id"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid project ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid project ID", err)
 		return
 	}
 
@@ -118,7 +118,7 @@ func ReorderColumns(c *gin.Context) {
 func DeleteColumn(c *gin.Context) {
 	colID, err := primitive.ObjectIDFromHex(c.Param("colId"))
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid column ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid column ID", err)
 		return
 	}
 
@@ -130,7 +130,7 @@ func DeleteColumn(c *gin.Context) {
 
 	result, err := db.Collection("columns").DeleteOne(ctx, bson.M{"_id": colID})
 	if err != nil || result.DeletedCount == 0 {
-		utils.Err(c, http.StatusNotFound, "Column not found")
+		utils.Err(c, http.StatusNotFound, "Column not found", err)
 		return
 	}
 

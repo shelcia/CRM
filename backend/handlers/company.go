@@ -23,13 +23,13 @@ func UploadCompanyLogo(c *gin.Context) {
 
 	companyID, err := primitive.ObjectIDFromHex(currentUser.CompanyID)
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid company ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid company ID", err)
 		return
 	}
 
 	file, header, err := c.Request.FormFile("logo")
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "No file uploaded")
+		utils.Err(c, http.StatusBadRequest, "No file uploaded", err)
 		return
 	}
 	defer file.Close()
@@ -42,7 +42,7 @@ func UploadCompanyLogo(c *gin.Context) {
 	}
 
 	if err := os.MkdirAll("uploads/logos", 0755); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create upload directory")
+		utils.Err(c, http.StatusInternalServerError, "Failed to create upload directory", err)
 		return
 	}
 
@@ -50,7 +50,7 @@ func UploadCompanyLogo(c *gin.Context) {
 	destPath := filepath.Join("uploads", "logos", filename)
 
 	if err := c.SaveUploadedFile(header, destPath); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to save file")
+		utils.Err(c, http.StatusInternalServerError, "Failed to save file", err)
 		return
 	}
 
@@ -64,7 +64,7 @@ func UploadCompanyLogo(c *gin.Context) {
 		bson.M{"$set": bson.M{"logo": logoURL}},
 	)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to update company logo")
+		utils.Err(c, http.StatusInternalServerError, "Failed to update company logo", err)
 		return
 	}
 
@@ -76,7 +76,7 @@ func GetCompany(c *gin.Context) {
 
 	companyID, err := primitive.ObjectIDFromHex(currentUser.CompanyID)
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid company ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid company ID", err)
 		return
 	}
 
@@ -85,7 +85,7 @@ func GetCompany(c *gin.Context) {
 
 	var company models.Company
 	if err := db.Collection("companies").FindOne(ctx, bson.M{"_id": companyID}).Decode(&company); err != nil {
-		utils.Err(c, http.StatusNotFound, "Company not found")
+		utils.Err(c, http.StatusNotFound, "Company not found", err)
 		return
 	}
 
@@ -97,7 +97,7 @@ func UpdateCompany(c *gin.Context) {
 
 	companyID, err := primitive.ObjectIDFromHex(currentUser.CompanyID)
 	if err != nil {
-		utils.Err(c, http.StatusBadRequest, "Invalid company ID")
+		utils.Err(c, http.StatusBadRequest, "Invalid company ID", err)
 		return
 	}
 
@@ -121,7 +121,7 @@ func UpdateCompany(c *gin.Context) {
 
 	result, err := db.Collection("companies").UpdateOne(ctx, bson.M{"_id": companyID}, update)
 	if err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to update company")
+		utils.Err(c, http.StatusInternalServerError, "Failed to update company", err)
 		return
 	}
 	if result.MatchedCount == 0 {
@@ -148,7 +148,7 @@ func CreateCompany(c *gin.Context) {
 	defer cancel()
 
 	if _, err := db.Collection("companies").InsertOne(ctx, company); err != nil {
-		utils.Err(c, http.StatusInternalServerError, "Failed to create company")
+		utils.Err(c, http.StatusInternalServerError, "Failed to create company", err)
 		return
 	}
 
