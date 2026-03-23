@@ -14,6 +14,8 @@ interface FormFieldProps {
   value: string;
   onChange: (v: string) => void;
   type?: string;
+  placeholder?: string;
+  error?: string;
 }
 
 export const FormField = ({
@@ -21,10 +23,19 @@ export const FormField = ({
   value,
   onChange,
   type = "text",
+  placeholder,
+  error,
 }: FormFieldProps) => (
   <div className="flex flex-col gap-1">
     <label className="text-xs font-medium text-muted-foreground">{label}</label>
-    <Input type={type} value={value} onChange={(e) => onChange(e.target.value)} />
+    <Input
+      type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      className={error ? "border-destructive" : undefined}
+    />
+    {error && <p className="text-xs text-destructive">{error}</p>}
   </div>
 );
 

@@ -16,5 +16,6 @@ export {
 export * from "./CustomLoaders";
 export * from "./CustomButtons";
 export { CardSection } from "./CardSection";
+export { MultiEmailInput } from "./MultiEmailInput";
 export { TableFilters } from "./TableFilters";
 export type { FilterConfig } from "./TableFilters";

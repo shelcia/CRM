@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { CustomModal } from "@/components/custom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { FormField } from "@/components/common";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
 import { apiEmailGroups } from "@/services/models/emailGroupsModel";
 import { apiContacts } from "@/services/models/contactsModel";
 import { EmailGroup } from "../types";
@@ -108,90 +108,81 @@ const GroupDialog = ({ group, onSaved, trigger }: GroupDialogProps) => {
       trigger={trigger}
       size="lg"
     >
-        <div className="space-y-4 pt-1">
-          <div className="space-y-1">
-            <Label htmlFor="gname">Group Name</Label>
-            <Input
-              id="gname"
-              placeholder="ex: Qualified Leads"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                setNameError("");
-              }}
-              className={cn(nameError && "border-destructive")}
-            />
-            {nameError && (
-              <p className="text-xs text-destructive">{nameError}</p>
+      <div className="space-y-4 pt-1">
+        <FormField
+          label="Group Name"
+          placeholder="ex: Qualified Leads"
+          value={name}
+          onChange={(v) => { setName(v); setNameError(""); }}
+          error={nameError}
+        />
+        <div className="space-y-1">
+          <Label htmlFor="gdesc">
+            Description{" "}
+            <span className="text-muted-foreground font-normal">
+              (optional)
+            </span>
+          </Label>
+          <Textarea
+            id="gdesc"
+            placeholder="What contacts does this group target?"
+            rows={2}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label>Contacts</Label>
+            <span className="text-xs text-muted-foreground">
+              {selectedIds.size} selected
+            </span>
+          </div>
+          <Input
+            placeholder="Search contacts…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="h-8 text-sm"
+          />
+          <div className="border rounded-md overflow-y-auto max-h-52">
+            {loadingContacts ? (
+              <p className="text-xs text-muted-foreground text-center py-6">
+                Loading contacts…
+              </p>
+            ) : filtered.length === 0 ? (
+              <p className="text-xs text-muted-foreground text-center py-6">
+                No contacts found
+              </p>
+            ) : (
+              filtered.map((c) => (
+                <label
+                  key={c._id}
+                  className="flex items-center gap-3 px-3 py-2 hover:bg-muted/50 cursor-pointer border-b last:border-0"
+                >
+                  <Checkbox
+                    checked={selectedIds.has(c._id)}
+                    onCheckedChange={() => toggle(c._id)}
+                  />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium truncate">{c.name}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {c.email}
+                    </p>
+                  </div>
+                </label>
+              ))
             )}
           </div>
-          <div className="space-y-1">
-            <Label htmlFor="gdesc">
-              Description{" "}
-              <span className="text-muted-foreground font-normal">
-                (optional)
-              </span>
-            </Label>
-            <Textarea
-              id="gdesc"
-              placeholder="What contacts does this group target?"
-              rows={2}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label>Contacts</Label>
-              <span className="text-xs text-muted-foreground">
-                {selectedIds.size} selected
-              </span>
-            </div>
-            <Input
-              placeholder="Search contacts…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="h-8 text-sm"
-            />
-            <div className="border rounded-md overflow-y-auto max-h-52">
-              {loadingContacts ? (
-                <p className="text-xs text-muted-foreground text-center py-6">
-                  Loading contacts…
-                </p>
-              ) : filtered.length === 0 ? (
-                <p className="text-xs text-muted-foreground text-center py-6">
-                  No contacts found
-                </p>
-              ) : (
-                filtered.map((c) => (
-                  <label
-                    key={c._id}
-                    className="flex items-center gap-3 px-3 py-2 hover:bg-muted/50 cursor-pointer border-b last:border-0"
-                  >
-                    <Checkbox
-                      checked={selectedIds.has(c._id)}
-                      onCheckedChange={() => toggle(c._id)}
-                    />
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium truncate">{c.name}</p>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {c.email}
-                      </p>
-                    </div>
-                  </label>
-                ))
-              )}
-            </div>
-          </div>
-          <div className="flex justify-end gap-2 pt-1">
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSubmit} loading={saving}>
-              {group ? "Save Changes" : "Create Group"}
-            </Button>
-          </div>
         </div>
+        <div className="flex justify-end gap-2 pt-1">
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button onClick={handleSubmit} loading={saving}>
+            {group ? "Save Changes" : "Create Group"}
+          </Button>
+        </div>
+      </div>
     </CustomModal>
   );
 };

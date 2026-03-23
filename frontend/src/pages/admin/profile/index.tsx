@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from "yup";
+import { emptyCompanyProfile, companyProfileValidationSchema } from "./helpers";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { CustomTextField, PageHeader, CardSection } from "@/components/custom";
@@ -28,22 +28,8 @@ const Profile = () => {
 
   const { errors, values, handleChange, handleSubmit, touched, setValues } =
     useFormik({
-      initialValues: {
-        name: "",
-        number: "",
-        cmail: "",
-        address: "",
-        website: "",
-        companySize: "",
-      },
-      validationSchema: Yup.object().shape({
-        name: Yup.string().required("Company name is required"),
-        number: Yup.string(),
-        cmail: Yup.string().email("Enter a valid email"),
-        address: Yup.string(),
-        website: Yup.string(),
-        companySize: Yup.number().min(0).nullable(),
-      }),
+      initialValues: emptyCompanyProfile,
+      validationSchema: companyProfileValidationSchema,
       onSubmit: (vals) => {
         setIsLoading(true);
         apiCompany.put!(vals, "", true).then((res) => {

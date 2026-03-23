@@ -19,7 +19,7 @@ import {
   TimePicker,
 } from "@/components/custom";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { MultiEmailInput } from "@/components/custom";
 import { cn } from "@/lib/utils";
 import { Editor } from "@/components/blocks/editor-00/editor";
 import { apiEmailTemplates } from "@/services/models/emailTemplatesModel";
@@ -211,20 +211,16 @@ const TemplateDialog = ({
             </div>
           ) : (
             <div className="space-y-1">
-              <Input
-                name="recipient"
-                placeholder="user@company.com, another@company.com"
+              <MultiEmailInput
                 value={values.recipient}
-                onChange={handleChange}
-                className={cn(
-                  touched.recipient && errors.recipient && "border-destructive",
-                )}
+                onChange={(v) => setFieldValue("recipient", v)}
+                hasError={!!(touched.recipient && errors.recipient)}
               />
               {touched.recipient && errors.recipient && (
                 <p className="text-xs text-destructive">{errors.recipient}</p>
               )}
               <p className="text-xs text-muted-foreground">
-                Separate multiple emails with a comma
+                Press Enter or comma to add each email
               </p>
             </div>
           )}
