@@ -1,12 +1,16 @@
 import React from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Navigate, Outlet } from "react-router-dom";
 import Topbar, { menuContents } from "./components/Topbar";
 import Sidebar from "./components/Sidebar";
 import usePermissions from "@/hooks/usePermissions";
+import { useAuth } from "@/context/AuthContext";
 
 const Layout = () => {
+  const { user } = useAuth();
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const { has } = usePermissions();
+
+  if (!user) return <Navigate to="/login" replace />;
   const visibleItems = menuContents.filter((item) => has(item.permission));
 
   const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
