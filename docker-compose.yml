@@ -3,6 +3,7 @@ services:
   backend:
     build:
       context: ./backend
+    image: ${IMAGE_REPO:-tinycrm}/backend:${IMAGE_TAG:-latest}
     restart: unless-stopped
     env_file:
       - ./backend/.env
@@ -21,6 +22,7 @@ services:
       context: ./frontend
       args:
         VITE_API_URL: /api   # relative path — nginx proxies to backend
+    image: ${IMAGE_REPO:-tinycrm}/frontend:${IMAGE_TAG:-latest}
     restart: unless-stopped
     ports:
       - "80:80"
