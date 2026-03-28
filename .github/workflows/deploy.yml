@@ -35,6 +35,7 @@ jobs:
         with:
           context: ./backend
           push: true
+          provenance: false
           tags: |
             ${{ steps.image.outputs.base }}/backend:latest
             ${{ steps.image.outputs.base }}/backend:${{ github.sha }}
@@ -46,6 +47,7 @@ jobs:
         with:
           context: ./frontend
           push: true
+          provenance: false
           build-args: |
             VITE_API_URL=https://crm-tb98.onrender.com/api
           tags: |
