@@ -2,20 +2,24 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+The following versions of this CRM project are currently receiving security updates:
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| 0.1.x   | :white_check_mark: |
+| < 0.1   | :x:                |
 
 ## Reporting a Vulnerability
 
-Use this section to tell people how to report a vulnerability.
+If you discover a security vulnerability in this project, please report it responsibly.
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+**Do not open a public GitHub issue for security vulnerabilities.**
+
+To report a vulnerability:
+
+1. Open a [GitHub Security Advisory](https://github.com/shelcia/CRM/security/advisories/new) in this repository.
+2. Provide a clear description of the vulnerability, steps to reproduce, and any relevant context or impact assessment.
+
+You can expect an initial response within **72 hours** of submission. If the vulnerability is confirmed, a fix will be prioritized based on severity. You will be credited in the release notes unless you prefer to remain anonymous.
+
+If the report is declined, you will receive an explanation of why it does not meet the threshold for a security fix.

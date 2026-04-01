@@ -9,7 +9,7 @@ RUN go mod download
 
 # Build the binary
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o server ./main.go
+RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o server ./main.go
 
 # ── Runtime stage ──────────────────────────────────────────────────────────────
 FROM alpine:3.19

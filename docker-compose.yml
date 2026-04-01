@@ -1,5 +1,4 @@
 services:
-
   backend:
     build:
       context: ./backend
@@ -10,7 +9,7 @@ services:
     volumes:
       - uploads:/app/uploads
     ports:
-      - "4050:4050"   # optional — remove if you don't need direct API access
+      - "4050:4050" # optional — remove if you don't need direct API access
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:4050/api/enums || exit 1"]
       interval: 15s
@@ -21,7 +20,7 @@ services:
     build:
       context: ./frontend
       args:
-        VITE_API_URL: /api   # relative path — nginx proxies to backend
+        VITE_API_URL: /api # relative path — nginx proxies to backend
     image: ${IMAGE_REPO:-tinycrm}/frontend:${IMAGE_TAG:-latest}
     restart: unless-stopped
     ports:
@@ -29,6 +28,3 @@ services:
     depends_on:
       backend:
         condition: service_healthy
-
-volumes:
-  uploads:
