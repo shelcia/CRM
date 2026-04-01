@@ -20,10 +20,12 @@ import (
 func GetTickets(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
-	search := strings.TrimSpace(c.Query("search"))
-	status := strings.TrimSpace(c.Query("status"))
-	priority := strings.TrimSpace(c.Query("priority"))
-	category := strings.TrimSpace(c.Query("category"))
+	search        := strings.TrimSpace(c.Query("search"))
+	filterTitle   := strings.TrimSpace(c.Query("title"))
+	filterContact := strings.TrimSpace(c.Query("contact"))
+	status        := strings.TrimSpace(c.Query("status"))
+	priority      := strings.TrimSpace(c.Query("priority"))
+	category      := strings.TrimSpace(c.Query("category"))
 
 	if page < 1 {
 		page = 1
@@ -35,9 +37,15 @@ func GetTickets(c *gin.Context) {
 	filter := bson.M{}
 	if search != "" {
 		filter["$or"] = bson.A{
-			bson.M{"title": bson.M{"$regex": search, "$options": "i"}},
+			bson.M{"title":   bson.M{"$regex": search, "$options": "i"}},
 			bson.M{"contact": bson.M{"$regex": search, "$options": "i"}},
 		}
+	}
+	if filterTitle != "" {
+		filter["title"] = bson.M{"$regex": filterTitle, "$options": "i"}
+	}
+	if filterContact != "" {
+		filter["contact"] = bson.M{"$regex": filterContact, "$options": "i"}
 	}
 	if status != "" {
 		filter["status"] = status

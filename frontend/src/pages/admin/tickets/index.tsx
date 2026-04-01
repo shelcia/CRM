@@ -54,10 +54,12 @@ const Tickets = () => {
     const ctrl = new AbortController();
     setIsLoading(true);
     const params: Record<string, unknown> = { page, limit: PAGE_SIZE };
-    if (search)           params.search   = search;
-    if (filters.status)   params.status   = filters.status;
-    if (filters.priority) params.priority = filters.priority;
-    if (filters.category) params.category = filters.category;
+    if (search)            params.search   = search;
+    if (filters.title)     params.title    = filters.title;
+    if (filters.contact)   params.contact  = filters.contact;
+    if (filters.status)    params.status   = filters.status;
+    if (filters.priority)  params.priority = filters.priority;
+    if (filters.category)  params.category = filters.category;
     apiTickets.getByParams!(params, ctrl.signal, "", true).then((res) => {
       if (cancelled) return;
       if (res?.data) {
@@ -222,6 +224,8 @@ const Tickets = () => {
             },
             loading: isLoading,
             columnFilters: {
+              title:    { type: "text", value: filters.title   ?? "", onChange: (v) => handleFilterChange("title",   v) },
+              contact:  { type: "text", value: filters.contact ?? "", onChange: (v) => handleFilterChange("contact", v) },
               status:   { options: ticketStatuses,   value: filters.status   ?? "", onChange: (v) => handleFilterChange("status",   v) },
               priority: { options: ticketPriorities, value: filters.priority ?? "", onChange: (v) => handleFilterChange("priority", v) },
               category: { options: ticketCategories, value: filters.category ?? "", onChange: (v) => handleFilterChange("category", v) },

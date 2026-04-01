@@ -59,6 +59,9 @@ const Contacts = () => {
     setIsLoading(true);
     const params: Record<string, unknown> = { page, limit: PAGE_SIZE };
     if (search) params.search = search;
+    if (filters.name) params.name = filters.name;
+    if (filters.email) params.email = filters.email;
+    if (filters.phone) params.phone = filters.phone;
     if (filters.status) params.status = filters.status;
     if (filters.priority) params.priority = filters.priority;
     if (filters.company) params.company = filters.company;
@@ -242,6 +245,21 @@ const Contacts = () => {
             },
             loading: isLoading,
             columnFilters: {
+              name: {
+                type: "text",
+                value: filters.name ?? "",
+                onChange: (v) => handleFilterChange("name", v),
+              },
+              email: {
+                type: "text",
+                value: filters.email ?? "",
+                onChange: (v) => handleFilterChange("email", v),
+              },
+              number: {
+                type: "text",
+                value: filters.phone ?? "",
+                onChange: (v) => handleFilterChange("phone", v),
+              },
               status: {
                 options: contactStatuses,
                 value: filters.status ?? "",

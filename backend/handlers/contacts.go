@@ -49,6 +49,9 @@ func GetContacts(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
 	search           := strings.TrimSpace(c.Query("search"))
+	filterName       := strings.TrimSpace(c.Query("name"))
+	filterEmail      := strings.TrimSpace(c.Query("email"))
+	filterPhone      := strings.TrimSpace(c.Query("phone"))
 	status           := strings.TrimSpace(c.Query("status"))
 	priority         := strings.TrimSpace(c.Query("priority"))
 	company          := strings.TrimSpace(c.Query("company"))
@@ -68,10 +71,20 @@ func GetContacts(c *gin.Context) {
 	filter := bson.M{}
 	if search != "" {
 		filter["$or"] = bson.A{
-			bson.M{"name": bson.M{"$regex": search, "$options": "i"}},
-			bson.M{"mail": bson.M{"$regex": search, "$options": "i"}},
+			bson.M{"name":    bson.M{"$regex": search, "$options": "i"}},
+			bson.M{"mail":    bson.M{"$regex": search, "$options": "i"}},
+			bson.M{"number":  bson.M{"$regex": search, "$options": "i"}},
 			bson.M{"company": bson.M{"$regex": search, "$options": "i"}},
 		}
+	}
+	if filterName != "" {
+		filter["name"] = bson.M{"$regex": filterName, "$options": "i"}
+	}
+	if filterEmail != "" {
+		filter["mail"] = bson.M{"$regex": filterEmail, "$options": "i"}
+	}
+	if filterPhone != "" {
+		filter["number"] = bson.M{"$regex": filterPhone, "$options": "i"}
 	}
 	if status != "" {
 		filter["status"] = status

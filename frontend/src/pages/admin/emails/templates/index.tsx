@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Plus, Clock } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Clock } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   CustomTable,
@@ -10,7 +10,6 @@ import {
   EditIconButton,
   AddPrimaryButton,
 } from "@/components/custom";
-import { Button } from "@/components/ui/button";
 import { apiEmailTemplates } from "@/services/models/emailTemplatesModel";
 import { apiEmailGroups } from "@/services/models/emailGroupsModel";
 import { useEnums } from "@/hooks/useEnums";
@@ -25,9 +24,14 @@ const EmailTemplates = () => {
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
   const [groups, setGroups] = useState<EmailGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [filters, setFilters] = useState<Record<string, string>>({});
   const { emailTemplateStatuses, emailTemplateFrequencies } = useEnums();
   const statusItems = toLabelItems(emailTemplateStatuses);
   const frequencyItems = toLabelItems(emailTemplateFrequencies);
+
+  const handleFilterChange = (key: string, value: string) =>
+    setFilters((prev) => ({ ...prev, [key]: value }));
 
   useEffect(() => {
     const controller = new AbortController();
@@ -41,6 +45,23 @@ const EmailTemplates = () => {
     });
     return () => controller.abort();
   }, []);
+
+  const filteredTemplates = useMemo(() => {
+    return templates.filter((t) => {
+      if (search) {
+        const s = search.toLowerCase();
+        if (!t.name?.toLowerCase().includes(s) && !t.subject?.toLowerCase().includes(s))
+          return false;
+      }
+      if (filters.name && !t.name?.toLowerCase().includes(filters.name.toLowerCase()))
+        return false;
+      if (filters.frequency && t.frequency !== filters.frequency) return false;
+      if (filters.status && t.status !== filters.status) return false;
+      if (filters.sendDateFrom && t.sendDate < filters.sendDateFrom) return false;
+      if (filters.sendDateTo && t.sendDate > filters.sendDateTo) return false;
+      return true;
+    });
+  }, [templates, search, filters]);
 
   const handleSaved = (updated: EmailTemplate) => {
     setTemplates((prev) => {
@@ -70,10 +91,9 @@ const EmailTemplates = () => {
       label: "Name",
       name: "name",
       options: {
-        customBodyRender: (_: any, rowIndex: number) => {
-          const t = templates[rowIndex];
-          return <span className="font-medium">{t?.name}</span>;
-        },
+        customBodyRender: (val: any) => (
+          <span className="font-medium">{val}</span>
+        ),
       },
     },
     { label: "Subject", name: "subject" },
@@ -97,7 +117,7 @@ const EmailTemplates = () => {
       options: {
         sortable: true,
         customBodyRender: (_: any, rowIndex: number) => {
-          const t = templates[rowIndex];
+          const t = filteredTemplates[rowIndex];
           return <span>{t ? scheduleLabel(t) : "—"}</span>;
         },
       },
@@ -117,7 +137,7 @@ const EmailTemplates = () => {
       name: "_id",
       options: {
         customBodyRender: (_: any, rowIndex: number) => {
-          const t = templates[rowIndex];
+          const t = filteredTemplates[rowIndex];
           if (!t) return null;
           return (
             <div className="flex items-center gap-1">
@@ -156,11 +176,7 @@ const EmailTemplates = () => {
       />
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        <StatCard
-          label="Total"
-          value={templates.length}
-          // icon={<Mail className="h-4 w-4" />}
-        />
+        <StatCard label="Total" value={templates.length} />
         {emailTemplateStatuses.map((status) => (
           <StatCard
             key={status}
@@ -175,9 +191,41 @@ const EmailTemplates = () => {
       ) : (
         <CustomTable
           columns={columns}
-          data={templates}
+          data={filteredTemplates}
           title="Templates"
           downloadName="email-templates"
+          serverSide={{
+            total: filteredTemplates.length,
+            page: 1,
+            pageSize: filteredTemplates.length || 1,
+            onPageChange: () => {},
+            onSearchChange: setSearch,
+            loading: false,
+            columnFilters: {
+              name: {
+                type: "text",
+                value: filters.name ?? "",
+                onChange: (v) => handleFilterChange("name", v),
+              },
+              frequency: {
+                options: emailTemplateFrequencies,
+                value: filters.frequency ?? "",
+                onChange: (v) => handleFilterChange("frequency", v),
+              },
+              sendDate: {
+                type: "date",
+                value: filters.sendDateFrom ?? "",
+                onChange: (v) => handleFilterChange("sendDateFrom", v),
+                valueTo: filters.sendDateTo ?? "",
+                onChangeTo: (v) => handleFilterChange("sendDateTo", v),
+              },
+              status: {
+                options: emailTemplateStatuses,
+                value: filters.status ?? "",
+                onChange: (v) => handleFilterChange("status", v),
+              },
+            },
+          }}
         />
       )}
     </section>

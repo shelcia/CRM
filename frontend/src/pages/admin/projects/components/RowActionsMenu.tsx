@@ -9,8 +9,8 @@ import {
 import { cn } from "@/lib/utils";
 
 interface RowActionsMenuProps {
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
   editLabel?: string;
   deleteLabel?: string;
   triggerClassName?: string;
@@ -37,15 +37,19 @@ export const RowActionsMenu = ({
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
-      <DropdownMenuItem onClick={onEdit}>
-        <Pencil className="size-4 mr-2" /> {editLabel}
-      </DropdownMenuItem>
-      <DropdownMenuItem
-        className="text-destructive focus:text-destructive"
-        onClick={onDelete}
-      >
-        <Trash2 className="size-4 mr-2" /> {deleteLabel}
-      </DropdownMenuItem>
+      {onEdit && (
+        <DropdownMenuItem onClick={onEdit}>
+          <Pencil className="size-4 mr-2" /> {editLabel}
+        </DropdownMenuItem>
+      )}
+      {onDelete && (
+        <DropdownMenuItem
+          className="text-destructive focus:text-destructive"
+          onClick={onDelete}
+        >
+          <Trash2 className="size-4 mr-2" /> {deleteLabel}
+        </DropdownMenuItem>
+      )}
     </DropdownMenuContent>
   </DropdownMenu>
 );

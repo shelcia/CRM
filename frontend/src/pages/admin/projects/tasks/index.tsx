@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Plus, FolderKanban } from "lucide-react";
+import { FolderKanban } from "lucide-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
@@ -12,19 +12,21 @@ import {
   PageSpinner,
   CustomEmptyState,
   PageHeader,
-  DeleteIconButton,
   CustomModal,
   AddPrimaryButton,
 } from "@/components/custom";
 import { apiProvider } from "@/services/utilities/provider";
 import usePermissions from "@/hooks/usePermissions";
 import { Project } from "../types";
+import { RowActionsMenu } from "../components/RowActionsMenu";
+import { confirmToast } from "@/utils/confirmToast";
 
 const Todos = () => {
   const { has } = usePermissions();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -35,14 +37,19 @@ const Todos = () => {
     return () => controller.abort();
   }, []);
 
-  const handleDelete = (id: string) => {
-    apiProvider.remove("projects", id, "", true).then((res) => {
-      if (res?.message === "Project deleted") {
-        setProjects((prev) => prev.filter((p) => p._id !== id));
-        toast.success("Project deleted");
-      } else {
-        toast.error(res?.message ?? "Failed to delete project");
-      }
+  const handleDelete = (id: string, name: string) => {
+    confirmToast({
+      title: `Delete "${name}"?`,
+      description: "This will permanently delete the project and all its tasks.",
+      onConfirm: async () => {
+        const res = await apiProvider.remove("projects", id, "", true);
+        if (res?.message === "Project deleted") {
+          setProjects((prev) => prev.filter((p) => p._id !== id));
+          toast.success("Project deleted");
+        } else {
+          toast.error(res?.message ?? "Failed to delete project");
+        }
+      },
     });
   };
 
@@ -54,6 +61,20 @@ const Todos = () => {
         toast.success("Project created");
       } else {
         toast.error(res?.message ?? "Failed to create project");
+      }
+    });
+  };
+
+  const handleRename = (id: string, name: string) => {
+    apiProvider.put("projects", { name }, id, true).then((res) => {
+      if (res?._id || res?.name) {
+        setProjects((prev) =>
+          prev.map((p) => (p._id === id ? { ...p, name } : p)),
+        );
+        setEditingProject(null);
+        toast.success("Project renamed");
+      } else {
+        toast.error(res?.message ?? "Failed to rename project");
       }
     });
   };
@@ -79,10 +100,27 @@ const Todos = () => {
         open={showForm}
         onOpenChange={(open) => !open && setShowForm(false)}
       >
-        <NewProjectForm
+        <ProjectNameForm
+          submitLabel="Create"
           onSubmit={handleCreate}
           onCancel={() => setShowForm(false)}
         />
+      </CustomModal>
+
+      <CustomModal
+        title="Rename Project"
+        size="sm"
+        open={!!editingProject}
+        onOpenChange={(open) => !open && setEditingProject(null)}
+      >
+        {editingProject && (
+          <ProjectNameForm
+            submitLabel="Save"
+            initialName={editingProject.name}
+            onSubmit={(name) => handleRename(editingProject._id, name)}
+            onCancel={() => setEditingProject(null)}
+          />
+        )}
       </CustomModal>
 
       {isLoading ? (
@@ -109,10 +147,19 @@ const Todos = () => {
                       })}
                     </p>
                   </div>
-                  {has("todos-delete") && (
-                    <DeleteIconButton
-                      className="size-7 shrink-0"
-                      onClick={() => handleDelete(project._id)}
+                  {(has("todos-edit") || has("todos-delete")) && (
+                    <RowActionsMenu
+                      onEdit={
+                        has("todos-edit")
+                          ? () => setEditingProject(project)
+                          : undefined
+                      }
+                      onDelete={
+                        has("todos-delete")
+                          ? () => handleDelete(project._id, project.name)
+                          : undefined
+                      }
+                      triggerClassName="size-7 shrink-0"
                     />
                   )}
                 </div>
@@ -153,15 +200,20 @@ const Todos = () => {
 
 export default Todos;
 
-const NewProjectForm = ({
+const ProjectNameForm = ({
+  submitLabel,
+  initialName = "",
   onSubmit,
   onCancel,
 }: {
+  submitLabel: string;
+  initialName?: string;
   onSubmit: (name: string) => void;
   onCancel: () => void;
 }) => {
   const { values, errors, touched, handleChange, handleSubmit } = useFormik({
-    initialValues: { name: "" },
+    initialValues: { name: initialName },
+    enableReinitialize: true,
     validationSchema: Yup.object({
       name: Yup.string().min(2, "Too short").required("Name is required"),
     }),
@@ -183,7 +235,7 @@ const NewProjectForm = ({
           Cancel
         </Button>
         <Button type="submit" size="sm">
-          Create
+          {submitLabel}
         </Button>
       </div>
     </form>

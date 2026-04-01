@@ -186,106 +186,111 @@ const Projects = () => {
   // ── Board ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="flex gap-3 overflow-x-auto pb-4 items-start">
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="board" direction="horizontal" type="COLUMN">
-          {(boardProvided) => (
-            <div
-              ref={boardProvided.innerRef}
-              {...boardProvided.droppableProps}
-              className="flex gap-3 items-start"
-            >
-              {columns.map((col, idx) => (
-                <Draggable draggableId={col._id} index={idx} key={col._id}>
-                  {(colProvided, colSnapshot) => (
-                    <div
-                      ref={colProvided.innerRef}
-                      {...colProvided.draggableProps}
-                      className="flex-shrink-0 w-68"
-                      style={{ ...colProvided.draggableProps.style }}
-                    >
+    <div className="flex gap-2">
+      <div className="flex gap-3 overflow-x-auto pb-4 items-start">
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="board" direction="horizontal" type="COLUMN">
+            {(boardProvided) => (
+              <div
+                ref={boardProvided.innerRef}
+                {...boardProvided.droppableProps}
+                className="flex gap-3 items-start"
+              >
+                {columns.map((col, idx) => (
+                  <Draggable draggableId={col._id} index={idx} key={col._id}>
+                    {(colProvided, colSnapshot) => (
                       <div
-                        className={cn(
-                          "rounded-xl bg-primary/[0.03] border border-primary/15 flex flex-col max-h-[calc(100vh-10rem)] transition-shadow",
-                          colSnapshot.isDragging &&
-                            "shadow-xl ring-2 ring-primary/30",
-                        )}
+                        ref={colProvided.innerRef}
+                        {...colProvided.draggableProps}
+                        className="flex-shrink-0 w-68"
+                        style={{ ...colProvided.draggableProps.style }}
                       >
-                        <ColumnHeader
-                          column={col}
-                          dragHandleProps={colProvided.dragHandleProps}
-                          onRename={(name) => handleRenameColumn(col._id, name)}
-                          onDelete={() => handleDeleteColumn(col._id)}
-                          onAddTodo={() =>
-                            setAddingColId((prev) =>
-                              prev === col._id ? null : col._id,
-                            )
-                          }
-                        />
-
-                        <Droppable droppableId={col._id}>
-                          {(provided, snapshot) => (
-                            <div
-                              {...provided.droppableProps}
-                              ref={provided.innerRef}
-                              className={cn(
-                                "flex-1 overflow-y-auto p-2 space-y-2 min-h-[4rem] transition-colors",
-                                snapshot.isDraggingOver && "bg-primary/10 rounded-lg",
-                              )}
-                            >
-                              {addingColId === col._id && (
-                                <AddTaskForm
-                                  onSubmit={(todo) =>
-                                    handleAddTodo(col._id, todo)
-                                  }
-                                  onCancel={() => setAddingColId(null)}
-                                />
-                              )}
-                              {col.todos.map((todo, todoIdx) => (
-                                <Draggable
-                                  draggableId={todo._id}
-                                  index={todoIdx}
-                                  key={todo._id}
-                                >
-                                  {(provided, snapshot) => (
-                                    <TaskCard
-                                      todo={todo}
-                                      provided={provided}
-                                      isDragging={snapshot.isDragging}
-                                      onDelete={() =>
-                                        handleDeleteTodo(col._id, todo._id)
-                                      }
-                                      onEdit={(updates) =>
-                                        handleEditTodo(
-                                          col._id,
-                                          todo._id,
-                                          updates,
-                                        )
-                                      }
-                                    />
-                                  )}
-                                </Draggable>
-                              ))}
-                              {provided.placeholder}
-                              {col.todos.length === 0 &&
-                                addingColId !== col._id && (
-                                  <p className="text-xs text-muted-foreground text-center py-4">
-                                    No tasks yet
-                                  </p>
-                                )}
-                            </div>
+                        <div
+                          className={cn(
+                            "rounded-xl bg-primary/[0.03] border border-primary/15 flex flex-col max-h-[calc(100vh-10rem)] transition-shadow",
+                            colSnapshot.isDragging &&
+                              "shadow-xl ring-2 ring-primary/30",
                           )}
-                        </Droppable>
+                        >
+                          <ColumnHeader
+                            column={col}
+                            dragHandleProps={colProvided.dragHandleProps}
+                            onRename={(name) =>
+                              handleRenameColumn(col._id, name)
+                            }
+                            onDelete={() => handleDeleteColumn(col._id)}
+                            onAddTodo={() =>
+                              setAddingColId((prev) =>
+                                prev === col._id ? null : col._id,
+                              )
+                            }
+                          />
+
+                          <Droppable droppableId={col._id}>
+                            {(provided, snapshot) => (
+                              <div
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                                className={cn(
+                                  "flex-1 overflow-y-auto p-2 space-y-2 min-h-[4rem] transition-colors",
+                                  snapshot.isDraggingOver &&
+                                    "bg-primary/10 rounded-lg",
+                                )}
+                              >
+                                {addingColId === col._id && (
+                                  <AddTaskForm
+                                    onSubmit={(todo) =>
+                                      handleAddTodo(col._id, todo)
+                                    }
+                                    onCancel={() => setAddingColId(null)}
+                                  />
+                                )}
+                                {col.todos.map((todo, todoIdx) => (
+                                  <Draggable
+                                    draggableId={todo._id}
+                                    index={todoIdx}
+                                    key={todo._id}
+                                  >
+                                    {(provided, snapshot) => (
+                                      <TaskCard
+                                        todo={todo}
+                                        provided={provided}
+                                        isDragging={snapshot.isDragging}
+                                        onDelete={() =>
+                                          handleDeleteTodo(col._id, todo._id)
+                                        }
+                                        onEdit={(updates) =>
+                                          handleEditTodo(
+                                            col._id,
+                                            todo._id,
+                                            updates,
+                                          )
+                                        }
+                                      />
+                                    )}
+                                  </Draggable>
+                                ))}
+                                {provided.placeholder}
+                                {col.todos.length === 0 &&
+                                  addingColId !== col._id && (
+                                    <p className="text-xs text-muted-foreground text-center py-4">
+                                      No tasks yet
+                                    </p>
+                                  )}
+                              </div>
+                            )}
+                          </Droppable>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {boardProvided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+                    )}
+                  </Draggable>
+                ))}
+                {boardProvided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
 
       {/* Add column */}
       <div className="flex-shrink-0 w-68">

@@ -16,21 +16,22 @@ const AddColumnForm = ({ onSubmit, onCancel }: AddColumnFormProps) => {
   });
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-2">
+    <form onSubmit={handleSubmit} className="space-y-4 p-2">
       <CustomTextField
         name="name"
+        label="Column Name"
         placeholder="Column name"
         values={values}
         handleChange={handleChange}
         touched={touched}
         errors={errors}
       />
-      <div className="flex gap-2">
+      <div className="flex gap-2 mt-4">
+        <Button type="button" variant="outline" size="sm" onClick={onCancel}>
+          Cancel
+        </Button>
         <Button type="submit" size="sm" className="flex-1">
           Add
-        </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
-          Cancel
         </Button>
       </div>
     </form>

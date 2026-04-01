@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Plus, Users } from "lucide-react";
 import toast from "react-hot-toast";
 import {
@@ -9,7 +9,6 @@ import {
   EditIconButton,
   AddPrimaryButton,
 } from "@/components/custom";
-import { Button } from "@/components/ui/button";
 import { apiEmailGroups } from "@/services/models/emailGroupsModel";
 import { confirmToast } from "@/utils/confirmToast";
 import { EmailGroup } from "../types";
@@ -18,6 +17,14 @@ import GroupDialog from "../components/GroupDialog";
 const EmailGroups = () => {
   const [groups, setGroups] = useState<EmailGroup[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [descFilter, setDescFilter] = useState("");
+
+  const filteredGroups = useMemo(() => {
+    if (!descFilter) return groups;
+    return groups.filter((g) =>
+      g.description?.toLowerCase().includes(descFilter.toLowerCase()),
+    );
+  }, [groups, descFilter]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -84,7 +91,7 @@ const EmailGroups = () => {
       name: "_id",
       options: {
         customBodyRender: (_: any, rowIndex: number) => {
-          const g = groups[rowIndex];
+          const g = filteredGroups[rowIndex];
           if (!g) return null;
           return (
             <div className="flex items-center gap-1">
@@ -121,9 +128,24 @@ const EmailGroups = () => {
       ) : (
         <CustomTable
           columns={columns}
-          data={groups}
+          data={filteredGroups}
           title="Groups"
           downloadName="email-groups"
+          serverSide={{
+            total: filteredGroups.length,
+            page: 1,
+            pageSize: filteredGroups.length || 1,
+            onPageChange: () => {},
+            onSearchChange: () => {},
+            loading: false,
+            columnFilters: {
+              description: {
+                type: "text",
+                value: descFilter,
+                onChange: setDescFilter,
+              },
+            },
+          }}
         />
       )}
     </section>
