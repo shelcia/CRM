@@ -6,27 +6,31 @@ export const STAGES: {
   {
     key: "lead",
     label: "Lead",
-    color: "bg-slate-100 dark:bg-slate-800",
+    color: "bg-primary/[0.04] border-primary/10",
   },
   {
     key: "qualified",
     label: "Qualified",
-    color: "bg-blue-50 dark:bg-blue-950",
+    color: "bg-primary/[0.07] border-primary/15",
   },
   {
     key: "proposal",
     label: "Proposal",
-    color: "bg-amber-50 dark:bg-amber-950",
+    color: "bg-primary/[0.10] border-primary/20",
   },
   {
     key: "negotiation",
     label: "Negotiation",
-    color: "bg-orange-50 dark:bg-orange-950",
+    color: "bg-primary/[0.13] border-primary/25",
   },
-  { key: "won", label: "Won", color: "bg-primary/5" },
+  {
+    key: "won",
+    label: "Won",
+    color: "bg-primary/[0.18] border-primary/30",
+  },
   {
     key: "lost",
     label: "Lost",
-    color: "bg-red-50 dark:bg-red-950",
+    color: "bg-destructive/5 border-destructive/20 dark:bg-destructive/10",
   },
 ];

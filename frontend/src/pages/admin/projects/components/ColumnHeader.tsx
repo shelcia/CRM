@@ -66,7 +66,7 @@ const ColumnHeader = ({
           <h5 className="flex-1 font-semibold text-sm truncate">
             {column.name}
           </h5>
-          <span className="text-xs text-muted-foreground tabular-nums bg-muted rounded-full px-1.5 py-0.5">
+          <span className="text-xs font-medium tabular-nums bg-primary/10 text-primary rounded-full px-1.5 py-0.5">
             {column.todos.length}
           </span>
           <Button
@@ -74,6 +74,7 @@ const ColumnHeader = ({
             variant="ghost"
             onClick={onAddTodo}
             title="Add card"
+            className="text-primary/60 hover:text-primary hover:bg-primary/10"
           >
             <Plus className="size-4" />
           </Button>

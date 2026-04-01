@@ -177,7 +177,7 @@ const Pipeline = () => {
                       <span className="text-sm font-semibold flex-1">
                         {stage.label}
                       </span>
-                      <span className="text-xs text-muted-foreground tabular-nums bg-background/60 rounded-full px-1.5 py-0.5">
+                      <span className="text-xs font-medium tabular-nums bg-primary/10 text-primary rounded-full px-1.5 py-0.5">
                         {stageDeals.length}
                       </span>
                       <AddDealDialog
@@ -186,7 +186,7 @@ const Pipeline = () => {
                           setDeals((prev) => [deal, ...prev])
                         }
                         trigger={
-                          <button className="text-muted-foreground hover:text-foreground transition-colors">
+                          <button className="text-primary/50 hover:text-primary transition-colors">
                             <Plus className="size-4" />
                           </button>
                         }
@@ -210,7 +210,7 @@ const Pipeline = () => {
                           {...provided.droppableProps}
                           className={cn(
                             "flex-1 overflow-y-auto p-2 space-y-2 min-h-[3rem] rounded-b-xl transition-colors",
-                            snapshot.isDraggingOver && "bg-primary/5",
+                            snapshot.isDraggingOver && "bg-primary/10",
                           )}
                         >
                           {stageDeals.map((deal, idx) => (

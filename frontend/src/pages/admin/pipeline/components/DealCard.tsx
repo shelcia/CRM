@@ -26,7 +26,7 @@ const DealCard = ({
       style={provided.draggableProps.style}
       className={cn(
         "rounded-lg border bg-card p-3 shadow-sm group transition-shadow cursor-grab active:cursor-grabbing",
-        isDragging && "shadow-lg ring-1 ring-primary/20",
+        isDragging && "shadow-lg ring-2 ring-primary/40 border-primary/30",
       )}
     >
       <div className="flex items-start justify-between gap-2">

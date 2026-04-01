@@ -58,7 +58,7 @@ const TaskCard = ({
       style={{ ...provided.draggableProps.style }}
       className={cn(
         "p-3 group transition-shadow",
-        isDragging && "shadow-lg ring-1 ring-primary/20",
+        isDragging && "shadow-lg ring-2 ring-primary/40 border-primary/30",
       )}
     >
       {editing ? (

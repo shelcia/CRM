@@ -206,9 +206,9 @@ const Projects = () => {
                     >
                       <div
                         className={cn(
-                          "rounded-xl bg-muted/50 border flex flex-col max-h-[calc(100vh-10rem)] transition-shadow",
+                          "rounded-xl bg-primary/[0.03] border border-primary/15 flex flex-col max-h-[calc(100vh-10rem)] transition-shadow",
                           colSnapshot.isDragging &&
-                            "shadow-xl ring-1 ring-primary/20",
+                            "shadow-xl ring-2 ring-primary/30",
                         )}
                       >
                         <ColumnHeader
@@ -230,7 +230,7 @@ const Projects = () => {
                               ref={provided.innerRef}
                               className={cn(
                                 "flex-1 overflow-y-auto p-2 space-y-2 min-h-[4rem] transition-colors",
-                                snapshot.isDraggingOver && "bg-primary/5",
+                                snapshot.isDraggingOver && "bg-primary/10 rounded-lg",
                               )}
                             >
                               {addingColId === col._id && (
@@ -290,7 +290,7 @@ const Projects = () => {
       {/* Add column */}
       <div className="flex-shrink-0 w-68">
         {showAddColumn ? (
-          <div className="rounded-xl bg-muted/50 border p-3">
+          <div className="rounded-xl bg-primary/[0.03] border border-primary/15 p-3">
             <AddColumnForm
               onSubmit={handleAddColumn}
               onCancel={() => setShowAddColumn(false)}
@@ -300,7 +300,7 @@ const Projects = () => {
           <Button
             variant="ghost"
             onClick={() => setShowAddColumn(true)}
-            className="w-full justify-start gap-2 rounded-xl border border-dashed px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 h-auto"
+            className="w-full justify-start gap-2 rounded-xl border border-dashed border-primary/30 px-3 py-2.5 text-sm text-primary/60 hover:text-primary hover:border-primary/60 hover:bg-primary/5 h-auto"
           >
             <Plus className="size-4" />
             Add column
